@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persists Postgres data across container restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.0
+#    entrypoint: /opt/keycloak/bin/kc.sh
+    command:
+      - start-dev
+      - --import-realm
+      - -Dkeycloak.import=/opt/keycloak/data/import/
+#       - export
+#       - --dir
+#       - /opt/keycloak/data/import
+#       - --realm
+#       - testrealm
+#       - --users
+#       - realm_file
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./testing/keycloak:/opt/keycloak/data/import:rw
+
+volumes:
+  postgres_data:
+    name: llmgw_postgres_data  # Named volume for Postgres data persistence
+  etcd_1_data:
+    name: llmgw_ectd_1_data

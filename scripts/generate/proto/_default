@@ -1,0 +1,11 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+# SPDX-License-Identifier: AGPL-3.0-only
+#MISE description="Generate code from protobuf files"
+
+set -e
+
+# Run Go build script
+mise run generate:proto:buf
+
+exit 0

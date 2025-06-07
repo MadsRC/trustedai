@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+version = 1
+[[annotations]]
+path = [
+    "go.sum",
+    "CLA.txt",
+    "gen/**"
+]
+SPDX-FileCopyrightText = "2025 Mads R. Havmand <mads@v42.dk>"
+SPDX-License-Identifier = "AGPL-3.0-only"

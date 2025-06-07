@@ -1,0 +1,202 @@
+// SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
+syntax = "proto3";
+
+package llmgw.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1";
+
+service IAMService {
+  // User operations
+  rpc CreateUser(IAMServiceCreateUserRequest) returns (IAMServiceCreateUserResponse);
+  rpc GetUser(IAMServiceGetUserRequest) returns (IAMServiceGetUserResponse);
+  rpc GetUserByEmail(IAMServiceGetUserByEmailRequest) returns (IAMServiceGetUserByEmailResponse);
+  rpc GetUserByExternalID(IAMServiceGetUserByExternalIDRequest) returns (IAMServiceGetUserByExternalIDResponse);
+  rpc ListUsersByOrganization(IAMServiceListUsersByOrganizationRequest) returns (IAMServiceListUsersByOrganizationResponse);
+  rpc UpdateUser(IAMServiceUpdateUserRequest) returns (IAMServiceUpdateUserResponse);
+  rpc DeleteUser(IAMServiceDeleteUserRequest) returns (IAMServiceDeleteUserResponse);
+
+  // Organization operations
+  rpc CreateOrganization(IAMServiceCreateOrganizationRequest) returns (IAMServiceCreateOrganizationResponse);
+  rpc GetOrganization(IAMServiceGetOrganizationRequest) returns (IAMServiceGetOrganizationResponse);
+  rpc GetOrganizationByName(IAMServiceGetOrganizationByNameRequest) returns (IAMServiceGetOrganizationByNameResponse);
+  rpc ListOrganizations(IAMServiceListOrganizationsRequest) returns (IAMServiceListOrganizationsResponse);
+  rpc UpdateOrganization(IAMServiceUpdateOrganizationRequest) returns (IAMServiceUpdateOrganizationResponse);
+  rpc DeleteOrganization(IAMServiceDeleteOrganizationRequest) returns (IAMServiceDeleteOrganizationResponse);
+
+  // Token operations
+  rpc CreateToken(IAMServiceCreateTokenRequest) returns (IAMServiceCreateTokenResponse);
+  rpc ListUserTokens(IAMServiceListUserTokensRequest) returns (IAMServiceListUserTokensResponse);
+  rpc RevokeToken(IAMServiceRevokeTokenRequest) returns (IAMServiceRevokeTokenResponse);
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+  string organization_id = 4;
+  string external_id = 5;
+  string provider = 6;
+  bool system_admin = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp last_login = 9;
+}
+
+message Organization {
+  string id = 1;
+  string name = 2;
+  string display_name = 3;
+  bool is_system = 4;
+  google.protobuf.Timestamp created_at = 5;
+  string sso_type = 6;
+  string sso_config = 7; // Serialized JSON configuration
+}
+
+message APIToken {
+  string id = 1;
+  string user_id = 2;
+  string description = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp expires_at = 5;
+  google.protobuf.Timestamp last_used_at = 6;
+}
+
+// User Service Messages
+message IAMServiceCreateUserRequest {
+  User user = 1;
+}
+
+message IAMServiceCreateUserResponse {
+  User user = 1;
+}
+
+message IAMServiceGetUserRequest {
+  string id = 1;
+}
+
+message IAMServiceGetUserResponse {
+  User user = 1;
+}
+
+message IAMServiceGetUserByEmailRequest {
+  string email = 1;
+}
+
+message IAMServiceGetUserByEmailResponse {
+  User user = 1;
+}
+
+message IAMServiceGetUserByExternalIDRequest {
+  string provider = 1;
+  string external_id = 2;
+}
+
+message IAMServiceGetUserByExternalIDResponse {
+  User user = 1;
+}
+
+message IAMServiceListUsersByOrganizationRequest {
+  string organization_id = 1;
+}
+
+message IAMServiceListUsersByOrganizationResponse {
+  repeated User users = 1;
+}
+
+message IAMServiceUpdateUserRequest {
+  User user = 1;
+  bool has_system_admin = 2;
+}
+
+message IAMServiceUpdateUserResponse {
+  User user = 1;
+}
+
+message IAMServiceDeleteUserRequest {
+  string id = 1;
+}
+
+message IAMServiceDeleteUserResponse {
+  bool success = 1;
+}
+
+// Organization Service Messages
+message IAMServiceCreateOrganizationRequest {
+  Organization organization = 1;
+}
+
+message IAMServiceCreateOrganizationResponse {
+  Organization organization = 1;
+}
+
+message IAMServiceGetOrganizationRequest {
+  string id = 1;
+}
+
+message IAMServiceGetOrganizationResponse {
+  Organization organization = 1;
+}
+
+message IAMServiceGetOrganizationByNameRequest {
+  string name = 1;
+}
+
+message IAMServiceGetOrganizationByNameResponse {
+  Organization organization = 1;
+}
+
+message IAMServiceListOrganizationsRequest {}
+
+message IAMServiceListOrganizationsResponse {
+  repeated Organization organizations = 1;
+}
+
+message IAMServiceUpdateOrganizationRequest {
+  Organization organization = 1;
+  bool has_is_system = 2;
+}
+
+message IAMServiceUpdateOrganizationResponse {
+  Organization organization = 1;
+}
+
+message IAMServiceDeleteOrganizationRequest {
+  string id = 1;
+  bool force = 2;
+}
+
+message IAMServiceDeleteOrganizationResponse {
+  bool success = 1;
+}
+
+// Token Service Messages
+message IAMServiceCreateTokenRequest {
+  string user_id = 1;
+  string description = 2;
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+message IAMServiceCreateTokenResponse {
+  APIToken token = 1;
+  string raw_token = 2;
+}
+
+message IAMServiceListUserTokensRequest {
+  string user_id = 1;
+}
+
+message IAMServiceListUserTokensResponse {
+  repeated APIToken tokens = 1;
+}
+
+message IAMServiceRevokeTokenRequest {
+  string token_id = 1;
+}
+
+message IAMServiceRevokeTokenResponse {
+  bool success = 1;
+}

@@ -1,0 +1,9 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+# SPDX-License-Identifier: AGPL-3.0-only
+#MISE description="Run integration tests for the project"
+
+# Run Go tests with the 'integration' build tag
+# The ./... pattern ensures tests are run in all subdirectories
+# -count=1 disables test caching for this run
+go test -count=1 -tags=integration ./...

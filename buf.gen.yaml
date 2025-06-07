@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+version: v2
+plugins:
+  - local: protoc-gen-go
+    out: gen
+    opt: paths=source_relative
+  - local: protoc-gen-connect-go
+    out: gen
+    opt: paths=source_relative

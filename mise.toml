@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+[tools]
+buf = "latest"
+"go:golang.org/x/tools/cmd/deadcode" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+golangci-lint = "latest"
+grpcurl = "latest"
+"pipx:reuse" = "latest"
+protoc-gen-connect-go = "latest"
+protoc-gen-go = "latest"
+shellcheck = "latest"
+"ubi:CycloneDX/cyclonedx-gomod" = "latest"
+
+[task_config]
+includes = ["scripts"]
