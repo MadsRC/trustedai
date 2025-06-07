@@ -27,8 +27,8 @@ var _ llmgwv1connect.IAMServiceHandler = (*Iam)(nil)
 // CreateUser creates a new user
 func (s *Iam) CreateUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserCreateRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserCreateResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceCreateUserRequest],
+) (*connect.Response[llmgwv1.IAMServiceCreateUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateUser invoked", "email", req.Msg.GetUser().GetEmail())
 
 	// Validate request
@@ -96,7 +96,7 @@ func (s *Iam) CreateUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserCreateResponse{
+	response := &llmgwv1.IAMServiceCreateUserResponse{
 		User: userToProto(user),
 	}
 
@@ -106,8 +106,8 @@ func (s *Iam) CreateUser(
 // GetUser retrieves a user by ID
 func (s *Iam) GetUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserGetRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserGetResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceGetUserRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUser invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -126,7 +126,7 @@ func (s *Iam) GetUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserGetResponse{
+	response := &llmgwv1.IAMServiceGetUserResponse{
 		User: userToProto(user),
 	}
 
@@ -136,8 +136,8 @@ func (s *Iam) GetUser(
 // GetUserByEmail retrieves a user by email
 func (s *Iam) GetUserByEmail(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserGetByEmailRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserGetByEmailResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceGetUserByEmailRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetUserByEmailResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUserByEmail invoked", "email", req.Msg.GetEmail())
 
 	// Validate request
@@ -156,7 +156,7 @@ func (s *Iam) GetUserByEmail(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserGetByEmailResponse{
+	response := &llmgwv1.IAMServiceGetUserByEmailResponse{
 		User: userToProto(user),
 	}
 
@@ -166,8 +166,8 @@ func (s *Iam) GetUserByEmail(
 // GetUserByExternalID retrieves a user by external ID and provider
 func (s *Iam) GetUserByExternalID(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserGetByExternalIDRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserGetByExternalIDResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceGetUserByExternalIDRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetUserByExternalIDResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUserByExternalID invoked",
 		"provider", req.Msg.GetProvider(), "externalID", req.Msg.GetExternalId())
 
@@ -192,7 +192,7 @@ func (s *Iam) GetUserByExternalID(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserGetByExternalIDResponse{
+	response := &llmgwv1.IAMServiceGetUserByExternalIDResponse{
 		User: userToProto(user),
 	}
 
@@ -202,8 +202,8 @@ func (s *Iam) GetUserByExternalID(
 // ListUsersByOrganization retrieves all users in an organization
 func (s *Iam) ListUsersByOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserListByOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserListByOrganizationResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceListUsersByOrganizationRequest],
+) (*connect.Response[llmgwv1.IAMServiceListUsersByOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListUsersByOrganization invoked", "organizationID", req.Msg.GetOrganizationId())
 
 	// Validate request
@@ -235,7 +235,7 @@ func (s *Iam) ListUsersByOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserListByOrganizationResponse{
+	response := &llmgwv1.IAMServiceListUsersByOrganizationResponse{
 		Users: protoUsers,
 	}
 
@@ -245,8 +245,8 @@ func (s *Iam) ListUsersByOrganization(
 // UpdateUser updates an existing user
 func (s *Iam) UpdateUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserUpdateRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserUpdateResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceUpdateUserRequest],
+) (*connect.Response[llmgwv1.IAMServiceUpdateUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] UpdateUser invoked", "id", req.Msg.GetUser().GetId())
 
 	// Validate request
@@ -314,7 +314,7 @@ func (s *Iam) UpdateUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserUpdateResponse{
+	response := &llmgwv1.IAMServiceUpdateUserResponse{
 		User: userToProto(existingUser),
 	}
 
@@ -324,8 +324,8 @@ func (s *Iam) UpdateUser(
 // DeleteUser removes a user
 func (s *Iam) DeleteUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUserDeleteRequest],
-) (*connect.Response[llmgwv1.IAMServiceUserDeleteResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceDeleteUserRequest],
+) (*connect.Response[llmgwv1.IAMServiceDeleteUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] DeleteUser invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -351,7 +351,7 @@ func (s *Iam) DeleteUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUserDeleteResponse{
+	response := &llmgwv1.IAMServiceDeleteUserResponse{
 		Success: true,
 	}
 
@@ -363,8 +363,8 @@ func (s *Iam) DeleteUser(
 // CreateOrganization creates a new organization
 func (s *Iam) CreateOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationCreateRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationCreateResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceCreateOrganizationRequest],
+) (*connect.Response[llmgwv1.IAMServiceCreateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateOrganization invoked", "name", req.Msg.GetOrganization().GetName())
 
 	// Validate request
@@ -421,7 +421,7 @@ func (s *Iam) CreateOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationCreateResponse{
+	response := &llmgwv1.IAMServiceCreateOrganizationResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -431,8 +431,8 @@ func (s *Iam) CreateOrganization(
 // GetOrganization retrieves an organization by ID
 func (s *Iam) GetOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationGetRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationGetResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceGetOrganizationRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetOrganization invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -451,7 +451,7 @@ func (s *Iam) GetOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationGetResponse{
+	response := &llmgwv1.IAMServiceGetOrganizationResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -461,8 +461,8 @@ func (s *Iam) GetOrganization(
 // GetOrganizationByName retrieves an organization by name
 func (s *Iam) GetOrganizationByName(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationGetByNameRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationGetByNameResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceGetOrganizationByNameRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetOrganizationByNameResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetOrganizationByName invoked", "name", req.Msg.GetName())
 
 	// Validate request
@@ -481,7 +481,7 @@ func (s *Iam) GetOrganizationByName(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationGetByNameResponse{
+	response := &llmgwv1.IAMServiceGetOrganizationByNameResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -491,8 +491,8 @@ func (s *Iam) GetOrganizationByName(
 // ListOrganizations retrieves all organizations
 func (s *Iam) ListOrganizations(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationListRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationListResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceListOrganizationsRequest],
+) (*connect.Response[llmgwv1.IAMServiceListOrganizationsResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListOrganizations invoked")
 
 	// Get organizations from repository
@@ -509,7 +509,7 @@ func (s *Iam) ListOrganizations(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationListResponse{
+	response := &llmgwv1.IAMServiceListOrganizationsResponse{
 		Organizations: protoOrgs,
 	}
 
@@ -519,8 +519,8 @@ func (s *Iam) ListOrganizations(
 // UpdateOrganization updates an existing organization
 func (s *Iam) UpdateOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationUpdateRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationUpdateResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceUpdateOrganizationRequest],
+) (*connect.Response[llmgwv1.IAMServiceUpdateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] UpdateOrganization invoked", "id", req.Msg.GetOrganization().GetId())
 
 	// Validate request
@@ -580,7 +580,7 @@ func (s *Iam) UpdateOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationUpdateResponse{
+	response := &llmgwv1.IAMServiceUpdateOrganizationResponse{
 		Organization: organizationToProto(existingOrg),
 	}
 
@@ -590,8 +590,8 @@ func (s *Iam) UpdateOrganization(
 // DeleteOrganization removes an organization
 func (s *Iam) DeleteOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceOrganizationDeleteRequest],
-) (*connect.Response[llmgwv1.IAMServiceOrganizationDeleteResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceDeleteOrganizationRequest],
+) (*connect.Response[llmgwv1.IAMServiceDeleteOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] DeleteOrganization invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -629,7 +629,7 @@ func (s *Iam) DeleteOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceOrganizationDeleteResponse{
+	response := &llmgwv1.IAMServiceDeleteOrganizationResponse{
 		Success: true,
 	}
 
@@ -641,8 +641,8 @@ func (s *Iam) DeleteOrganization(
 // CreateToken creates a new API token for a user
 func (s *Iam) CreateToken(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceTokenCreateRequest],
-) (*connect.Response[llmgwv1.IAMServiceTokenCreateResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceCreateTokenRequest],
+) (*connect.Response[llmgwv1.IAMServiceCreateTokenResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateToken invoked", "userID", req.Msg.GetUserId())
 
 	// Validate request
@@ -679,7 +679,7 @@ func (s *Iam) CreateToken(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceTokenCreateResponse{
+	response := &llmgwv1.IAMServiceCreateTokenResponse{
 		Token: &llmgwv1.APIToken{
 			Id:          token.ID,
 			UserId:      token.UserID,
@@ -700,8 +700,8 @@ func (s *Iam) CreateToken(
 // ListUserTokens retrieves all tokens for a user
 func (s *Iam) ListUserTokens(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceTokenListUserTokensRequest],
-) (*connect.Response[llmgwv1.IAMServiceTokenListUserTokensResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceListUserTokensRequest],
+) (*connect.Response[llmgwv1.IAMServiceListUserTokensResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListUserTokens invoked", "userID", req.Msg.GetUserId())
 
 	// Validate request
@@ -745,7 +745,7 @@ func (s *Iam) ListUserTokens(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceTokenListUserTokensResponse{
+	response := &llmgwv1.IAMServiceListUserTokensResponse{
 		Tokens: protoTokens,
 	}
 
@@ -755,8 +755,8 @@ func (s *Iam) ListUserTokens(
 // RevokeToken invalidates a token
 func (s *Iam) RevokeToken(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceTokenRevokeRequest],
-) (*connect.Response[llmgwv1.IAMServiceTokenRevokeResponse], error) {
+	req *connect.Request[llmgwv1.IAMServiceRevokeTokenRequest],
+) (*connect.Response[llmgwv1.IAMServiceRevokeTokenResponse], error) {
 	s.options.Logger.Debug("[IAMService] RevokeToken invoked", "tokenID", req.Msg.GetTokenId())
 
 	// Validate request
@@ -775,7 +775,7 @@ func (s *Iam) RevokeToken(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceTokenRevokeResponse{
+	response := &llmgwv1.IAMServiceRevokeTokenResponse{
 		Success: true,
 	}
 

@@ -14,6 +14,7 @@ import (
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/services"
 	"connectrpc.com/connect"
+	"connectrpc.com/grpcreflect"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -80,6 +81,13 @@ func NewServer(options ...ServerOption) (*Server, error) {
 	servicesToRegister[iamPath] = iamHandler
 
 	registerServiceHandlers(mux, interceptors, servicesToRegister)
+
+	// Add gRPC reflection support
+	reflector := grpcreflect.NewStaticReflector(
+		llmgwv1connect.IAMServiceName,
+	)
+	mux.Handle(grpcreflect.NewHandlerV1(reflector))
+	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
 
 	// Add SSO callback handler if provided
 	if opts.SsoHandler != nil {
@@ -185,6 +193,11 @@ func WithTokenInterceptor(interceptor *auth.TokenInterceptor) ServerOption {
 	return newFuncServerOption(func(opts *serverOptions) {
 		opts.TokenInterceptor = interceptor
 	})
+}
+
+// GetMux returns the HTTP mux for the server
+func (s *Server) GetMux() *http.ServeMux {
+	return s.mux
 }
 
 func (s *Server) Run() {
