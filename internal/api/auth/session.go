@@ -101,7 +101,7 @@ func (s *MemorySessionStore) Get(ctx context.Context, id string) (*Session, erro
 
 	// Check if the session has expired
 	if time.Now().After(session.ExpiresAt) {
-		s.Delete(id)
+		_ = s.Delete(id)
 		return nil, errors.New("session expired")
 	}
 

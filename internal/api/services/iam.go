@@ -389,9 +389,9 @@ func (s *Iam) CreateOrganization(
 	}
 
 	// Parse SSO config if provided
-	var ssoConfig map[string]interface{}
+	var ssoConfig map[string]any
 	if req.Msg.GetOrganization().GetSsoConfig() != "" {
-		ssoConfig = make(map[string]interface{})
+		ssoConfig = make(map[string]any)
 		err := json.Unmarshal([]byte(req.Msg.GetOrganization().GetSsoConfig()), &ssoConfig)
 		if err != nil {
 			return nil, connect.NewError(connect.CodeInvalidArgument,
@@ -560,7 +560,7 @@ func (s *Iam) UpdateOrganization(
 
 	// Parse and update SSO config if provided
 	if req.Msg.GetOrganization().GetSsoConfig() != "" {
-		ssoConfig := make(map[string]interface{})
+		ssoConfig := make(map[string]any)
 		err := json.Unmarshal([]byte(req.Msg.GetOrganization().GetSsoConfig()), &ssoConfig)
 		if err != nil {
 			return nil, connect.NewError(connect.CodeInvalidArgument,
@@ -690,8 +690,8 @@ func (s *Iam) CreateToken(
 		RawToken: rawToken,
 	}
 
-	if !token.LastUsedAt.IsZero() {
-		response.Token.LastUsedAt = timestamppb.New(token.LastUsedAt)
+	if token.LastUsedAt != nil && !token.LastUsedAt.IsZero() {
+		response.Token.LastUsedAt = timestamppb.New(*token.LastUsedAt)
 	}
 
 	return connect.NewResponse(response), nil
@@ -737,8 +737,8 @@ func (s *Iam) ListUserTokens(
 			ExpiresAt:   timestamppb.New(token.ExpiresAt),
 		}
 
-		if !token.LastUsedAt.IsZero() {
-			protoToken.LastUsedAt = timestamppb.New(token.LastUsedAt)
+		if token.LastUsedAt != nil && !token.LastUsedAt.IsZero() {
+			protoToken.LastUsedAt = timestamppb.New(*token.LastUsedAt)
 		}
 
 		protoTokens = append(protoTokens, protoToken)

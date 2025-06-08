@@ -99,7 +99,7 @@ func extractTokenFromStreamingConn(conn connect.StreamingHandlerConn) string {
 
 func parseCookies(cookieHeader string) map[string]string {
 	cookies := make(map[string]string)
-	for _, c := range strings.Split(cookieHeader, ";") {
+	for c := range strings.SplitSeq(cookieHeader, ";") {
 		parts := strings.SplitN(strings.TrimSpace(c), "=", 2)
 		if len(parts) == 2 {
 			cookies[parts[0]] = parts[1]

@@ -36,7 +36,7 @@ func RunMigrations(logger *slog.Logger, databaseURL string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create migrate instance: %w", err)
 	}
-	defer m.Close()
+	defer func() { _, _ = m.Close() }()
 
 	// Get current version
 	currentVersion, dirty, err := m.Version()

@@ -119,7 +119,7 @@ func (r *TokenRepository) GetTokenByPrefixHash(
 	}
 
 	if lastUsedAt != nil {
-		token.LastUsedAt = *lastUsedAt
+		token.LastUsedAt = lastUsedAt
 	}
 
 	return &token, nil
@@ -180,7 +180,7 @@ func (r *TokenRepository) ListUserTokens(
 		}
 
 		if lastUsedAt != nil {
-			token.LastUsedAt = *lastUsedAt
+			token.LastUsedAt = lastUsedAt
 		}
 
 		tokens = append(tokens, &token)

@@ -20,7 +20,7 @@ type DeviceAuthResponse struct {
 type SsoProvider interface {
 	GetAuthURL(ctx context.Context, state string) (string, error)
 	HandleCallback(ctx context.Context, code string) (*User, error)
-	ValidateToken(ctx context.Context, token string) (bool, map[string]interface{}, error)
+	ValidateToken(ctx context.Context, token string) (bool, map[string]any, error)
 
 	// Device Flow additions
 	StartDeviceAuth(ctx context.Context) (*DeviceAuthResponse, error)

@@ -15,7 +15,7 @@ fi
 # Verify mode - check formatting without modifying files
 # Only output if there are issues
 # Use find with -exec to avoid subshell issues
-UNFORMATTED=$(find . -name "*.go" -not -path "./vendor/*" -not -path "*/\.*" -exec sh -c 'if goimports -e -d -l "$1" | grep -q .; then echo "$1"; fi' sh {} \;)
+UNFORMATTED=$(find . -name "*.go" -not -path "./vendor/*" -not -path "./gen/*" -not -path "*/\.*" -exec sh -c 'if goimports -e -d -l "$1" | grep -q .; then echo "$1"; fi' sh {} \;)
 
 if [ -n "$UNFORMATTED" ]; then
     echo "The following files are not formatted correctly:"

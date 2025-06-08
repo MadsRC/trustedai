@@ -107,14 +107,14 @@ type OrganizationRepository interface {
 
 // APIToken represents an API access credential
 type APIToken struct {
-	ID          string    `json:"id"`
-	UserID      string    `json:"userId"`
-	Description string    `json:"description"`
-	PrefixHash  string    `json:"-"` // SHA256 of token prefix for lookups
-	TokenHash   string    `json:"-"` // Argon2id hash of full token
-	CreatedAt   time.Time `json:"createdAt"`
-	ExpiresAt   time.Time `json:"expiresAt"`
-	LastUsedAt  time.Time `json:"lastUsedAt,omitempty"`
+	ID          string     `json:"id"`
+	UserID      string     `json:"userId"`
+	Description string     `json:"description"`
+	PrefixHash  string     `json:"-"` // SHA256 of token prefix for lookups
+	TokenHash   string     `json:"-"` // Argon2id hash of full token
+	CreatedAt   time.Time  `json:"createdAt"`
+	ExpiresAt   time.Time  `json:"expiresAt"`
+	LastUsedAt  *time.Time `json:"lastUsedAt,omitempty"`
 }
 
 // TokenRepository defines persistence operations for API tokens

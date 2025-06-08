@@ -178,7 +178,7 @@ func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User
 }
 
 // ValidateToken validates an OIDC token
-func (p *Provider) ValidateToken(ctx context.Context, token string) (bool, map[string]interface{}, error) {
+func (p *Provider) ValidateToken(ctx context.Context, token string) (bool, map[string]any, error) {
 	orgName, err := getOrgNameFromContext(ctx)
 	if err != nil {
 		return false, nil, err
@@ -200,7 +200,7 @@ func (p *Provider) ValidateToken(ctx context.Context, token string) (bool, map[s
 		return false, nil, nil
 	}
 
-	var claims map[string]interface{}
+	var claims map[string]any
 	if err := idToken.Claims(&claims); err != nil {
 		return false, nil, err
 	}
@@ -256,7 +256,7 @@ func (p *Provider) StartDeviceAuth(ctx context.Context) (*llmgw.DeviceAuthRespon
 	if err != nil {
 		return nil, fmt.Errorf("failed to start device auth: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// Check response status
 	if resp.StatusCode != http.StatusOK {
@@ -332,7 +332,7 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 	if err != nil {
 		return nil, fmt.Errorf("failed to check device auth: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// Read response body
 	body, err := io.ReadAll(resp.Body)

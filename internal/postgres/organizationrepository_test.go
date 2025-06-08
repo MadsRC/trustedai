@@ -150,7 +150,7 @@ func TestOrganizationRepository_Get(t *testing.T) {
 			IsSystem:    false,
 			CreatedAt:   now,
 			SSOType:     "oidc",
-			SSOConfig:   map[string]interface{}{"client_id": "test"},
+			SSOConfig:   map[string]any{"client_id": "test"},
 		}
 
 		rows := pgxmock.NewRows([]string{
@@ -251,7 +251,7 @@ func TestOrganizationRepository_GetByName(t *testing.T) {
 			IsSystem:    false,
 			CreatedAt:   now,
 			SSOType:     "oidc",
-			SSOConfig:   map[string]interface{}{"client_id": "test"},
+			SSOConfig:   map[string]any{"client_id": "test"},
 		}
 
 		rows := pgxmock.NewRows([]string{
@@ -361,7 +361,7 @@ func TestOrganizationRepository_List(t *testing.T) {
 			IsSystem:    true,
 			CreatedAt:   now.Add(time.Hour),
 			SSOType:     "oidc",
-			SSOConfig:   map[string]interface{}{"client_id": "test-client"},
+			SSOConfig:   map[string]any{"client_id": "test-client"},
 		}
 
 		rows := pgxmock.NewRows([]string{
@@ -515,7 +515,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 			DisplayName: "Updated Organization",
 			IsSystem:    false,
 			SSOType:     "oidc",
-			SSOConfig:   map[string]interface{}{"client_id": "updated-client"},
+			SSOConfig:   map[string]any{"client_id": "updated-client"},
 		}
 
 		mock.ExpectExec(`

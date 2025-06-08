@@ -22,7 +22,7 @@ import (
 func registerServiceHandlers(
 	mux *http.ServeMux,
 	interceptors []connect.Interceptor,
-	servicesToRegister map[string]interface{},
+	servicesToRegister map[string]any,
 ) {
 	for path, handler := range servicesToRegister {
 		mux.Handle(path, handler.(http.Handler))
@@ -64,14 +64,14 @@ func NewServer(options ...ServerOption) (*Server, error) {
 
 	// Create handler with interceptors
 	interceptors := []connect.Interceptor{}
-	if opts.AuthInterceptor != nil {
-		interceptors = append(interceptors, opts.AuthInterceptor)
+	if authInterceptor != nil {
+		interceptors = append(interceptors, authInterceptor)
 	}
 	if opts.TokenInterceptor != nil {
 		interceptors = append(interceptors, opts.TokenInterceptor)
 	}
 
-	servicesToRegister := make(map[string]interface{})
+	servicesToRegister := make(map[string]any)
 
 	// IAM service
 	iamPath, iamHandler := llmgwv1connect.NewIAMServiceHandler(
@@ -202,7 +202,7 @@ func (s *Server) GetMux() *http.ServeMux {
 
 func (s *Server) Run() {
 	fmt.Println("Starting server on localhost:9999")
-	http.ListenAndServe(
+	_ = http.ListenAndServe(
 		"localhost:9999",
 		// Use h2c so we can serve HTTP/2 without TLS.
 		h2c.NewHandler(s.mux, &http2.Server{}),

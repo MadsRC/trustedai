@@ -16,6 +16,10 @@ import (
 	"codeberg.org/MadsRC/llmgw"
 )
 
+type contextKey string
+
+const organizationContextKey contextKey = "organization"
+
 func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	pathSegments := strings.Split(strings.TrimPrefix(r.URL.Path, "/"), "/")
 	if len(pathSegments) < 1 {
@@ -34,12 +38,12 @@ func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		orgName := pathSegments[1]
 		provider = s.options.Providers["oidc"]
-		ctx = context.WithValue(ctx, "organization", orgName)
+		ctx = context.WithValue(ctx, organizationContextKey, orgName)
 
 		// Adjust path segments to handle the rest of the routing
 		pathSegments = append([]string{"oidc"}, pathSegments[2:]...)
 	} else {
-		provider, _ = s.options.Providers[pathSegments[0]]
+		provider = s.options.Providers[pathSegments[0]]
 		if provider == nil {
 			http.NotFound(w, r)
 			return
@@ -170,7 +174,7 @@ func (s *SsoCallback) handleDeviceStart(w http.ResponseWriter, r *http.Request, 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response)
 }
 
 // handleDevicePoll checks the status of a device authorization
@@ -213,7 +217,7 @@ func (s *SsoCallback) handleDevicePoll(w http.ResponseWriter, r *http.Request, p
 	})
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	_ = json.NewEncoder(w).Encode(user)
 }
 
 func generateSecureState() string {
