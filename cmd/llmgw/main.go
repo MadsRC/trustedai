@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -16,6 +17,7 @@ import (
 
 	"codeberg.org/MadsRC/llmgw/internal/api"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
+	"codeberg.org/MadsRC/llmgw/internal/api/providers"
 	"codeberg.org/MadsRC/llmgw/internal/api/services"
 	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
 	"codeberg.org/MadsRC/llmgw/internal/oidc"
@@ -178,10 +180,17 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("failed to create server: %w", err)
 	}
 
+	// Create OpenAI provider
+	openaiProvider := providers.NewOpenAIProvider(
+		api.WithProviderLogger(logger),
+	)
+
 	// Create DataPlane server
 	dataPlaneServer, err := api.NewDataPlaneServer(
 		api.WithDataPlaneLogger(logger),
 		api.WithDataPlaneAddr(c.String("data-plane-listen")),
+		api.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
+		api.WithDataPlaneProviders(openaiProvider),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create data plane server: %w", err)
@@ -206,7 +215,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 
 	// Start ControlPlane server
 	go func() {
-		if err := controlPlaneServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := controlPlaneServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			serverChan <- fmt.Errorf("control plane server failed: %w", err)
 		}
 	}()

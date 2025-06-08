@@ -11,20 +11,26 @@ import (
 	"net"
 	"net/http"
 	"time"
+
+	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 )
 
 type DataPlaneServer struct {
-	options    *dataPlaneOptions
-	mux        *http.ServeMux
-	httpServer *http.Server
+	options          *dataPlaneOptions
+	mux              *http.ServeMux
+	httpServer       *http.Server
+	bearerMiddleware *auth.BearerMiddleware
+	providers        []Provider
 }
 
 type dataPlaneOptions struct {
-	Logger       *slog.Logger
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
-	IdleTimeout  time.Duration
-	Addr         string
+	Logger             *slog.Logger
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	IdleTimeout        time.Duration
+	Addr               string
+	TokenAuthenticator *auth.TokenAuthenticator
+	Providers          []Provider
 }
 
 type DataPlaneOption interface {
@@ -67,6 +73,18 @@ func WithDataPlaneIdleTimeout(timeout time.Duration) DataPlaneOption {
 	})
 }
 
+func WithDataPlaneTokenAuthenticator(authenticator *auth.TokenAuthenticator) DataPlaneOption {
+	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
+		opts.TokenAuthenticator = authenticator
+	})
+}
+
+func WithDataPlaneProviders(providers ...Provider) DataPlaneOption {
+	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
+		opts.Providers = append(opts.Providers, providers...)
+	})
+}
+
 func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 	opts := &dataPlaneOptions{
 		Logger:       slog.Default(),
@@ -83,8 +101,14 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 	mux := http.NewServeMux()
 
 	server := &DataPlaneServer{
-		options: opts,
-		mux:     mux,
+		options:   opts,
+		mux:       mux,
+		providers: opts.Providers,
+	}
+
+	// Initialize Bearer middleware if TokenAuthenticator is provided
+	if opts.TokenAuthenticator != nil {
+		server.bearerMiddleware = auth.NewBearerMiddleware(opts.TokenAuthenticator, opts.Logger)
 	}
 
 	server.setupRoutes()
@@ -101,8 +125,24 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 }
 
 func (s *DataPlaneServer) setupRoutes() {
+	// Health endpoint - no authentication required
 	s.mux.HandleFunc("GET /health", s.handleHealth)
-	s.mux.HandleFunc("GET /hello", s.handleHello)
+
+	// Protected endpoints - require Bearer token authentication
+	var baseAuth func(http.Handler) http.Handler
+	if s.bearerMiddleware != nil {
+		baseAuth = s.bearerMiddleware.Authenticate
+		s.mux.Handle("GET /hello", s.bearerMiddleware.Authenticate(http.HandlerFunc(s.handleHello)))
+	} else {
+		// Fallback if no authentication is configured (for backward compatibility)
+		s.mux.HandleFunc("GET /hello", s.handleHello)
+	}
+
+	// Setup provider routes
+	for _, provider := range s.providers {
+		s.options.Logger.Info("Setting up provider routes", "provider", provider.Name())
+		provider.SetupRoutes(s.mux, baseAuth)
+	}
 }
 
 func (s *DataPlaneServer) handleHealth(w http.ResponseWriter, r *http.Request) {
@@ -116,8 +156,18 @@ func (s *DataPlaneServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 func (s *DataPlaneServer) handleHello(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if _, err := fmt.Fprint(w, `{"message":"Hello, World!","server":"llmgw-dataplane"}`); err != nil {
-		s.options.Logger.Error("Failed to write hello response", "error", err)
+
+	// Check if user is authenticated
+	if user := auth.UserFromHTTPContext(r); user != nil {
+		response := fmt.Sprintf(`{"message":"Hello, %s!","server":"llmgw-dataplane","user_id":"%s"}`,
+			user.Name, user.ID)
+		if _, err := fmt.Fprint(w, response); err != nil {
+			s.options.Logger.Error("Failed to write hello response", "error", err)
+		}
+	} else {
+		if _, err := fmt.Fprint(w, `{"message":"Hello, World!","server":"llmgw-dataplane"}`); err != nil {
+			s.options.Logger.Error("Failed to write hello response", "error", err)
+		}
 	}
 }
 
@@ -147,6 +197,13 @@ func (s *DataPlaneServer) Start(ctx context.Context) error {
 
 func (s *DataPlaneServer) Shutdown(ctx context.Context) error {
 	s.options.Logger.Info("Shutting down data plane server")
+
+	// Shutdown providers first
+	for _, provider := range s.providers {
+		if err := provider.Shutdown(ctx); err != nil {
+			s.options.Logger.Error("Failed to shutdown provider", "provider", provider.Name(), "error", err)
+		}
+	}
 
 	shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()

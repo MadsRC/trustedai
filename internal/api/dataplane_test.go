@@ -264,3 +264,44 @@ func TestDataPlaneServer_Shutdown(t *testing.T) {
 		t.Errorf("Shutdown() returned error: %v", err)
 	}
 }
+
+func TestDataPlaneServer_WithProviders(t *testing.T) {
+	// Create a mock provider
+	mockProvider := &mockProvider{name: "test"}
+
+	server, err := NewDataPlaneServer(WithDataPlaneProviders(mockProvider))
+	if err != nil {
+		t.Fatalf("Failed to create server: %v", err)
+	}
+
+	if len(server.providers) != 1 {
+		t.Errorf("Expected 1 provider, got %d", len(server.providers))
+	}
+
+	if server.providers[0].Name() != "test" {
+		t.Errorf("Expected provider name 'test', got %s", server.providers[0].Name())
+	}
+}
+
+// mockProvider is a simple mock implementation of Provider for testing
+type mockProvider struct {
+	name string
+}
+
+func (m *mockProvider) Name() string {
+	return m.name
+}
+
+func (m *mockProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler) {
+	mux.HandleFunc("GET /"+m.name, func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		if _, err := w.Write([]byte("mock response")); err != nil {
+			// Handle error in test (logging would be overkill for test)
+			return
+		}
+	})
+}
+
+func (m *mockProvider) Shutdown(ctx context.Context) error {
+	return nil
+}
