@@ -29,15 +29,15 @@ func registerServiceHandlers(
 	}
 }
 
-type Server struct {
-	options *serverOptions
+type ControlPlaneServer struct {
+	options *controlPlaneOptions
 	mux     *http.ServeMux
 }
 
-// NewServer creates a new [Server].
-func NewServer(options ...ServerOption) (*Server, error) {
-	opts := defaultServerOptions
-	for _, opt := range GlobalServerOptions {
+// NewControlPlaneServer creates a new [ControlPlaneServer].
+func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, error) {
+	opts := defaultControlPlaneOptions
+	for _, opt := range GlobalControlPlaneOptions {
 		opt.apply(&opts)
 	}
 	for _, opt := range options {
@@ -94,13 +94,13 @@ func NewServer(options ...ServerOption) (*Server, error) {
 		mux.Handle("/sso/", http.StripPrefix("/sso", opts.SsoHandler))
 	}
 
-	return &Server{
+	return &ControlPlaneServer{
 		options: &opts,
 		mux:     mux,
 	}, nil
 }
 
-type serverOptions struct {
+type controlPlaneOptions struct {
 	Logger                 *slog.Logger
 	UserRepository         llmgw.UserRepository
 	OrganizationRepository llmgw.OrganizationRepository
@@ -111,96 +111,96 @@ type serverOptions struct {
 	TokenInterceptor       *auth.TokenInterceptor
 }
 
-var defaultServerOptions = serverOptions{
+var defaultControlPlaneOptions = controlPlaneOptions{
 	Logger: slog.Default(),
 }
 
-// GlobalServerOptions is a list of [ServerOption]s that are applied to all [Server]s.
-var GlobalServerOptions []ServerOption
+// GlobalControlPlaneOptions is a list of [ControlPlaneOption]s that are applied to all [ControlPlaneServer]s.
+var GlobalControlPlaneOptions []ControlPlaneOption
 
-// ServerOption is an option for configuring a [Server].
-type ServerOption interface {
-	apply(*serverOptions)
+// ControlPlaneOption is an option for configuring a [ControlPlaneServer].
+type ControlPlaneOption interface {
+	apply(*controlPlaneOptions)
 }
 
-// funcServerOption is a [ServerOption] that calls a function.
-// It is used to wrap a function, so it satisfies the [ServerOption] interface.
-type funcServerOption struct {
-	f func(*serverOptions)
+// funcControlPlaneOption is a [ControlPlaneOption] that calls a function.
+// It is used to wrap a function, so it satisfies the [ControlPlaneOption] interface.
+type funcControlPlaneOption struct {
+	f func(*controlPlaneOptions)
 }
 
-func (fdo *funcServerOption) apply(opts *serverOptions) {
+func (fdo *funcControlPlaneOption) apply(opts *controlPlaneOptions) {
 	fdo.f(opts)
 }
 
-func newFuncServerOption(f func(*serverOptions)) *funcServerOption {
-	return &funcServerOption{
+func newFuncControlPlaneOption(f func(*controlPlaneOptions)) *funcControlPlaneOption {
+	return &funcControlPlaneOption{
 		f: f,
 	}
 }
 
-// WithServerLogger returns a [ServerOption] that uses the provided logger.
-func WithServerLogger(logger *slog.Logger) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithControlPlaneLogger returns a [ControlPlaneOption] that uses the provided logger.
+func WithControlPlaneLogger(logger *slog.Logger) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.Logger = logger
 	})
 }
 
-// WithServerUserRepository returns a [ServerOption] that uses the provided UserRepository.
-func WithServerUserRepository(repository llmgw.UserRepository) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithControlPlaneUserRepository returns a [ControlPlaneOption] that uses the provided UserRepository.
+func WithControlPlaneUserRepository(repository llmgw.UserRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.UserRepository = repository
 	})
 }
 
-// WithServerOrganizationRepository returns a [ServerOption] that uses the provided OrganizationRepository.
-func WithServerOrganizationRepository(repository llmgw.OrganizationRepository) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithControlPlaneOrganizationRepository returns a [ControlPlaneOption] that uses the provided OrganizationRepository.
+func WithControlPlaneOrganizationRepository(repository llmgw.OrganizationRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.OrganizationRepository = repository
 	})
 }
 
-// WithServerTokenRepository returns a [ServerOption] that uses the provided TokenRepository.
-func WithServerTokenRepository(repository llmgw.TokenRepository) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithControlPlaneTokenRepository returns a [ControlPlaneOption] that uses the provided TokenRepository.
+func WithControlPlaneTokenRepository(repository llmgw.TokenRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.TokenRepository = repository
 	})
 }
 
-// WithSSOHandler returns a [ServerOption] that uses the provided SSO handler.
-func WithSSOHandler(handler http.Handler) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithSSOHandler returns a [ControlPlaneOption] that uses the provided SSO handler.
+func WithSSOHandler(handler http.Handler) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.SsoHandler = handler
 	})
 }
 
-// WithSessionStore returns a [ServerOption] that uses the provided session store.
-func WithSessionStore(store auth.SessionStore) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithSessionStore returns a [ControlPlaneOption] that uses the provided session store.
+func WithSessionStore(store auth.SessionStore) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.SessionStore = store
 	})
 }
 
-// WithAuthInterceptor returns a [ServerOption] that uses the provided auth interceptor.
-func WithAuthInterceptor(interceptor *auth.Interceptor) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithAuthInterceptor returns a [ControlPlaneOption] that uses the provided auth interceptor.
+func WithAuthInterceptor(interceptor *auth.Interceptor) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.AuthInterceptor = interceptor
 	})
 }
 
-// WithTokenInterceptor returns a [ServerOption] that uses the provided token interceptor.
-func WithTokenInterceptor(interceptor *auth.TokenInterceptor) ServerOption {
-	return newFuncServerOption(func(opts *serverOptions) {
+// WithTokenInterceptor returns a [ControlPlaneOption] that uses the provided token interceptor.
+func WithTokenInterceptor(interceptor *auth.TokenInterceptor) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.TokenInterceptor = interceptor
 	})
 }
 
 // GetMux returns the HTTP mux for the server
-func (s *Server) GetMux() *http.ServeMux {
+func (s *ControlPlaneServer) GetMux() *http.ServeMux {
 	return s.mux
 }
 
-func (s *Server) Run() {
+func (s *ControlPlaneServer) Run() {
 	fmt.Println("Starting server on localhost:9999")
 	_ = http.ListenAndServe(
 		"localhost:9999",
