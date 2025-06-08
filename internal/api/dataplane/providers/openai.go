@@ -11,15 +11,15 @@ import (
 	"net/http"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/api"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 )
 
 type OpenAIProvider struct {
-	options *api.ProviderOptions
+	options *dataplane.ProviderOptions
 }
 
-func NewOpenAIProvider(options ...api.ProviderOption) *OpenAIProvider {
-	opts := &api.ProviderOptions{
+func NewOpenAIProvider(options ...dataplane.ProviderOption) *OpenAIProvider {
+	opts := &dataplane.ProviderOptions{
 		Logger: slog.Default(),
 	}
 

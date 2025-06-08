@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"codeberg.org/MadsRC/llmgw/internal/api"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 )
 
 func TestOpenAIProvider_Name(t *testing.T) {
@@ -103,7 +103,7 @@ func TestOpenAIProvider_Shutdown(t *testing.T) {
 }
 
 func TestOpenAIProvider_WithLogger(t *testing.T) {
-	logger := api.WithProviderLogger(nil)
+	logger := dataplane.WithProviderLogger(nil)
 	provider := NewOpenAIProvider(logger)
 
 	if provider.options.Logger != nil {

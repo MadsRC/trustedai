@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-package api
+package dataplane
 
 import (
 	"context"
@@ -13,13 +13,14 @@ import (
 	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
+	dauth "codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
 )
 
 type DataPlaneServer struct {
 	options          *dataPlaneOptions
 	mux              *http.ServeMux
 	httpServer       *http.Server
-	bearerMiddleware *auth.BearerMiddleware
+	bearerMiddleware *dauth.BearerMiddleware
 	providers        []Provider
 }
 
@@ -108,7 +109,7 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 
 	// Initialize Bearer middleware if TokenAuthenticator is provided
 	if opts.TokenAuthenticator != nil {
-		server.bearerMiddleware = auth.NewBearerMiddleware(opts.TokenAuthenticator, opts.Logger)
+		server.bearerMiddleware = dauth.NewBearerMiddleware(opts.TokenAuthenticator, opts.Logger)
 	}
 
 	server.setupRoutes()
@@ -158,7 +159,7 @@ func (s *DataPlaneServer) handleHello(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// Check if user is authenticated
-	if user := auth.UserFromHTTPContext(r); user != nil {
+	if user := dauth.UserFromHTTPContext(r); user != nil {
 		response := fmt.Sprintf(`{"message":"Hello, %s!","server":"llmgw-dataplane","user_id":"%s"}`,
 			user.Name, user.ID)
 		if _, err := fmt.Fprint(w, response); err != nil {

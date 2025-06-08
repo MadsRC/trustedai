@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-package api
+package controlplane
 
 import (
 	"fmt"
@@ -12,7 +12,8 @@ import (
 	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/services"
+	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
+	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
 	"connectrpc.com/connect"
 	"connectrpc.com/grpcreflect"
 	"golang.org/x/net/http2"
@@ -47,7 +48,7 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 	// Create auth interceptor if not provided
 	authInterceptor := opts.AuthInterceptor
 	if authInterceptor == nil && opts.SessionStore != nil {
-		authInterceptor = auth.NewInterceptor(opts.SessionStore)
+		authInterceptor = cauth.NewInterceptor(opts.SessionStore)
 	}
 
 	// Create IAM service handler
@@ -107,8 +108,8 @@ type controlPlaneOptions struct {
 	TokenRepository        llmgw.TokenRepository
 	SsoHandler             http.Handler
 	SessionStore           auth.SessionStore
-	AuthInterceptor        *auth.Interceptor
-	TokenInterceptor       *auth.TokenInterceptor
+	AuthInterceptor        *cauth.Interceptor
+	TokenInterceptor       *cauth.TokenInterceptor
 }
 
 var defaultControlPlaneOptions = controlPlaneOptions{
@@ -182,14 +183,14 @@ func WithSessionStore(store auth.SessionStore) ControlPlaneOption {
 }
 
 // WithAuthInterceptor returns a [ControlPlaneOption] that uses the provided auth interceptor.
-func WithAuthInterceptor(interceptor *auth.Interceptor) ControlPlaneOption {
+func WithAuthInterceptor(interceptor *cauth.Interceptor) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.AuthInterceptor = interceptor
 	})
 }
 
 // WithTokenInterceptor returns a [ControlPlaneOption] that uses the provided token interceptor.
-func WithTokenInterceptor(interceptor *auth.TokenInterceptor) ControlPlaneOption {
+func WithTokenInterceptor(interceptor *cauth.TokenInterceptor) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.TokenInterceptor = interceptor
 	})

@@ -8,14 +8,15 @@ import (
 	"context"
 	"strings"
 
+	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"connectrpc.com/connect"
 )
 
 type Interceptor struct {
-	sessionStore SessionStore
+	sessionStore auth.SessionStore
 }
 
-func NewInterceptor(sessionStore SessionStore) *Interceptor {
+func NewInterceptor(sessionStore auth.SessionStore) *Interceptor {
 	return &Interceptor{
 		sessionStore: sessionStore,
 	}
@@ -110,7 +111,7 @@ func parseCookies(cookieHeader string) map[string]string {
 
 type sessionContextKey struct{}
 
-func SessionFromContext(ctx context.Context) *Session {
-	session, _ := ctx.Value(sessionContextKey{}).(*Session)
+func SessionFromContext(ctx context.Context) *auth.Session {
+	session, _ := ctx.Value(sessionContextKey{}).(*auth.Session)
 	return session
 }

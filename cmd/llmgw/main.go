@@ -15,10 +15,12 @@ import (
 	"syscall"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/api"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/providers"
-	"codeberg.org/MadsRC/llmgw/internal/api/services"
+	"codeberg.org/MadsRC/llmgw/internal/api/controlplane"
+	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
+	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/providers"
 	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
 	"codeberg.org/MadsRC/llmgw/internal/oidc"
 	"codeberg.org/MadsRC/llmgw/internal/postgres"
@@ -161,20 +163,20 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	}
 
 	// Create auth interceptors
-	authInterceptor := auth.NewInterceptor(sessionStore)
+	authInterceptor := cauth.NewInterceptor(sessionStore)
 	tokenAuthenticator := auth.NewTokenAuthenticator(tokenRepo, userRepo)
-	tokenInterceptor := auth.NewTokenInterceptor(tokenAuthenticator)
+	tokenInterceptor := cauth.NewTokenInterceptor(tokenAuthenticator)
 
 	// Create server
-	server, err := api.NewControlPlaneServer(
-		api.WithControlPlaneLogger(logger),
-		api.WithControlPlaneUserRepository(userRepo),
-		api.WithControlPlaneOrganizationRepository(orgRepo),
-		api.WithControlPlaneTokenRepository(tokenRepo),
-		api.WithSSOHandler(ssoHandler),
-		api.WithSessionStore(sessionStore),
-		api.WithAuthInterceptor(authInterceptor),
-		api.WithTokenInterceptor(tokenInterceptor),
+	server, err := controlplane.NewControlPlaneServer(
+		controlplane.WithControlPlaneLogger(logger),
+		controlplane.WithControlPlaneUserRepository(userRepo),
+		controlplane.WithControlPlaneOrganizationRepository(orgRepo),
+		controlplane.WithControlPlaneTokenRepository(tokenRepo),
+		controlplane.WithSSOHandler(ssoHandler),
+		controlplane.WithSessionStore(sessionStore),
+		controlplane.WithAuthInterceptor(authInterceptor),
+		controlplane.WithTokenInterceptor(tokenInterceptor),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create server: %w", err)
@@ -182,15 +184,15 @@ func runServer(ctx context.Context, c *cli.Command) error {
 
 	// Create OpenAI provider
 	openaiProvider := providers.NewOpenAIProvider(
-		api.WithProviderLogger(logger),
+		dataplane.WithProviderLogger(logger),
 	)
 
 	// Create DataPlane server
-	dataPlaneServer, err := api.NewDataPlaneServer(
-		api.WithDataPlaneLogger(logger),
-		api.WithDataPlaneAddr(c.String("data-plane-listen")),
-		api.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
-		api.WithDataPlaneProviders(openaiProvider),
+	dataPlaneServer, err := dataplane.NewDataPlaneServer(
+		dataplane.WithDataPlaneLogger(logger),
+		dataplane.WithDataPlaneAddr(c.String("data-plane-listen")),
+		dataplane.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
+		dataplane.WithDataPlaneProviders(openaiProvider),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create data plane server: %w", err)

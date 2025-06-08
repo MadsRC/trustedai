@@ -11,16 +11,17 @@ import (
 	"strings"
 
 	"codeberg.org/MadsRC/llmgw"
+	sharedauth "codeberg.org/MadsRC/llmgw/internal/api/auth"
 )
 
 // BearerMiddleware provides Bearer token authentication for HTTP handlers
 type BearerMiddleware struct {
-	authenticator *TokenAuthenticator
+	authenticator *sharedauth.TokenAuthenticator
 	logger        *slog.Logger
 }
 
 // NewBearerMiddleware creates a new Bearer token middleware
-func NewBearerMiddleware(authenticator *TokenAuthenticator, logger *slog.Logger) *BearerMiddleware {
+func NewBearerMiddleware(authenticator *sharedauth.TokenAuthenticator, logger *slog.Logger) *BearerMiddleware {
 	return &BearerMiddleware{
 		authenticator: authenticator,
 		logger:        logger,
@@ -75,6 +76,14 @@ func extractBearerToken(r *http.Request) string {
 	}
 
 	return parts[1]
+}
+
+type userContextKey struct{}
+
+// UserFromContext extracts the user from the context
+func UserFromContext(ctx context.Context) *llmgw.User {
+	user, _ := ctx.Value(userContextKey{}).(*llmgw.User)
+	return user
 }
 
 // UserFromHTTPContext extracts the authenticated user from an HTTP request context
