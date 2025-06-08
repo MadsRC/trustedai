@@ -15,7 +15,7 @@ fi
 # Format mode - fix formatting issues silently unless there's an error
 # Run goimports on each file, capturing any errors
 # Use find with -exec to avoid subshell issues
-find . -name "*.go" -not -path "./vendor/*" -not -path "*/\.*" -exec sh -c '
+find . -name "*.go" -not -path "./vendor/*" -not -path "./gen/*" -not -path "*/\.*" -exec sh -c '
     if ! goimports -e -w "$1" 2>/dev/null; then
         echo "Error formatting file: $1"
         exit 1

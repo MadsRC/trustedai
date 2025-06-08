@@ -30,7 +30,7 @@ func RunMigrations(logger *slog.Logger, databaseURL string) error {
 
 	// Convert postgres:// to pgx5:// URL scheme for pgx/v5 driver
 	migrationURL := strings.Replace(databaseURL, "postgres://", "pgx5://", 1)
-	
+
 	// Create migrate instance
 	m, err := migrate.NewWithSourceInstance("iofs", sourceDriver, migrationURL)
 	if err != nil {

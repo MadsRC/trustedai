@@ -7,7 +7,8 @@ version = 1
 path = [
     "go.sum",
     "CLA.txt",
-    "gen/**"
+    "gen/**",
+    "assets/**.png",
 ]
 SPDX-FileCopyrightText = "2025 Mads R. Havmand <mads@v42.dk>"
 SPDX-License-Identifier = "AGPL-3.0-only"
