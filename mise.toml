@@ -3,20 +3,23 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 [tools]
-buf = "latest"
+"aqua:google/osv-scanner" = "2.0.2"
+buf = "1.54.0"
 "go:golang.org/x/tools/cmd/deadcode" = "latest"
 "go:golang.org/x/tools/cmd/goimports" = "latest"
-golangci-lint = "latest"
-grpcurl = "latest"
-node = "latest"
+golangci-lint = "2.1.6"
+grpcurl = "1.9.3"
+node = "24.2.0"
 "npm:@anthropic-ai/claude-code" = "1.0.22"
 "npm:@bufbuild/protoc-gen-es" = "2.5.2"
 "npm:@connectrpc/protoc-gen-connect-es" = "1.6.1"
-"pipx:reuse" = "latest"
-protoc-gen-connect-go = "latest"
-protoc-gen-go = "latest"
-shellcheck = "latest"
-"ubi:CycloneDX/cyclonedx-gomod" = "latest"
+"pipx:reuse" = "5.0.2"
+protoc-gen-connect-go = "1.18.0"
+protoc-gen-go = "1.36.6"
+shellcheck = "0.10.0"
+"ubi:CycloneDX/cyclonedx-gomod" = "1.9.0"
+go = "1.24.4"
+python = "3.12.11"
 
 [task_config]
 includes = ["scripts"]

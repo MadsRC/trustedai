@@ -4,7 +4,7 @@
 
 module codeberg.org/MadsRC/llmgw
 
-go 1.24.2
+go 1.24.4
 
 require (
 	connectrpc.com/connect v1.18.1
