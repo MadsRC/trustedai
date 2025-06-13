@@ -16,6 +16,7 @@ service IAMService {
   rpc GetUser(IAMServiceGetUserRequest) returns (IAMServiceGetUserResponse);
   rpc GetUserByEmail(IAMServiceGetUserByEmailRequest) returns (IAMServiceGetUserByEmailResponse);
   rpc GetUserByExternalID(IAMServiceGetUserByExternalIDRequest) returns (IAMServiceGetUserByExternalIDResponse);
+  rpc GetCurrentUser(IAMServiceGetCurrentUserRequest) returns (IAMServiceGetCurrentUserResponse);
   rpc ListUsersByOrganization(IAMServiceListUsersByOrganizationRequest) returns (IAMServiceListUsersByOrganizationResponse);
   rpc UpdateUser(IAMServiceUpdateUserRequest) returns (IAMServiceUpdateUserResponse);
   rpc DeleteUser(IAMServiceDeleteUserRequest) returns (IAMServiceDeleteUserResponse);
@@ -96,6 +97,12 @@ message IAMServiceGetUserByExternalIDRequest {
 }
 
 message IAMServiceGetUserByExternalIDResponse {
+  User user = 1;
+}
+
+message IAMServiceGetCurrentUserRequest {}
+
+message IAMServiceGetCurrentUserResponse {
   User user = 1;
 }
 

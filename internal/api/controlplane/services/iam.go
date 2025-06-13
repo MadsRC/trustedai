@@ -14,6 +14,7 @@ import (
 	"codeberg.org/MadsRC/llmgw"
 	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
+	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
 	"connectrpc.com/connect"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -199,7 +200,49 @@ func (s *Iam) GetUserByExternalID(
 	return connect.NewResponse(response), nil
 }
 
-// ListUsersByOrganization retrieves all users in an organization
+// getUserFromConnection extracts the authenticated user from the connection context
+// This function checks both session-based authentication (SSO) and API key authentication
+func (s *Iam) getUserFromConnection(ctx context.Context) (*llmgw.User, error) {
+	// Check for session-based authentication (SSO) first
+	if session := auth.SessionFromContext(ctx); session != nil {
+		s.options.Logger.Debug("[IAMService] Found session user",
+			"userID", session.User.ID, "email", session.User.Email, "authMethod", "session")
+		return session.User, nil
+	}
+
+	// Fall back to API key authentication
+	if apiKeyUser := auth.UserFromContext(ctx); apiKeyUser != nil {
+		s.options.Logger.Debug("[IAMService] Found API key user",
+			"userID", apiKeyUser.ID, "email", apiKeyUser.Email, "authMethod", "apikey")
+		return apiKeyUser, nil
+	}
+
+	// No authentication found
+	return nil, connect.NewError(connect.CodeUnauthenticated,
+		errors.New("iam service: no authenticated user found"))
+}
+
+// GetCurrentUser retrieves the current authenticated user (from session or API key)
+func (s *Iam) GetCurrentUser(
+	ctx context.Context,
+	req *connect.Request[llmgwv1.IAMServiceGetCurrentUserRequest],
+) (*connect.Response[llmgwv1.IAMServiceGetCurrentUserResponse], error) {
+	s.options.Logger.Debug("[IAMService] GetCurrentUser invoked")
+
+	user, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return the user
+	response := &llmgwv1.IAMServiceGetCurrentUserResponse{
+		User: userToProto(user),
+	}
+
+	return connect.NewResponse(response), nil
+}
+
+// ListUsersByOrganization retrieves users in an organization if the requester has permission
 func (s *Iam) ListUsersByOrganization(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceListUsersByOrganizationRequest],
@@ -211,8 +254,14 @@ func (s *Iam) ListUsersByOrganization(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("iam service: organization ID is required"))
 	}
 
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	// Check if organization exists
-	_, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetOrganizationId())
+	_, err = s.options.OrganizationRepository.Get(ctx, req.Msg.GetOrganizationId())
 	if err != nil {
 		if errors.Is(err, llmgw.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
@@ -221,9 +270,12 @@ func (s *Iam) ListUsersByOrganization(
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to get organization: %w", err))
 	}
 
-	// Get users from repository
-	users, err := s.options.UserRepository.ListByOrganization(ctx, req.Msg.GetOrganizationId())
+	// Get users from repository with authorization check
+	users, err := s.options.UserRepository.ListByOrganizationForUser(ctx, currentUser, req.Msg.GetOrganizationId())
 	if err != nil {
+		if errors.Is(err, llmgw.ErrUnauthorized) {
+			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to list users in this organization"))
+		}
 		s.options.Logger.Error("Failed to list users by organization", "error", err, "organizationID", req.Msg.GetOrganizationId())
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to list users by organization: %w", err))
 	}
@@ -360,12 +412,23 @@ func (s *Iam) DeleteUser(
 
 // Organization Service Methods
 
-// CreateOrganization creates a new organization
+// CreateOrganization creates a new organization (system admins only)
 func (s *Iam) CreateOrganization(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceCreateOrganizationRequest],
 ) (*connect.Response[llmgwv1.IAMServiceCreateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateOrganization invoked", "name", req.Msg.GetOrganization().GetName())
+
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Only system admins can create organizations
+	if !currentUser.IsSystemAdmin() {
+		return nil, connect.NewError(connect.CodePermissionDenied, errors.New("iam service: only system administrators can create organizations"))
+	}
 
 	// Validate request
 	if req.Msg.GetOrganization() == nil {
@@ -411,7 +474,7 @@ func (s *Iam) CreateOrganization(
 	}
 
 	// Create organization in repository
-	err := s.options.OrganizationRepository.Create(ctx, org)
+	err = s.options.OrganizationRepository.Create(ctx, org)
 	if err != nil {
 		if errors.Is(err, llmgw.ErrDuplicateEntry) {
 			return nil, connect.NewError(connect.CodeAlreadyExists, fmt.Errorf("iam service: organization already exists: %w", err))
@@ -488,17 +551,23 @@ func (s *Iam) GetOrganizationByName(
 	return connect.NewResponse(response), nil
 }
 
-// ListOrganizations retrieves all organizations
+// ListOrganizations retrieves organizations visible to the authenticated user
 func (s *Iam) ListOrganizations(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceListOrganizationsRequest],
 ) (*connect.Response[llmgwv1.IAMServiceListOrganizationsResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListOrganizations invoked")
 
-	// Get organizations from repository
-	orgs, err := s.options.OrganizationRepository.List(ctx)
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
 	if err != nil {
-		s.options.Logger.Error("Failed to list organizations", "error", err)
+		return nil, err
+	}
+
+	// Get organizations visible to this user
+	orgs, err := s.options.OrganizationRepository.ListForUser(ctx, currentUser)
+	if err != nil {
+		s.options.Logger.Error("Failed to list organizations for user", "error", err, "userID", currentUser.ID)
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to list organizations: %w", err))
 	}
 
@@ -516,12 +585,23 @@ func (s *Iam) ListOrganizations(
 	return connect.NewResponse(response), nil
 }
 
-// UpdateOrganization updates an existing organization
+// UpdateOrganization updates an existing organization (system admins only)
 func (s *Iam) UpdateOrganization(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceUpdateOrganizationRequest],
 ) (*connect.Response[llmgwv1.IAMServiceUpdateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] UpdateOrganization invoked", "id", req.Msg.GetOrganization().GetId())
+
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Only system admins can update organizations
+	if !currentUser.IsSystemAdmin() {
+		return nil, connect.NewError(connect.CodePermissionDenied, errors.New("iam service: only system administrators can update organizations"))
+	}
 
 	// Validate request
 	if req.Msg.GetOrganization() == nil {
@@ -587,12 +667,23 @@ func (s *Iam) UpdateOrganization(
 	return connect.NewResponse(response), nil
 }
 
-// DeleteOrganization removes an organization
+// DeleteOrganization removes an organization (system admins only)
 func (s *Iam) DeleteOrganization(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceDeleteOrganizationRequest],
 ) (*connect.Response[llmgwv1.IAMServiceDeleteOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] DeleteOrganization invoked", "id", req.Msg.GetId())
+
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Only system admins can delete organizations
+	if !currentUser.IsSystemAdmin() {
+		return nil, connect.NewError(connect.CodePermissionDenied, errors.New("iam service: only system administrators can delete organizations"))
+	}
 
 	// Validate request
 	if req.Msg.GetId() == "" {
@@ -600,7 +691,7 @@ func (s *Iam) DeleteOrganization(
 	}
 
 	// Check if organization exists
-	_, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetId())
+	_, err = s.options.OrganizationRepository.Get(ctx, req.Msg.GetId())
 	if err != nil {
 		if errors.Is(err, llmgw.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
@@ -697,7 +788,7 @@ func (s *Iam) CreateToken(
 	return connect.NewResponse(response), nil
 }
 
-// ListUserTokens retrieves all tokens for a user
+// ListUserTokens retrieves tokens for a user if the requester has permission
 func (s *Iam) ListUserTokens(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceListUserTokensRequest],
@@ -709,8 +800,14 @@ func (s *Iam) ListUserTokens(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("iam service: user ID is required"))
 	}
 
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	// Check if user exists
-	_, err := s.options.UserRepository.Get(ctx, req.Msg.GetUserId())
+	_, err = s.options.UserRepository.Get(ctx, req.Msg.GetUserId())
 	if err != nil {
 		if errors.Is(err, llmgw.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
@@ -719,9 +816,12 @@ func (s *Iam) ListUserTokens(
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to get user for token listing: %w", err))
 	}
 
-	// Get tokens from repository
-	tokens, err := s.options.TokenRepository.ListUserTokens(ctx, req.Msg.GetUserId())
+	// Get tokens from repository with authorization check
+	tokens, err := s.options.TokenRepository.ListUserTokensForUser(ctx, currentUser, req.Msg.GetUserId())
 	if err != nil {
+		if errors.Is(err, llmgw.ErrUnauthorized) {
+			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to list tokens for this user"))
+		}
 		s.options.Logger.Error("Failed to list user tokens", "error", err, "userID", req.Msg.GetUserId())
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to list user tokens: %w", err))
 	}
@@ -752,7 +852,7 @@ func (s *Iam) ListUserTokens(
 	return connect.NewResponse(response), nil
 }
 
-// RevokeToken invalidates a token
+// RevokeToken invalidates a token if the requester has permission
 func (s *Iam) RevokeToken(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.IAMServiceRevokeTokenRequest],
@@ -764,11 +864,20 @@ func (s *Iam) RevokeToken(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("iam service: token ID is required"))
 	}
 
-	// Revoke token
-	err := s.options.TokenRepository.RevokeToken(ctx, req.Msg.GetTokenId())
+	// Get authenticated user
+	currentUser, err := s.getUserFromConnection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Revoke token with authorization check
+	err = s.options.TokenRepository.RevokeTokenForUser(ctx, currentUser, req.Msg.GetTokenId())
 	if err != nil {
 		if errors.Is(err, llmgw.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: token not found: %w", err))
+		}
+		if errors.Is(err, llmgw.ErrUnauthorized) {
+			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to revoke this token"))
 		}
 		s.options.Logger.Error("Failed to revoke token", "error", err, "tokenID", req.Msg.GetTokenId())
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("iam service: failed to revoke token: %w", err))

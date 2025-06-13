@@ -6,6 +6,7 @@ package controlplane
 
 import (
 	"fmt"
+	"io/fs"
 	"log/slog"
 	"net/http"
 
@@ -15,10 +16,19 @@ import (
 	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
 	"connectrpc.com/connect"
+	connectcors "connectrpc.com/cors"
 	"connectrpc.com/grpcreflect"
+	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
+
+// WithFrontendFS returns a [ControlPlaneOption] that uses the provided filesystem for frontend files.
+func WithFrontendFS(frontendFS fs.FS) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
+		opts.FrontendFS = frontendFS
+	})
+}
 
 func registerServiceHandlers(
 	mux *http.ServeMux,
@@ -31,8 +41,9 @@ func registerServiceHandlers(
 }
 
 type ControlPlaneServer struct {
-	options *controlPlaneOptions
-	mux     *http.ServeMux
+	options     *controlPlaneOptions
+	mux         *http.ServeMux
+	corsHandler *cors.Cors
 }
 
 // NewControlPlaneServer creates a new [ControlPlaneServer].
@@ -63,6 +74,26 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 
 	mux := http.NewServeMux()
 
+	// Configure CORS early for use with individual handlers
+	allowedMethods := append(connectcors.AllowedMethods(), http.MethodOptions)
+	allowedHeaders := append(connectcors.AllowedHeaders(),
+		"Connect-Protocol-Version",
+		"Connect-Timeout-Ms",
+		"X-User-Agent",
+		"User-Agent",
+		"Accept-Encoding",
+	)
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:     []string{"http://localhost:3000"},
+		AllowedMethods:     allowedMethods,
+		AllowedHeaders:     allowedHeaders,
+		ExposedHeaders:     connectcors.ExposedHeaders(),
+		AllowCredentials:   true,
+		OptionsPassthrough: false, // Handle OPTIONS internally
+		MaxAge:             7200,  // 2 hours in seconds
+		Debug:              true,  // Enable debug logging
+	})
+
 	// Create handler with interceptors
 	interceptors := []connect.Interceptor{}
 	if authInterceptor != nil {
@@ -87,17 +118,33 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 	reflector := grpcreflect.NewStaticReflector(
 		llmgwv1connect.IAMServiceName,
 	)
-	mux.Handle(grpcreflect.NewHandlerV1(reflector))
-	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
+	reflectionV1Path, reflectionV1Handler := grpcreflect.NewHandlerV1(reflector)
+	reflectionV1AlphaPath, reflectionV1AlphaHandler := grpcreflect.NewHandlerV1Alpha(reflector)
+	mux.Handle(reflectionV1Path, reflectionV1Handler)
+	mux.Handle(reflectionV1AlphaPath, reflectionV1AlphaHandler)
 
 	// Add SSO callback handler if provided
 	if opts.SsoHandler != nil {
+		opts.Logger.Info("Registering SSO handler at /sso/")
 		mux.Handle("/sso/", http.StripPrefix("/sso", opts.SsoHandler))
+	} else {
+		opts.Logger.Warn("No SSO handler provided - SSO routes will not be available")
+	}
+
+	// Serve static frontend files from embedded filesystem at root
+	if opts.FrontendFS != nil {
+		fileServer := http.FileServer(http.FS(opts.FrontendFS))
+		mux.Handle("/", fileServer)
+	} else {
+		// Fallback to filesystem if no embedded FS provided
+		fileServer := http.FileServer(http.Dir("frontend/build/"))
+		mux.Handle("/", fileServer)
 	}
 
 	return &ControlPlaneServer{
-		options: &opts,
-		mux:     mux,
+		options:     &opts,
+		mux:         mux,
+		corsHandler: corsHandler,
 	}, nil
 }
 
@@ -110,6 +157,7 @@ type controlPlaneOptions struct {
 	SessionStore           auth.SessionStore
 	AuthInterceptor        *cauth.Interceptor
 	TokenInterceptor       *cauth.TokenInterceptor
+	FrontendFS             fs.FS
 }
 
 var defaultControlPlaneOptions = controlPlaneOptions{
@@ -203,9 +251,32 @@ func (s *ControlPlaneServer) GetMux() *http.ServeMux {
 
 func (s *ControlPlaneServer) Run() {
 	fmt.Println("Starting server on localhost:9999")
-	_ = http.ListenAndServe(
-		"localhost:9999",
-		// Use h2c so we can serve HTTP/2 without TLS.
-		h2c.NewHandler(s.mux, &http2.Server{}),
-	)
+
+	// Simple CORS middleware wrapper
+	corsWrapper := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("CORS Middleware: %s %s from Origin: %s\n", r.Method, r.URL.Path, r.Header.Get("Origin"))
+
+		// Set CORS headers for all requests
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Expose-Headers", "Grpc-Status, Grpc-Message, Grpc-Status-Details-Bin")
+
+		// Handle preflight OPTIONS requests
+		if r.Method == http.MethodOptions {
+			fmt.Printf("CORS Middleware: Handling OPTIONS preflight request\n")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version, Connect-Timeout-Ms, Authorization, X-User-Agent, User-Agent, Accept-Encoding")
+			w.Header().Set("Access-Control-Max-Age", "7200")
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		// Pass through to original handler
+		s.mux.ServeHTTP(w, r)
+	})
+
+	// Apply h2c to CORS wrapper
+	handler := h2c.NewHandler(corsWrapper, &http2.Server{})
+
+	_ = http.ListenAndServe("localhost:9999", handler)
 }

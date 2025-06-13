@@ -15,6 +15,7 @@ import (
 	"syscall"
 	"time"
 
+	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/controlplane"
 	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
@@ -153,6 +154,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	}
 
 	// Create SSO callback service
+	logger.Info("Creating SSO callback service...")
 	ssoHandler, err := services.NewSsoCallback(
 		services.WithSsoCallbackLogger(logger),
 		services.WithSsoCallbackProvider("oidc", oidcProvider),
@@ -161,6 +163,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	if err != nil {
 		return fmt.Errorf("failed to create SSO handler: %w", err)
 	}
+	logger.Info("SSO callback service created successfully")
 
 	// Create auth interceptors
 	authInterceptor := cauth.NewInterceptor(sessionStore)
@@ -177,6 +180,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		controlplane.WithSessionStore(sessionStore),
 		controlplane.WithAuthInterceptor(authInterceptor),
 		controlplane.WithTokenInterceptor(tokenInterceptor),
+		controlplane.WithFrontendFS(llmgw.GetFrontendFS()),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create server: %w", err)
@@ -198,13 +202,36 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("failed to create data plane server: %w", err)
 	}
 
-	// Setup ControlPlane HTTP server
+	// Setup ControlPlane HTTP server with CORS
 	controlPlaneAddr := c.String("control-plane-listen")
 	logger.Info("Starting control plane server", "address", controlPlaneAddr)
 
+	// Create CORS middleware wrapper
+	corsWrapper := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.Debug("CORS Middleware", "method", r.Method, "path", r.URL.Path, "origin", r.Header.Get("Origin"))
+
+		// Set CORS headers for all requests
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Expose-Headers", "Grpc-Status, Grpc-Message, Grpc-Status-Details-Bin")
+
+		// Handle preflight OPTIONS requests
+		if r.Method == http.MethodOptions {
+			logger.Debug("CORS Middleware: Handling OPTIONS preflight request")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version, Connect-Timeout-Ms, Authorization, X-User-Agent, User-Agent, Accept-Encoding")
+			w.Header().Set("Access-Control-Max-Age", "7200")
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		// Pass through to original handler
+		server.GetMux().ServeHTTP(w, r)
+	})
+
 	controlPlaneServer := &http.Server{
 		Addr:         controlPlaneAddr,
-		Handler:      h2c.NewHandler(server.GetMux(), &http2.Server{}),
+		Handler:      h2c.NewHandler(corsWrapper, &http2.Server{}),
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  120 * time.Second,

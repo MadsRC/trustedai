@@ -52,6 +52,18 @@ func (m *mockTokenRepository) UpdateTokenUsage(ctx context.Context, tokenID stri
 	return nil // No-op for testing
 }
 
+func (m *mockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *llmgw.User, targetUserID string) ([]*llmgw.APIToken, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
+func (m *mockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.APIToken, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
+func (m *mockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *llmgw.User, tokenID string) error {
+	return fmt.Errorf("not implemented")
+}
+
 // mockUserRepository implements llmgw.UserRepository for testing
 type mockUserRepository struct {
 	users map[string]*llmgw.User
@@ -92,6 +104,14 @@ func (m *mockUserRepository) Update(ctx context.Context, user *llmgw.User) error
 
 func (m *mockUserRepository) Delete(ctx context.Context, id string) error {
 	return fmt.Errorf("not implemented")
+}
+
+func (m *mockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
+func (m *mockUserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+	return nil, fmt.Errorf("not implemented")
 }
 
 func TestDataPlaneAuthenticationIntegration(t *testing.T) {

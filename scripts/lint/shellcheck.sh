@@ -11,7 +11,7 @@ if ! command -v shellcheck > /dev/null 2>&1; then
 fi
 
 # Find all shell scripts with .sh extension
-find . -type f -name "*.sh" | sort | while read -r file; do
+find . -type f -name "*.sh" -not -path "*/\.*" -not -path "*/vendor/*" -not -path "*/node_modules/*" -not -path "*/build/*" | sort | while read -r file; do
     # Run shellcheck silently first
     if ! shellcheck -q "$file" > /dev/null 2>&1; then
         # If the silent run fails, run again with output
@@ -21,7 +21,7 @@ find . -type f -name "*.sh" | sort | while read -r file; do
 done
 
 # Find files with shell shebang
-find . -type f -not -path "*/\.*" -not -path "*/vendor/*" -not -path "*/node_modules/*" | sort | while read -r file; do
+find . -type f -not -path "*/\.*" -not -path "*/vendor/*" -not -path "*/node_modules/*" -not -path "*/build/*" | sort | while read -r file; do
     if [ -f "$file" ] && head -n 1 "$file" | grep -q '^#!/bin/\(bash\|sh\|zsh\)' && echo "$file" | grep -qv '\.sh$'; then
         # Run shellcheck silently first
         if ! shellcheck -q "$file" > /dev/null 2>&1; then

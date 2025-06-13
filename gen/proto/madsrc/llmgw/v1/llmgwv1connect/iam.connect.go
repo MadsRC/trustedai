@@ -47,6 +47,9 @@ const (
 	// IAMServiceGetUserByExternalIDProcedure is the fully-qualified name of the IAMService's
 	// GetUserByExternalID RPC.
 	IAMServiceGetUserByExternalIDProcedure = "/llmgw.v1.IAMService/GetUserByExternalID"
+	// IAMServiceGetCurrentUserProcedure is the fully-qualified name of the IAMService's GetCurrentUser
+	// RPC.
+	IAMServiceGetCurrentUserProcedure = "/llmgw.v1.IAMService/GetCurrentUser"
 	// IAMServiceListUsersByOrganizationProcedure is the fully-qualified name of the IAMService's
 	// ListUsersByOrganization RPC.
 	IAMServiceListUsersByOrganizationProcedure = "/llmgw.v1.IAMService/ListUsersByOrganization"
@@ -88,6 +91,7 @@ type IAMServiceClient interface {
 	GetUser(context.Context, *connect.Request[v1.IAMServiceGetUserRequest]) (*connect.Response[v1.IAMServiceGetUserResponse], error)
 	GetUserByEmail(context.Context, *connect.Request[v1.IAMServiceGetUserByEmailRequest]) (*connect.Response[v1.IAMServiceGetUserByEmailResponse], error)
 	GetUserByExternalID(context.Context, *connect.Request[v1.IAMServiceGetUserByExternalIDRequest]) (*connect.Response[v1.IAMServiceGetUserByExternalIDResponse], error)
+	GetCurrentUser(context.Context, *connect.Request[v1.IAMServiceGetCurrentUserRequest]) (*connect.Response[v1.IAMServiceGetCurrentUserResponse], error)
 	ListUsersByOrganization(context.Context, *connect.Request[v1.IAMServiceListUsersByOrganizationRequest]) (*connect.Response[v1.IAMServiceListUsersByOrganizationResponse], error)
 	UpdateUser(context.Context, *connect.Request[v1.IAMServiceUpdateUserRequest]) (*connect.Response[v1.IAMServiceUpdateUserResponse], error)
 	DeleteUser(context.Context, *connect.Request[v1.IAMServiceDeleteUserRequest]) (*connect.Response[v1.IAMServiceDeleteUserResponse], error)
@@ -137,6 +141,12 @@ func NewIAMServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 			httpClient,
 			baseURL+IAMServiceGetUserByExternalIDProcedure,
 			connect.WithSchema(iAMServiceMethods.ByName("GetUserByExternalID")),
+			connect.WithClientOptions(opts...),
+		),
+		getCurrentUser: connect.NewClient[v1.IAMServiceGetCurrentUserRequest, v1.IAMServiceGetCurrentUserResponse](
+			httpClient,
+			baseURL+IAMServiceGetCurrentUserProcedure,
+			connect.WithSchema(iAMServiceMethods.ByName("GetCurrentUser")),
 			connect.WithClientOptions(opts...),
 		),
 		listUsersByOrganization: connect.NewClient[v1.IAMServiceListUsersByOrganizationRequest, v1.IAMServiceListUsersByOrganizationResponse](
@@ -220,6 +230,7 @@ type iAMServiceClient struct {
 	getUser                 *connect.Client[v1.IAMServiceGetUserRequest, v1.IAMServiceGetUserResponse]
 	getUserByEmail          *connect.Client[v1.IAMServiceGetUserByEmailRequest, v1.IAMServiceGetUserByEmailResponse]
 	getUserByExternalID     *connect.Client[v1.IAMServiceGetUserByExternalIDRequest, v1.IAMServiceGetUserByExternalIDResponse]
+	getCurrentUser          *connect.Client[v1.IAMServiceGetCurrentUserRequest, v1.IAMServiceGetCurrentUserResponse]
 	listUsersByOrganization *connect.Client[v1.IAMServiceListUsersByOrganizationRequest, v1.IAMServiceListUsersByOrganizationResponse]
 	updateUser              *connect.Client[v1.IAMServiceUpdateUserRequest, v1.IAMServiceUpdateUserResponse]
 	deleteUser              *connect.Client[v1.IAMServiceDeleteUserRequest, v1.IAMServiceDeleteUserResponse]
@@ -252,6 +263,11 @@ func (c *iAMServiceClient) GetUserByEmail(ctx context.Context, req *connect.Requ
 // GetUserByExternalID calls llmgw.v1.IAMService.GetUserByExternalID.
 func (c *iAMServiceClient) GetUserByExternalID(ctx context.Context, req *connect.Request[v1.IAMServiceGetUserByExternalIDRequest]) (*connect.Response[v1.IAMServiceGetUserByExternalIDResponse], error) {
 	return c.getUserByExternalID.CallUnary(ctx, req)
+}
+
+// GetCurrentUser calls llmgw.v1.IAMService.GetCurrentUser.
+func (c *iAMServiceClient) GetCurrentUser(ctx context.Context, req *connect.Request[v1.IAMServiceGetCurrentUserRequest]) (*connect.Response[v1.IAMServiceGetCurrentUserResponse], error) {
+	return c.getCurrentUser.CallUnary(ctx, req)
 }
 
 // ListUsersByOrganization calls llmgw.v1.IAMService.ListUsersByOrganization.
@@ -321,6 +337,7 @@ type IAMServiceHandler interface {
 	GetUser(context.Context, *connect.Request[v1.IAMServiceGetUserRequest]) (*connect.Response[v1.IAMServiceGetUserResponse], error)
 	GetUserByEmail(context.Context, *connect.Request[v1.IAMServiceGetUserByEmailRequest]) (*connect.Response[v1.IAMServiceGetUserByEmailResponse], error)
 	GetUserByExternalID(context.Context, *connect.Request[v1.IAMServiceGetUserByExternalIDRequest]) (*connect.Response[v1.IAMServiceGetUserByExternalIDResponse], error)
+	GetCurrentUser(context.Context, *connect.Request[v1.IAMServiceGetCurrentUserRequest]) (*connect.Response[v1.IAMServiceGetCurrentUserResponse], error)
 	ListUsersByOrganization(context.Context, *connect.Request[v1.IAMServiceListUsersByOrganizationRequest]) (*connect.Response[v1.IAMServiceListUsersByOrganizationResponse], error)
 	UpdateUser(context.Context, *connect.Request[v1.IAMServiceUpdateUserRequest]) (*connect.Response[v1.IAMServiceUpdateUserResponse], error)
 	DeleteUser(context.Context, *connect.Request[v1.IAMServiceDeleteUserRequest]) (*connect.Response[v1.IAMServiceDeleteUserResponse], error)
@@ -366,6 +383,12 @@ func NewIAMServiceHandler(svc IAMServiceHandler, opts ...connect.HandlerOption) 
 		IAMServiceGetUserByExternalIDProcedure,
 		svc.GetUserByExternalID,
 		connect.WithSchema(iAMServiceMethods.ByName("GetUserByExternalID")),
+		connect.WithHandlerOptions(opts...),
+	)
+	iAMServiceGetCurrentUserHandler := connect.NewUnaryHandler(
+		IAMServiceGetCurrentUserProcedure,
+		svc.GetCurrentUser,
+		connect.WithSchema(iAMServiceMethods.ByName("GetCurrentUser")),
 		connect.WithHandlerOptions(opts...),
 	)
 	iAMServiceListUsersByOrganizationHandler := connect.NewUnaryHandler(
@@ -450,6 +473,8 @@ func NewIAMServiceHandler(svc IAMServiceHandler, opts ...connect.HandlerOption) 
 			iAMServiceGetUserByEmailHandler.ServeHTTP(w, r)
 		case IAMServiceGetUserByExternalIDProcedure:
 			iAMServiceGetUserByExternalIDHandler.ServeHTTP(w, r)
+		case IAMServiceGetCurrentUserProcedure:
+			iAMServiceGetCurrentUserHandler.ServeHTTP(w, r)
 		case IAMServiceListUsersByOrganizationProcedure:
 			iAMServiceListUsersByOrganizationHandler.ServeHTTP(w, r)
 		case IAMServiceUpdateUserProcedure:
@@ -497,6 +522,10 @@ func (UnimplementedIAMServiceHandler) GetUserByEmail(context.Context, *connect.R
 
 func (UnimplementedIAMServiceHandler) GetUserByExternalID(context.Context, *connect.Request[v1.IAMServiceGetUserByExternalIDRequest]) (*connect.Response[v1.IAMServiceGetUserByExternalIDResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.IAMService.GetUserByExternalID is not implemented"))
+}
+
+func (UnimplementedIAMServiceHandler) GetCurrentUser(context.Context, *connect.Request[v1.IAMServiceGetCurrentUserRequest]) (*connect.Response[v1.IAMServiceGetCurrentUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.IAMService.GetCurrentUser is not implemented"))
 }
 
 func (UnimplementedIAMServiceHandler) ListUsersByOrganization(context.Context, *connect.Request[v1.IAMServiceListUsersByOrganizationRequest]) (*connect.Response[v1.IAMServiceListUsersByOrganizationResponse], error) {

@@ -6,6 +6,7 @@ package llmgw
 
 import (
 	"context"
+	"database/sql/driver"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -34,33 +35,32 @@ func (u *User) IsSystemAdmin() bool {
 	return u.SystemAdmin
 }
 
-// SSOConfig is a custom type for SSO configuration with redaction capabilities
+// SSOConfig is a custom type for SSO configuration
 type SSOConfig map[string]any
 
-// MarshalJSON redacts sensitive fields during JSON serialization
-func (s SSOConfig) MarshalJSON() ([]byte, error) {
-	redacted := s.redactSecrets()
-	return json.Marshal(redacted)
-}
-
-// String redacts sensitive fields in string representations
-func (s SSOConfig) String() string {
-	redacted := s.redactSecrets()
-	return fmt.Sprintf("%v", redacted)
-}
-
-// redactSecrets creates a safe copy for serialization
-func (s SSOConfig) redactSecrets() map[string]any {
-	copy := make(map[string]any, len(s))
-	for k, v := range s {
-		switch k {
-		case "oidc_client_secret", "private_key", "api_key":
-			copy[k] = "********"
-		default:
-			copy[k] = v
-		}
+// Scan implements sql.Scanner interface for database scanning
+func (s *SSOConfig) Scan(value any) error {
+	if value == nil {
+		*s = make(SSOConfig)
+		return nil
 	}
-	return copy
+
+	switch v := value.(type) {
+	case []byte:
+		return json.Unmarshal(v, s)
+	case string:
+		return json.Unmarshal([]byte(v), s)
+	default:
+		return fmt.Errorf("cannot scan %T into SSOConfig", value)
+	}
+}
+
+// Value implements driver.Valuer interface for database storage
+func (s SSOConfig) Value() (driver.Value, error) {
+	if s == nil {
+		return nil, nil
+	}
+	return json.Marshal(s)
 }
 
 // Organization represents a tenant in the system
@@ -91,6 +91,8 @@ type UserRepository interface {
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetByExternalID(ctx context.Context, provider, externalID string) (*User, error)
 	ListByOrganization(ctx context.Context, orgID string) ([]*User, error)
+	ListByOrganizationForUser(ctx context.Context, requestingUser *User, orgID string) ([]*User, error)
+	ListAllForUser(ctx context.Context, requestingUser *User) ([]*User, error)
 	Update(ctx context.Context, user *User) error
 	Delete(ctx context.Context, id string) error
 }
@@ -101,6 +103,7 @@ type OrganizationRepository interface {
 	Get(ctx context.Context, id string) (*Organization, error)
 	GetByName(ctx context.Context, name string) (*Organization, error)
 	List(ctx context.Context) ([]*Organization, error)
+	ListForUser(ctx context.Context, user *User) ([]*Organization, error)
 	Update(ctx context.Context, org *Organization) error
 	Delete(ctx context.Context, id string) error
 }
@@ -136,6 +139,20 @@ type TokenRepository interface {
 	// ListUserTokens returns all active tokens for a user
 	ListUserTokens(ctx context.Context, userID string) ([]*APIToken, error)
 
+	// ListUserTokensForUser returns tokens visible to the requesting user
+	ListUserTokensForUser(ctx context.Context, requestingUser *User, targetUserID string) ([]*APIToken, error)
+
+	// ListAllTokensForUser returns all tokens visible to the requesting user
+	ListAllTokensForUser(ctx context.Context, requestingUser *User) ([]*APIToken, error)
+
+	// RevokeTokenForUser revokes a token if the requesting user has permission
+	RevokeTokenForUser(ctx context.Context, requestingUser *User, tokenID string) error
+
 	// UpdateTokenUsage records when a token was last used
 	UpdateTokenUsage(ctx context.Context, tokenID string) error
 }
+
+// Context keys for passing data through request contexts
+type ContextKey struct{}
+
+var OrganizationContextKey = ContextKey{}

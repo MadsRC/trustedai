@@ -246,3 +246,62 @@ func (r *UserRepository) Delete(ctx context.Context, id string) error {
 
 	return nil
 }
+
+// ListByOrganizationForUser retrieves users from the specified organization
+// if the requesting user has permission to see them
+func (r *UserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+	// Authorization check: users can only list users from their own organization
+	// unless they are system admins
+	if !requestingUser.IsSystemAdmin() && requestingUser.OrganizationID != orgID {
+		return nil, llmgw.ErrUnauthorized
+	}
+
+	return r.ListByOrganization(ctx, orgID)
+}
+
+// ListAllForUser retrieves all users visible to the requesting user
+// System admins see all users across all organizations
+// Regular users see only users from their own organization
+func (r *UserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+	if requestingUser.IsSystemAdmin() {
+		query := `
+			SELECT id, email, name, organization_id, 
+				external_id, provider, system_admin, 
+				created_at, last_login
+			FROM users
+			ORDER BY organization_id, name`
+
+		rows, err := r.options.Db.Query(ctx, query)
+		if err != nil {
+			r.options.Logger.Error("Failed to list all users", "error", err)
+			return nil, err
+		}
+		defer rows.Close()
+
+		var users []*llmgw.User
+		for rows.Next() {
+			var user llmgw.User
+			err := rows.Scan(
+				&user.ID,
+				&user.Email,
+				&user.Name,
+				&user.OrganizationID,
+				&user.ExternalID,
+				&user.Provider,
+				&user.SystemAdmin,
+				&user.CreatedAt,
+				&user.LastLogin,
+			)
+			if err != nil {
+				r.options.Logger.Error("Failed to scan user row", "error", err)
+				return nil, err
+			}
+			users = append(users, &user)
+		}
+
+		return users, rows.Err()
+	}
+
+	// Regular users see only users from their own organization
+	return r.ListByOrganization(ctx, requestingUser.OrganizationID)
+}

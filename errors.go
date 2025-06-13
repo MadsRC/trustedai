@@ -12,4 +12,7 @@ var (
 
 	// ErrDuplicateEntry should be returned when a resource would violate unique constraints
 	ErrDuplicateEntry = errors.New("duplicate entry")
+
+	// ErrUnauthorized should be returned when a user lacks permission for an operation
+	ErrUnauthorized = errors.New("unauthorized")
 )

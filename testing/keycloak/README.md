@@ -13,6 +13,17 @@ resources:
 
 - Users:
   - `user1` with password `password`
+  - `user2` with passwird `password
 - Clients
   - OIDC Client with ID `client01` with Authorization Code and Device Code
-    flows enabled. Client secret is `ASjzsXU37Y1UzU7gFkST5exJSMnOYEzW`
+    flows enabled. Client secret can be found in the keycloak interface
+
+Additionally includes a test realm called `testrealm02` containing the following
+resources:
+
+- Users:
+  - `admin@localhost` with password `password`
+  - `user1` with password `password`
+- Clients
+  - OIDC Client with ID `client01` with Authorization Code and Device Code
+    flows enabled. Client secret can be found in the keycloak interface

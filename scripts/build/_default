@@ -6,9 +6,7 @@
 
 set -e
 
-# Run Go build script
+mise run build:react
 mise run build:go
-
-# Add any future build scripts here
 
 exit 0

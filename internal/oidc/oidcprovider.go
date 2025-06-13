@@ -118,8 +118,12 @@ func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User
 		return nil, fmt.Errorf("no id_token in token response")
 	}
 
-	// Verify the ID token
-	verifier := provider.Verifier(&oidc.Config{ClientID: config.ClientID})
+	// Verify the ID token with clock skew tolerance
+	verifier := provider.Verifier(&oidc.Config{
+		ClientID:          config.ClientID,
+		SkipClientIDCheck: false,
+		SkipIssuerCheck:   false,
+	})
 	idToken, err := verifier.Verify(ctx, rawIDToken)
 	if err != nil {
 		p.options.Logger.Error("Failed to verify ID token", "error", err)
@@ -148,13 +152,28 @@ func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User
 		Email:      claims.Email,
 		Name:       claims.Name,
 		ExternalID: claims.Subject,
-		Provider:   "oidc:" + orgName,
+		Provider:   "oidc",
 	}
 
-	// Check if user already exists
+	// Check if user already exists by external ID and OIDC provider
 	existingUser, err := p.options.UserRepo.GetByExternalID(ctx, user.Provider, user.ExternalID)
 	if err == nil && existingUser != nil {
 		return existingUser, nil
+	}
+
+	// If not found by external ID, check if user exists by email (handle migration from 'none' provider)
+	existingUserByEmail, err := p.options.UserRepo.GetByEmail(ctx, user.Email)
+	if err == nil && existingUserByEmail != nil {
+		// User exists with same email - update their provider and external ID to enable OIDC login
+		existingUserByEmail.Provider = user.Provider
+		existingUserByEmail.ExternalID = user.ExternalID
+		err = p.options.UserRepo.Update(ctx, existingUserByEmail)
+		if err != nil {
+			p.options.Logger.Error("Failed to update existing user for OIDC", "error", err, "email", user.Email)
+			return nil, fmt.Errorf("failed to update existing user for OIDC: %w", err)
+		}
+		p.options.Logger.Info("Updated existing user for OIDC login", "email", user.Email, "external_id", user.ExternalID)
+		return existingUserByEmail, nil
 	}
 
 	// Get organization
@@ -194,7 +213,11 @@ func (p *Provider) ValidateToken(ctx context.Context, token string) (bool, map[s
 		return false, nil, fmt.Errorf("failed to discover OIDC provider: %w", err)
 	}
 
-	verifier := provider.Verifier(&oidc.Config{ClientID: config.ClientID})
+	verifier := provider.Verifier(&oidc.Config{
+		ClientID:          config.ClientID,
+		SkipClientIDCheck: false,
+		SkipIssuerCheck:   false,
+	})
 	idToken, err := verifier.Verify(ctx, token)
 	if err != nil {
 		return false, nil, nil
@@ -370,8 +393,12 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 		return nil, fmt.Errorf("no ID token in response")
 	}
 
-	// Verify the ID token
-	verifier := provider.Verifier(&oidc.Config{ClientID: config.ClientID})
+	// Verify the ID token with clock skew tolerance
+	verifier := provider.Verifier(&oidc.Config{
+		ClientID:          config.ClientID,
+		SkipClientIDCheck: false,
+		SkipIssuerCheck:   false,
+	})
 	idToken, err := verifier.Verify(ctx, tokenResp.IDToken)
 	if err != nil {
 		return nil, fmt.Errorf("failed to verify ID token: %w", err)
@@ -401,10 +428,25 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 		Provider:   "oidc",
 	}
 
-	// Check if user already exists
+	// Check if user already exists by external ID and OIDC provider
 	existingUser, err := p.options.UserRepo.GetByExternalID(ctx, user.Provider, user.ExternalID)
 	if err == nil && existingUser != nil {
 		return existingUser, nil
+	}
+
+	// If not found by external ID, check if user exists by email (handle migration from 'none' provider)
+	existingUserByEmail, err := p.options.UserRepo.GetByEmail(ctx, user.Email)
+	if err == nil && existingUserByEmail != nil {
+		// User exists with same email - update their provider and external ID to enable OIDC login
+		existingUserByEmail.Provider = user.Provider
+		existingUserByEmail.ExternalID = user.ExternalID
+		err = p.options.UserRepo.Update(ctx, existingUserByEmail)
+		if err != nil {
+			p.options.Logger.Error("Failed to update existing user for OIDC", "error", err, "email", user.Email)
+			return nil, fmt.Errorf("failed to update existing user for OIDC: %w", err)
+		}
+		p.options.Logger.Info("Updated existing user for OIDC login", "email", user.Email, "external_id", user.ExternalID)
+		return existingUserByEmail, nil
 	}
 
 	// Get organization
@@ -429,7 +471,9 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 
 // Helper function to get organization name from context
 func getOrgNameFromContext(ctx context.Context) (string, error) {
-	orgName, ok := ctx.Value("organization").(string)
+	value := ctx.Value(llmgw.OrganizationContextKey)
+
+	orgName, ok := value.(string)
 	if !ok || orgName == "" {
 		return "", fmt.Errorf("organization name missing in context")
 	}
@@ -443,13 +487,22 @@ func (p *Provider) getOrgOIDCConfig(ctx context.Context, orgName string) (*oidcC
 		return nil, fmt.Errorf("failed to get organization: %w", err)
 	}
 
+	// Log the SSO config for debugging
+	p.options.Logger.Debug("Processing SSO config", "orgName", orgName, "ssoConfig", org.SSOConfig)
+
 	// Extract OIDC configuration from organization's SSO config
 	config := &oidcConfig{
-		ClientID:     getStringConfig(org.SSOConfig, "oidc_client_id"),
-		ClientSecret: getStringConfig(org.SSOConfig, "oidc_client_secret"),
-		IssuerURL:    getStringConfig(org.SSOConfig, "oidc_issuer_url"),
+		ClientID:     getStringConfig(org.SSOConfig, "client_id"),
+		ClientSecret: getStringConfig(org.SSOConfig, "client_secret"),
+		IssuerURL:    getStringConfig(org.SSOConfig, "issuer"),
 		RedirectURL:  fmt.Sprintf("%s/sso/oidc/%s/callback", p.options.BaseURL, orgName),
 	}
+
+	// Log extracted config for debugging
+	p.options.Logger.Debug("Extracted OIDC config",
+		"clientID", config.ClientID,
+		"issuerURL", config.IssuerURL,
+		"redirectURL", config.RedirectURL)
 
 	// Validate required fields
 	if config.ClientID == "" {

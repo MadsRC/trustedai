@@ -16,13 +16,14 @@ import (
 	"codeberg.org/MadsRC/llmgw"
 )
 
-type contextKey string
-
-const organizationContextKey contextKey = "organization"
-
 func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.options.Logger.Info("SSO handler received request", "method", r.Method, "path", r.URL.Path)
+
 	pathSegments := strings.Split(strings.TrimPrefix(r.URL.Path, "/"), "/")
+	s.options.Logger.Debug("Path segments", "segments", pathSegments)
+
 	if len(pathSegments) < 1 {
+		s.options.Logger.Warn("Invalid path - no segments")
 		http.NotFound(w, r)
 		return
 	}
@@ -32,16 +33,29 @@ func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var ctx = r.Context()
 
 	if pathSegments[0] == "oidc" {
-		if len(pathSegments) < 3 {
+		if len(pathSegments) < 2 {
+			s.options.Logger.Warn("OIDC path too short", "segments", pathSegments)
 			http.NotFound(w, r)
 			return
 		}
 		orgName := pathSegments[1]
+		s.options.Logger.Debug("Processing OIDC request", "orgName", orgName)
 		provider = s.options.Providers["oidc"]
-		ctx = context.WithValue(ctx, organizationContextKey, orgName)
+		if provider == nil {
+			s.options.Logger.Error("OIDC provider not found")
+			http.NotFound(w, r)
+			return
+		}
+		ctx = context.WithValue(ctx, llmgw.OrganizationContextKey, orgName)
+		s.options.Logger.Debug("Set organization in context", "orgName", orgName, "contextKey", "organization")
 
 		// Adjust path segments to handle the rest of the routing
-		pathSegments = append([]string{"oidc"}, pathSegments[2:]...)
+		if len(pathSegments) > 2 {
+			pathSegments = append([]string{"oidc"}, pathSegments[2:]...)
+		} else {
+			// For /oidc/orgname (no trailing path), treat as auth init
+			pathSegments = []string{"oidc"}
+		}
 	} else {
 		provider = s.options.Providers[pathSegments[0]]
 		if provider == nil {
@@ -140,6 +154,17 @@ func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, pro
 		return
 	}
 
+	// Log the authenticated user details
+	s.options.Logger.Info("SSO authentication successful",
+		"userID", user.ID,
+		"email", user.Email,
+		"name", user.Name,
+		"externalID", user.ExternalID,
+		"provider", user.Provider,
+		"organizationID", user.OrganizationID,
+		"systemAdmin", user.SystemAdmin,
+	)
+
 	// Create a session for the authenticated user
 	session, err := s.options.SessionStore.Create(user)
 	if err != nil {
@@ -147,6 +172,15 @@ func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, pro
 		http.Error(w, "session creation failed", http.StatusInternalServerError)
 		return
 	}
+
+	// Log the session creation
+	s.options.Logger.Info("Session created successfully",
+		"sessionID", session.ID,
+		"userEmail", session.User.Email,
+		"userName", session.User.Name,
+		"userID", session.User.ID,
+		"expiresAt", session.ExpiresAt,
+	)
 
 	// Set the session cookie
 	sessionCookie := &http.Cookie{
@@ -160,7 +194,7 @@ func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, pro
 	}
 	http.SetCookie(w, sessionCookie)
 
-	// Redirect to the home page or dashboard
+	// Redirect to the frontend root - React router will handle navigation
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 

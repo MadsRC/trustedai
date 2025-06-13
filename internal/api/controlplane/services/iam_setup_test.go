@@ -68,6 +68,22 @@ func (m *MockUserRepository) Delete(ctx context.Context, id string) error {
 	return args.Error(0)
 }
 
+func (m *MockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+	args := m.Called(ctx, requestingUser, orgID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*llmgw.User), args.Error(1)
+}
+
+func (m *MockUserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+	args := m.Called(ctx, requestingUser)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*llmgw.User), args.Error(1)
+}
+
 type MockOrganizationRepository struct {
 	mock.Mock
 }
@@ -111,6 +127,14 @@ func (m *MockOrganizationRepository) Delete(ctx context.Context, id string) erro
 	return args.Error(0)
 }
 
+func (m *MockOrganizationRepository) ListForUser(ctx context.Context, user *llmgw.User) ([]*llmgw.Organization, error) {
+	args := m.Called(ctx, user)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*llmgw.Organization), args.Error(1)
+}
+
 type MockTokenRepository struct {
 	mock.Mock
 }
@@ -146,6 +170,27 @@ func (m *MockTokenRepository) ListUserTokens(ctx context.Context, userID string)
 
 func (m *MockTokenRepository) UpdateTokenUsage(ctx context.Context, tokenID string) error {
 	args := m.Called(ctx, tokenID)
+	return args.Error(0)
+}
+
+func (m *MockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *llmgw.User, targetUserID string) ([]*llmgw.APIToken, error) {
+	args := m.Called(ctx, requestingUser, targetUserID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*llmgw.APIToken), args.Error(1)
+}
+
+func (m *MockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.APIToken, error) {
+	args := m.Called(ctx, requestingUser)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*llmgw.APIToken), args.Error(1)
+}
+
+func (m *MockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *llmgw.User, tokenID string) error {
+	args := m.Called(ctx, requestingUser, tokenID)
 	return args.Error(0)
 }
 

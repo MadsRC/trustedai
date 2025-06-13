@@ -38,12 +38,15 @@ func CheckAndBootstrap(
 		return fmt.Errorf("failed to check for system organization: %w", err)
 	}
 
+	if errors.Is(err, llmgw.ErrNotFound) {
+		logger.Info("No system organization found, bootstrapping required")
+	}
+
 	needsBootstrap := false
 
-	// If no system org exists, we need to bootstrap
+	// If no system organization exists, we need to bootstrap
 	if systemOrg == nil {
 		needsBootstrap = true
-		logger.Info("No system organization found, bootstrapping required")
 	} else {
 		// Check if there's at least one system admin in the system org
 		hasSystemAdmin, err := hasSystemAdministrator(ctx, userRepo, systemOrg.ID)

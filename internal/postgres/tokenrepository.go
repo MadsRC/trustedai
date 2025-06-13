@@ -251,6 +251,100 @@ func generateArgon2idHash(token string) (string, error) {
 	return encodedHash, nil
 }
 
+// ListUserTokensForUser returns tokens visible to the requesting user
+// Users can only see their own tokens, system admins can see any user's tokens
+func (r *TokenRepository) ListUserTokensForUser(
+	ctx context.Context,
+	requestingUser *llmgw.User,
+	targetUserID string,
+) ([]*llmgw.APIToken, error) {
+	// Authorization check: users can only list their own tokens
+	// unless they are system admins
+	if !requestingUser.IsSystemAdmin() && requestingUser.ID != targetUserID {
+		return nil, llmgw.ErrUnauthorized
+	}
+
+	return r.ListUserTokens(ctx, targetUserID)
+}
+
+// ListAllTokensForUser returns all tokens visible to the requesting user
+// System admins see all tokens, regular users see only their own tokens
+func (r *TokenRepository) ListAllTokensForUser(
+	ctx context.Context,
+	requestingUser *llmgw.User,
+) ([]*llmgw.APIToken, error) {
+	if requestingUser.IsSystemAdmin() {
+		// System admins see all tokens across all users
+		const query = `SELECT 
+			id, user_id, description, prefix_hash, token_hash, 
+			created_at, expires_at, last_used_at 
+			FROM tokens
+			ORDER BY created_at DESC`
+
+		rows, err := r.options.Db.Query(ctx, query)
+		if err != nil {
+			return nil, fmt.Errorf("failed to list all tokens: %w", err)
+		}
+		defer rows.Close()
+
+		var tokens []*llmgw.APIToken
+		for rows.Next() {
+			var token llmgw.APIToken
+			var lastUsedAt *time.Time
+
+			if err := rows.Scan(
+				&token.ID,
+				&token.UserID,
+				&token.Description,
+				&token.PrefixHash,
+				&token.TokenHash,
+				&token.CreatedAt,
+				&token.ExpiresAt,
+				&lastUsedAt,
+			); err != nil {
+				return nil, fmt.Errorf("failed to scan token: %w", err)
+			}
+
+			if lastUsedAt != nil {
+				token.LastUsedAt = lastUsedAt
+			}
+
+			tokens = append(tokens, &token)
+		}
+
+		return tokens, rows.Err()
+	}
+
+	// Regular users see only their own tokens
+	return r.ListUserTokens(ctx, requestingUser.ID)
+}
+
+// RevokeTokenForUser revokes a token if the requesting user has permission
+func (r *TokenRepository) RevokeTokenForUser(
+	ctx context.Context,
+	requestingUser *llmgw.User,
+	tokenID string,
+) error {
+	// If not a system admin, verify the token belongs to the requesting user
+	if !requestingUser.IsSystemAdmin() {
+		const checkQuery = `SELECT user_id FROM tokens WHERE id = $1`
+		var tokenUserID string
+		err := r.options.Db.QueryRow(ctx, checkQuery, tokenID).Scan(&tokenUserID)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return llmgw.ErrNotFound
+		}
+		if err != nil {
+			return fmt.Errorf("failed to check token ownership: %w", err)
+		}
+
+		if tokenUserID != requestingUser.ID {
+			return llmgw.ErrUnauthorized
+		}
+	}
+
+	return r.RevokeToken(ctx, tokenID)
+}
+
 // generateUUID creates a random UUID for token IDs
 func generateUUID() string {
 	uuid := make([]byte, 16)

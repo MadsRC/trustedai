@@ -5,5 +5,6 @@
 
 mise run lint:proto
 mise run lint:go
+mise run lint:js
 mise run lint:shellcheck
 mise run lint:reuse

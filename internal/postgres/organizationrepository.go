@@ -199,3 +199,17 @@ func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
 
 	return nil
 }
+
+// ListForUser retrieves organizations visible to the specified user
+// System admins see all organizations, regular users see only their own
+func (r *OrganizationRepository) ListForUser(ctx context.Context, user *llmgw.User) ([]*llmgw.Organization, error) {
+	if user.IsSystemAdmin() {
+		return r.List(ctx)
+	}
+
+	org, err := r.Get(ctx, user.OrganizationID)
+	if err != nil {
+		return nil, err
+	}
+	return []*llmgw.Organization{org}, nil
+}

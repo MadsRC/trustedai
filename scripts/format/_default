@@ -8,6 +8,8 @@ set -e
 mise run format:proto
 # Run goimports formatter
 mise run format:go
+# Run JavaScript/TypeScript formatter
+mise run format:js
 
 # Add any future Go formatting tools here
 
