@@ -2,10 +2,4 @@
 # SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run Go linting tools"
-
-# Run the Go linting tools in the specified order
-mise run lint:go:goimports
-mise run lint:go:modernize
-# Deadcode disabled for now.
-#mise run lint:go:deadcode
-mise run lint:go:golangci
+#MISE depends=["lint:go:goimports", "lint:go:modernize", "lint:go:golangci"]

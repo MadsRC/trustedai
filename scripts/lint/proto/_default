@@ -2,6 +2,4 @@
 # SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run protobuf linting tools"
-
-mise run lint:proto:buf-format
-mise run lint:proto:buf-lint
+#MISE depends=["lint:proto:buf-format", "lint:proto:buf-lint"]

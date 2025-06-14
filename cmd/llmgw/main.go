@@ -15,6 +15,9 @@ import (
 	"syscall"
 	"time"
 
+	llm "codeberg.org/gai-org/gai"
+	"codeberg.org/gai-org/gai-provider-openrouter"
+
 	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/controlplane"
@@ -23,6 +26,7 @@ import (
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/providers"
 	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
+	"codeberg.org/MadsRC/llmgw/internal/modelrouter"
 	"codeberg.org/MadsRC/llmgw/internal/oidc"
 	"codeberg.org/MadsRC/llmgw/internal/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -65,6 +69,11 @@ func main() {
 				Name:    "debug",
 				Usage:   "Enable debug logging",
 				Sources: cli.EnvVars("LLMGW_DEBUG"),
+			},
+			&cli.StringFlag{
+				Name:    "openrouter-api-key",
+				Usage:   "OpenRouter API key for LLM provider",
+				Sources: cli.EnvVars("OPENROUTER_API_KEY"),
 			},
 		},
 		Action: runServer,
@@ -186,6 +195,33 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("failed to create server: %w", err)
 	}
 
+	// Create custom model router with hardcoded models
+	customModelRouter := modelrouter.New()
+
+	// Create LLM client with custom router
+	llmClient := llm.New(
+		llm.WithClientLogger(logger.WithGroup("llmclient")),
+		llm.WithModelRouter(customModelRouter),
+	)
+
+	// Create and register OpenRouter provider if API key is provided
+	openrouterAPIKey := c.String("openrouter-api-key")
+	if openrouterAPIKey != "" {
+		openrouterProvider := openrouter.New(
+			openrouter.WithAPIKey(openrouterAPIKey),
+			openrouter.WithLogger(logger.WithGroup("openrouter")),
+			openrouter.WithSiteName("LLMGW"),
+			openrouter.WithHTTPReferer("https://codeberg.org/MadsRC/llmgw"),
+		)
+
+		if err := customModelRouter.RegisterProvider(ctx, openrouterProvider); err != nil {
+			return fmt.Errorf("failed to register OpenRouter provider: %w", err)
+		}
+		logger.Info("OpenRouter provider registered successfully")
+	} else {
+		logger.Warn("OpenRouter API key not provided, OpenRouter provider not available")
+	}
+
 	// Create OpenAI provider
 	openaiProvider := providers.NewOpenAIProvider(
 		dataplane.WithProviderLogger(logger),
@@ -197,6 +233,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		dataplane.WithDataPlaneAddr(c.String("data-plane-listen")),
 		dataplane.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
 		dataplane.WithDataPlaneProviders(openaiProvider),
+		dataplane.WithDataPlaneLLMClient(llmClient),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create data plane server: %w", err)

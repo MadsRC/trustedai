@@ -8,11 +8,19 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+
+	llm "codeberg.org/gai-org/gai"
 )
+
+type LLMClient interface {
+	Generate(ctx context.Context, req llm.ResponseRequest) (*llm.Response, error)
+	GenerateStream(ctx context.Context, req llm.ResponseRequest) (llm.ResponseStream, error)
+}
 
 type Provider interface {
 	Name() string
 	SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler)
+	SetLLMClient(client LLMClient)
 	Shutdown(ctx context.Context) error
 }
 

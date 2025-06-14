@@ -22,6 +22,7 @@ type DataPlaneServer struct {
 	httpServer       *http.Server
 	bearerMiddleware *dauth.BearerMiddleware
 	providers        []Provider
+	LLMClient        LLMClient
 }
 
 type dataPlaneOptions struct {
@@ -32,6 +33,7 @@ type dataPlaneOptions struct {
 	Addr               string
 	TokenAuthenticator *auth.TokenAuthenticator
 	Providers          []Provider
+	LLMClient          LLMClient
 }
 
 type DataPlaneOption interface {
@@ -86,6 +88,12 @@ func WithDataPlaneProviders(providers ...Provider) DataPlaneOption {
 	})
 }
 
+func WithDataPlaneLLMClient(client LLMClient) DataPlaneOption {
+	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
+		opts.LLMClient = client
+	})
+}
+
 func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 	opts := &dataPlaneOptions{
 		Logger:       slog.Default(),
@@ -105,11 +113,19 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 		options:   opts,
 		mux:       mux,
 		providers: opts.Providers,
+		LLMClient: opts.LLMClient,
 	}
 
 	// Initialize Bearer middleware if TokenAuthenticator is provided
 	if opts.TokenAuthenticator != nil {
 		server.bearerMiddleware = dauth.NewBearerMiddleware(opts.TokenAuthenticator, opts.Logger)
+	}
+
+	// Set LLMClient on all providers if available
+	if server.LLMClient != nil {
+		for _, provider := range server.providers {
+			provider.SetLLMClient(server.LLMClient)
+		}
 	}
 
 	server.setupRoutes()

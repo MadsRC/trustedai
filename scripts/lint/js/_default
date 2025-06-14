@@ -2,7 +2,4 @@
 # SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run JavaScript/TypeScript linting tools"
-
-# Run the JavaScript linting tools
-mise run lint:js:prettier-check
-mise run lint:js:eslint
+#MISE depends=["lint:js:prettier-check", "lint:js:eslint"]

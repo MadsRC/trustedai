@@ -302,6 +302,10 @@ func (m *mockProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handle
 	})
 }
 
+func (m *mockProvider) SetLLMClient(client LLMClient) {
+	// Mock implementation - does nothing
+}
+
 func (m *mockProvider) Shutdown(ctx context.Context) error {
 	return nil
 }

@@ -2,15 +2,8 @@
 # SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Runs all formatting tools"
+#MISE depends=["format:proto", "format:go", "format:js"]
 
 set -e
-
-mise run format:proto
-# Run goimports formatter
-mise run format:go
-# Run JavaScript/TypeScript formatter
-mise run format:js
-
-# Add any future Go formatting tools here
 
 exit 0

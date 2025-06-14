@@ -9,9 +9,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import {
-  isAuthenticatedAsync,
-} from "../utils/auth";
+import { isAuthenticatedAsync } from "../utils/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;

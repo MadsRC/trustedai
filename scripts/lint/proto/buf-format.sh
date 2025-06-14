@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
-# MISE:description Format all .proto files using buf format and report files that need formatting.
-# MISE:usage scripts/lint/proto/buf-format.sh
+#MISE description="Format all .proto files using buf format and report files that need formatting."
+#MISE sources=["**/*.proto"]
+#MISE outputs={"auto"=true}
 
 # This script finds all .proto files and runs 'buf format --exit-code' on them.
 # 'buf format --exit-code' exits 0 if the file is already formatted,

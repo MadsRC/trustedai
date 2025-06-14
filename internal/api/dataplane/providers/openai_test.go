@@ -12,8 +12,12 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
+	llm "codeberg.org/gai-org/gai"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestOpenAIProvider_Name(t *testing.T) {
@@ -25,6 +29,11 @@ func TestOpenAIProvider_Name(t *testing.T) {
 
 func TestOpenAIProvider_ChatCompletions(t *testing.T) {
 	provider := NewOpenAIProvider()
+
+	// Set up a mock LLM client
+	mockClient := &mockLLMClient{}
+	provider.SetLLMClient(mockClient)
+
 	mux := http.NewServeMux()
 	provider.SetupRoutes(mux, nil)
 
@@ -108,5 +117,278 @@ func TestOpenAIProvider_WithLogger(t *testing.T) {
 
 	if provider.options.Logger != nil {
 		t.Errorf("Expected logger to be nil, got %v", provider.options.Logger)
+	}
+}
+
+// mockLLMClient is a mock implementation of LLMClient for testing
+type mockLLMClient struct {
+	shouldStreamError bool
+	streamChunks      []*llm.ResponseChunk
+}
+
+func (m *mockLLMClient) Generate(ctx context.Context, req llm.ResponseRequest) (*llm.Response, error) {
+	return &llm.Response{
+		ID:        "test-response-123",
+		ModelID:   req.ModelID,
+		Status:    "completed",
+		Output:    []llm.OutputItem{llm.TextOutput{Text: "Hello! This is a test response."}},
+		Usage:     &llm.TokenUsage{PromptTokens: 10, CompletionTokens: 15, TotalTokens: 25},
+		CreatedAt: time.Now(),
+	}, nil
+}
+
+func (m *mockLLMClient) GenerateStream(ctx context.Context, req llm.ResponseRequest) (llm.ResponseStream, error) {
+	if m.shouldStreamError {
+		return nil, assert.AnError
+	}
+
+	chunks := m.streamChunks
+	if chunks == nil {
+		// Default test chunks
+		chunks = []*llm.ResponseChunk{
+			{
+				ID:       "test-stream-123",
+				Delta:    llm.OutputDelta{Text: "Hello"},
+				Finished: false,
+				Status:   "generating",
+			},
+			{
+				ID:       "test-stream-123",
+				Delta:    llm.OutputDelta{Text: " world"},
+				Finished: false,
+				Status:   "generating",
+			},
+			{
+				ID:       "test-stream-123",
+				Delta:    llm.OutputDelta{Text: "!"},
+				Finished: true,
+				Status:   "completed",
+				Usage:    &llm.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
+			},
+		}
+	}
+
+	return &mockResponseStream{chunks: chunks}, nil
+}
+
+// mockResponseStream implements the ResponseStream interface
+type mockResponseStream struct {
+	chunks []*llm.ResponseChunk
+	index  int
+	closed bool
+}
+
+func (m *mockResponseStream) Next() (*llm.ResponseChunk, error) {
+	if m.closed {
+		return nil, io.EOF
+	}
+	if m.index >= len(m.chunks) {
+		return nil, io.EOF
+	}
+
+	chunk := m.chunks[m.index]
+	m.index++
+	return chunk, nil
+}
+
+func (m *mockResponseStream) Close() error {
+	m.closed = true
+	return nil
+}
+
+func (m *mockResponseStream) Err() error {
+	return nil
+}
+
+func TestOpenAIProvider_ChatCompletions_Streaming(t *testing.T) {
+	tests := []struct {
+		name               string
+		requestBody        string
+		mockClient         *mockLLMClient
+		expectedStatusCode int
+		expectedChunks     int
+		shouldHaveDone     bool
+	}{
+		{
+			name:               "successful streaming",
+			requestBody:        `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"Hello"}],"stream":true}`,
+			mockClient:         &mockLLMClient{},
+			expectedStatusCode: http.StatusOK,
+			expectedChunks:     3,
+			shouldHaveDone:     true,
+		},
+		{
+			name:        "streaming with custom chunks",
+			requestBody: `{"model":"gpt-4","messages":[{"role":"user","content":"Test"}],"stream":true}`,
+			mockClient: &mockLLMClient{
+				streamChunks: []*llm.ResponseChunk{
+					{
+						ID:       "custom-123",
+						Delta:    llm.OutputDelta{Text: "Custom"},
+						Finished: false,
+						Status:   "generating",
+					},
+					{
+						ID:       "custom-123",
+						Delta:    llm.OutputDelta{Text: " response"},
+						Finished: true,
+						Status:   "completed",
+						Usage:    &llm.TokenUsage{PromptTokens: 3, CompletionTokens: 5, TotalTokens: 8},
+					},
+				},
+			},
+			expectedStatusCode: http.StatusOK,
+			expectedChunks:     2,
+			shouldHaveDone:     true,
+		},
+		{
+			name:               "streaming error from LLM client",
+			requestBody:        `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"Hello"}],"stream":true}`,
+			mockClient:         &mockLLMClient{shouldStreamError: true},
+			expectedStatusCode: http.StatusInternalServerError,
+			expectedChunks:     0,
+			shouldHaveDone:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			provider := NewOpenAIProvider()
+			provider.SetLLMClient(tt.mockClient)
+
+			mux := http.NewServeMux()
+			provider.SetupRoutes(mux, nil)
+
+			req := httptest.NewRequest("POST", "/openai/chat/completions", strings.NewReader(tt.requestBody))
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+
+			mux.ServeHTTP(w, req)
+
+			assert.Equal(t, tt.expectedStatusCode, w.Code)
+
+			if tt.expectedStatusCode != http.StatusOK {
+				return
+			}
+
+			// Check headers for streaming
+			assert.Equal(t, "text/event-stream", w.Header().Get("Content-Type"))
+			assert.Equal(t, "no-cache", w.Header().Get("Cache-Control"))
+			assert.Equal(t, "keep-alive", w.Header().Get("Connection"))
+
+			// Parse SSE response
+			body := w.Body.String()
+			lines := strings.Split(body, "\n")
+
+			var dataLines []string
+			for _, line := range lines {
+				if strings.HasPrefix(line, "data: ") {
+					dataLines = append(dataLines, line)
+				}
+			}
+
+			// Should have expected number of chunks plus [DONE]
+			expectedDataLines := tt.expectedChunks
+			if tt.shouldHaveDone {
+				expectedDataLines++
+			}
+			assert.Equal(t, expectedDataLines, len(dataLines))
+
+			// Check [DONE] message if expected
+			if tt.shouldHaveDone {
+				assert.Equal(t, "data: [DONE]", dataLines[len(dataLines)-1])
+			}
+
+			// Validate chunk format (exclude [DONE])
+			for i := range len(dataLines) - 1 {
+				dataContent := strings.TrimPrefix(dataLines[i], "data: ")
+				var chunk map[string]any
+				err := json.Unmarshal([]byte(dataContent), &chunk)
+				require.NoError(t, err)
+
+				assert.Equal(t, "chat.completion.chunk", chunk["object"])
+				assert.Contains(t, chunk["id"], "chatcmpl-")
+				assert.NotNil(t, chunk["choices"])
+
+				choices := chunk["choices"].([]any)
+				assert.Len(t, choices, 1)
+
+				choice := choices[0].(map[string]any)
+				assert.Equal(t, float64(0), choice["index"])
+				assert.NotNil(t, choice["delta"])
+			}
+		})
+	}
+}
+
+func TestOpenAIProvider_convertChunkToOpenAI(t *testing.T) {
+	provider := NewOpenAIProvider()
+
+	tests := []struct {
+		name       string
+		chunk      *llm.ResponseChunk
+		modelID    string
+		wantObject string
+		wantFinish any
+	}{
+		{
+			name: "regular chunk",
+			chunk: &llm.ResponseChunk{
+				ID:       "test-123",
+				Delta:    llm.OutputDelta{Text: "Hello"},
+				Finished: false,
+				Status:   "generating",
+			},
+			modelID:    "gpt-3.5-turbo",
+			wantObject: "chat.completion.chunk",
+			wantFinish: nil,
+		},
+		{
+			name: "final chunk",
+			chunk: &llm.ResponseChunk{
+				ID:       "test-123",
+				Delta:    llm.OutputDelta{Text: "!"},
+				Finished: true,
+				Status:   "completed",
+				Usage:    &llm.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
+			},
+			modelID:    "gpt-4",
+			wantObject: "chat.completion.chunk",
+			wantFinish: "stop",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := provider.convertChunkToOpenAI(tt.chunk, tt.modelID)
+
+			assert.Equal(t, tt.wantObject, result["object"])
+			assert.Equal(t, "chatcmpl-"+tt.chunk.ID, result["id"])
+			assert.Equal(t, tt.modelID, result["model"])
+			assert.NotNil(t, result["created"])
+
+			choices := result["choices"].([]map[string]any)
+			require.Len(t, choices, 1)
+
+			choice := choices[0]
+			assert.Equal(t, 0, choice["index"])
+			assert.Equal(t, tt.wantFinish, choice["finish_reason"])
+
+			delta := choice["delta"].(map[string]any)
+			if tt.chunk.Finished {
+				// Final chunk should have empty delta
+				assert.Empty(t, delta)
+			} else {
+				assert.Equal(t, tt.chunk.Delta.Text, delta["content"])
+			}
+
+			// Check usage information for final chunk
+			if tt.chunk.Usage != nil {
+				usage := result["usage"].(map[string]any)
+				assert.Equal(t, tt.chunk.Usage.PromptTokens, usage["prompt_tokens"])
+				assert.Equal(t, tt.chunk.Usage.CompletionTokens, usage["completion_tokens"])
+				assert.Equal(t, tt.chunk.Usage.TotalTokens, usage["total_tokens"])
+			}
+		})
 	}
 }
