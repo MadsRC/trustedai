@@ -15,8 +15,8 @@ import (
 	"syscall"
 	"time"
 
-	llm "codeberg.org/gai-org/gai"
-	"codeberg.org/gai-org/gai-provider-openrouter"
+	"codeberg.org/gai-org/gai"
+	openrouter "codeberg.org/gai-org/gai-provider-openrouter"
 
 	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
@@ -199,9 +199,9 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	customModelRouter := modelrouter.New()
 
 	// Create LLM client with custom router
-	llmClient := llm.New(
-		llm.WithClientLogger(logger.WithGroup("llmclient")),
-		llm.WithModelRouter(customModelRouter),
+	llmClient := gai.New(
+		gai.WithClientLogger(logger.WithGroup("llmclient")),
+		gai.WithModelRouter(customModelRouter),
 	)
 
 	// Create and register OpenRouter provider if API key is provided

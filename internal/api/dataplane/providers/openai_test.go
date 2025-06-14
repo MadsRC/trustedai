@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
-	llm "codeberg.org/gai-org/gai"
+	"codeberg.org/gai-org/gai"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -123,21 +123,21 @@ func TestOpenAIProvider_WithLogger(t *testing.T) {
 // mockLLMClient is a mock implementation of LLMClient for testing
 type mockLLMClient struct {
 	shouldStreamError bool
-	streamChunks      []*llm.ResponseChunk
+	streamChunks      []*gai.ResponseChunk
 }
 
-func (m *mockLLMClient) Generate(ctx context.Context, req llm.ResponseRequest) (*llm.Response, error) {
-	return &llm.Response{
+func (m *mockLLMClient) Generate(ctx context.Context, req gai.ResponseRequest) (*gai.Response, error) {
+	return &gai.Response{
 		ID:        "test-response-123",
 		ModelID:   req.ModelID,
 		Status:    "completed",
-		Output:    []llm.OutputItem{llm.TextOutput{Text: "Hello! This is a test response."}},
-		Usage:     &llm.TokenUsage{PromptTokens: 10, CompletionTokens: 15, TotalTokens: 25},
+		Output:    []gai.OutputItem{gai.TextOutput{Text: "Hello! This is a test response."}},
+		Usage:     &gai.TokenUsage{PromptTokens: 10, CompletionTokens: 15, TotalTokens: 25},
 		CreatedAt: time.Now(),
 	}, nil
 }
 
-func (m *mockLLMClient) GenerateStream(ctx context.Context, req llm.ResponseRequest) (llm.ResponseStream, error) {
+func (m *mockLLMClient) GenerateStream(ctx context.Context, req gai.ResponseRequest) (gai.ResponseStream, error) {
 	if m.shouldStreamError {
 		return nil, assert.AnError
 	}
@@ -145,25 +145,25 @@ func (m *mockLLMClient) GenerateStream(ctx context.Context, req llm.ResponseRequ
 	chunks := m.streamChunks
 	if chunks == nil {
 		// Default test chunks
-		chunks = []*llm.ResponseChunk{
+		chunks = []*gai.ResponseChunk{
 			{
 				ID:       "test-stream-123",
-				Delta:    llm.OutputDelta{Text: "Hello"},
+				Delta:    gai.OutputDelta{Text: "Hello"},
 				Finished: false,
 				Status:   "generating",
 			},
 			{
 				ID:       "test-stream-123",
-				Delta:    llm.OutputDelta{Text: " world"},
+				Delta:    gai.OutputDelta{Text: " world"},
 				Finished: false,
 				Status:   "generating",
 			},
 			{
 				ID:       "test-stream-123",
-				Delta:    llm.OutputDelta{Text: "!"},
+				Delta:    gai.OutputDelta{Text: "!"},
 				Finished: true,
 				Status:   "completed",
-				Usage:    &llm.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
+				Usage:    &gai.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
 			},
 		}
 	}
@@ -173,12 +173,12 @@ func (m *mockLLMClient) GenerateStream(ctx context.Context, req llm.ResponseRequ
 
 // mockResponseStream implements the ResponseStream interface
 type mockResponseStream struct {
-	chunks []*llm.ResponseChunk
+	chunks []*gai.ResponseChunk
 	index  int
 	closed bool
 }
 
-func (m *mockResponseStream) Next() (*llm.ResponseChunk, error) {
+func (m *mockResponseStream) Next() (*gai.ResponseChunk, error) {
 	if m.closed {
 		return nil, io.EOF
 	}
@@ -221,19 +221,19 @@ func TestOpenAIProvider_ChatCompletions_Streaming(t *testing.T) {
 			name:        "streaming with custom chunks",
 			requestBody: `{"model":"gpt-4","messages":[{"role":"user","content":"Test"}],"stream":true}`,
 			mockClient: &mockLLMClient{
-				streamChunks: []*llm.ResponseChunk{
+				streamChunks: []*gai.ResponseChunk{
 					{
 						ID:       "custom-123",
-						Delta:    llm.OutputDelta{Text: "Custom"},
+						Delta:    gai.OutputDelta{Text: "Custom"},
 						Finished: false,
 						Status:   "generating",
 					},
 					{
 						ID:       "custom-123",
-						Delta:    llm.OutputDelta{Text: " response"},
+						Delta:    gai.OutputDelta{Text: " response"},
 						Finished: true,
 						Status:   "completed",
-						Usage:    &llm.TokenUsage{PromptTokens: 3, CompletionTokens: 5, TotalTokens: 8},
+						Usage:    &gai.TokenUsage{PromptTokens: 3, CompletionTokens: 5, TotalTokens: 8},
 					},
 				},
 			},
@@ -326,16 +326,16 @@ func TestOpenAIProvider_convertChunkToOpenAI(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		chunk      *llm.ResponseChunk
+		chunk      *gai.ResponseChunk
 		modelID    string
 		wantObject string
 		wantFinish any
 	}{
 		{
 			name: "regular chunk",
-			chunk: &llm.ResponseChunk{
+			chunk: &gai.ResponseChunk{
 				ID:       "test-123",
-				Delta:    llm.OutputDelta{Text: "Hello"},
+				Delta:    gai.OutputDelta{Text: "Hello"},
 				Finished: false,
 				Status:   "generating",
 			},
@@ -345,12 +345,12 @@ func TestOpenAIProvider_convertChunkToOpenAI(t *testing.T) {
 		},
 		{
 			name: "final chunk",
-			chunk: &llm.ResponseChunk{
+			chunk: &gai.ResponseChunk{
 				ID:       "test-123",
-				Delta:    llm.OutputDelta{Text: "!"},
+				Delta:    gai.OutputDelta{Text: "!"},
 				Finished: true,
 				Status:   "completed",
-				Usage:    &llm.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
+				Usage:    &gai.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
 			},
 			modelID:    "gpt-4",
 			wantObject: "chat.completion.chunk",

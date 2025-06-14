@@ -10,15 +10,15 @@ import (
 	"fmt"
 	"maps"
 
-	llm "codeberg.org/gai-org/gai"
+	"codeberg.org/gai-org/gai"
 )
 
 type ModelRouter struct {
-	providers          map[string]llm.ProviderClient
+	providers          map[string]gai.ProviderClient
 	modelToProvider    map[string]string
 	modelAliases       map[string]string
 	aliasOnlyMode      bool
-	hardcodedModels    map[string]llm.Model
+	hardcodedModels    map[string]gai.Model
 	hardcodedProviders map[string]ProviderConfig
 }
 
@@ -42,7 +42,7 @@ type ModelConfig struct {
 	MaxOutputTokens   int
 	SupportsReasoning bool
 	SupportsTools     bool
-	Capabilities      llm.ModelCapabilities
+	Capabilities      gai.ModelCapabilities
 }
 
 var (
@@ -52,10 +52,10 @@ var (
 
 func New() *ModelRouter {
 	mr := &ModelRouter{
-		providers:       make(map[string]llm.ProviderClient),
+		providers:       make(map[string]gai.ProviderClient),
 		modelToProvider: make(map[string]string),
 		modelAliases:    make(map[string]string),
-		hardcodedModels: make(map[string]llm.Model),
+		hardcodedModels: make(map[string]gai.Model),
 		hardcodedProviders: map[string]ProviderConfig{
 			"openrouter": {
 				ID:   "openrouter",
@@ -69,22 +69,22 @@ func New() *ModelRouter {
 }
 
 func (mr *ModelRouter) initializeHardcodedModels() {
-	deepseekModel := llm.Model{
+	deepseekModel := gai.Model{
 		ID:       "deepseek/deepseek-r1-0528-qwen3-8b:free",
 		Name:     "DeepSeek-R1-0528-Qwen3-8B",
 		Provider: "openrouter",
-		Capabilities: llm.ModelCapabilities{
+		Capabilities: gai.ModelCapabilities{
 			SupportsStreaming: true,
 			SupportsJSON:      true,
 			SupportsFunctions: true,
 			SupportsVision:    false,
 		},
 	}
-	llama4MaverickModel := llm.Model{
+	llama4MaverickModel := gai.Model{
 		ID:       "meta-llama/llama-4-maverick-17b-128e-instruct:free",
 		Name:     "LLama-4-Maverick-17b-128e-instruct",
 		Provider: "openrouter",
-		Capabilities: llm.ModelCapabilities{
+		Capabilities: gai.ModelCapabilities{
 			SupportsStreaming: true,
 			SupportsJSON:      true,
 			SupportsFunctions: true,
@@ -143,7 +143,7 @@ func (mr *ModelRouter) GetModelConfig(modelID string) (*ModelConfig, error) {
 	}
 }
 
-func (mr *ModelRouter) RegisterProvider(ctx context.Context, provider llm.ProviderClient) error {
+func (mr *ModelRouter) RegisterProvider(ctx context.Context, provider gai.ProviderClient) error {
 	if provider == nil {
 		return errors.New("provider cannot be nil")
 	}
@@ -157,7 +157,7 @@ func (mr *ModelRouter) RegisterProvider(ctx context.Context, provider llm.Provid
 	return nil
 }
 
-func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (llm.ProviderClient, error) {
+func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (gai.ProviderClient, error) {
 	resolvedModelID := mr.resolveModelAlias(modelID)
 
 	if mr.aliasOnlyMode && !mr.isAliased(modelID) {
@@ -177,8 +177,8 @@ func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (llm.Prov
 	return provider, nil
 }
 
-func (mr *ModelRouter) ListAvailableModels(ctx context.Context) ([]llm.Model, error) {
-	var models []llm.Model
+func (mr *ModelRouter) ListAvailableModels(ctx context.Context) ([]gai.Model, error) {
+	var models []gai.Model
 
 	for _, model := range mr.hardcodedModels {
 		if mr.aliasOnlyMode {

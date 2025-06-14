@@ -9,12 +9,12 @@ import (
 	"log/slog"
 	"net/http"
 
-	llm "codeberg.org/gai-org/gai"
+	"codeberg.org/gai-org/gai"
 )
 
 type LLMClient interface {
-	Generate(ctx context.Context, req llm.ResponseRequest) (*llm.Response, error)
-	GenerateStream(ctx context.Context, req llm.ResponseRequest) (llm.ResponseStream, error)
+	Generate(ctx context.Context, req gai.ResponseRequest) (*gai.Response, error)
+	GenerateStream(ctx context.Context, req gai.ResponseRequest) (gai.ResponseStream, error)
 }
 
 type Provider interface {
