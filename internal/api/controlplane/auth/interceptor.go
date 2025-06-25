@@ -67,8 +67,8 @@ func (i *Interceptor) WrapStreamingHandler(next connect.StreamingHandlerFunc) co
 func extractToken(req connect.AnyRequest) string {
 	// Check Authorization header first
 	if authHeader := req.Header().Get("Authorization"); authHeader != "" {
-		if strings.HasPrefix(authHeader, "Bearer ") {
-			return strings.TrimPrefix(authHeader, "Bearer ")
+		if token, ok := strings.CutPrefix(authHeader, "Bearer "); ok {
+			return token
 		}
 	}
 
@@ -84,8 +84,8 @@ func extractToken(req connect.AnyRequest) string {
 func extractTokenFromStreamingConn(conn connect.StreamingHandlerConn) string {
 	// Check Authorization header first
 	if authHeader := conn.RequestHeader().Get("Authorization"); authHeader != "" {
-		if strings.HasPrefix(authHeader, "Bearer ") {
-			return strings.TrimPrefix(authHeader, "Bearer ")
+		if token, ok := strings.CutPrefix(authHeader, "Bearer "); ok {
+			return token
 		}
 	}
 

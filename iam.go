@@ -10,6 +10,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"codeberg.org/gai-org/gai"
+	"github.com/google/uuid"
 )
 
 // User represents a system user with SSO integration capabilities
@@ -150,6 +153,69 @@ type TokenRepository interface {
 
 	// UpdateTokenUsage records when a token was last used
 	UpdateTokenUsage(ctx context.Context, tokenID string) error
+}
+
+// ProviderConfig represents a provider configuration
+type ProviderConfig struct {
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	ProviderType string `json:"provider_type"`
+	Enabled      bool   `json:"enabled"`
+}
+
+// OpenRouterCredential represents an OpenRouter API credential
+type OpenRouterCredential struct {
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	APIKey      string    `json:"api_key"`
+	SiteName    string    `json:"site_name"`
+	HTTPReferer string    `json:"http_referer"`
+	Enabled     bool      `json:"enabled"`
+}
+
+// ModelWithCredentials represents a model with its associated credentials
+type ModelWithCredentials struct {
+	Model          gai.Model
+	CredentialID   uuid.UUID
+	CredentialType string
+	ModelReference string
+}
+
+// ModelWithReference represents a model with its model reference for aliasing
+type ModelWithReference struct {
+	Model          gai.Model
+	ModelReference string
+}
+
+// ProviderRepository defines persistence operations for Providers
+type ProviderRepository interface {
+	GetAllProviders(ctx context.Context) ([]ProviderConfig, error)
+	GetProviderByID(ctx context.Context, providerID string) (*ProviderConfig, error)
+	CreateProvider(ctx context.Context, provider *ProviderConfig) error
+	UpdateProvider(ctx context.Context, provider *ProviderConfig) error
+	DeleteProvider(ctx context.Context, providerID string) error
+}
+
+// CredentialRepository defines persistence operations for Credentials
+type CredentialRepository interface {
+	GetOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) (*OpenRouterCredential, error)
+	ListOpenRouterCredentials(ctx context.Context) ([]OpenRouterCredential, error)
+	CreateOpenRouterCredential(ctx context.Context, cred *OpenRouterCredential) error
+	UpdateOpenRouterCredential(ctx context.Context, cred *OpenRouterCredential) error
+	DeleteOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) error
+}
+
+// ModelRepository defines persistence operations for Models
+type ModelRepository interface {
+	GetAllModels(ctx context.Context) ([]gai.Model, error)
+	GetAllModelsWithReference(ctx context.Context) ([]ModelWithReference, error)
+	GetModelByID(ctx context.Context, modelID string) (*gai.Model, error)
+	GetModelByIDWithReference(ctx context.Context, modelID string) (*ModelWithReference, error)
+	GetModelWithCredentials(ctx context.Context, modelID string) (*ModelWithCredentials, error)
+	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error
+	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error
+	DeleteModel(ctx context.Context, modelID string) error
 }
 
 // Context keys for passing data through request contexts

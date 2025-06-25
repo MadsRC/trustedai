@@ -7,8 +7,8 @@ module codeberg.org/MadsRC/llmgw
 go 1.24.4
 
 require (
-	codeberg.org/gai-org/gai v0.2.0
-	codeberg.org/gai-org/gai-provider-openrouter v0.1.1
+	codeberg.org/gai-org/gai v0.7.1
+	codeberg.org/gai-org/gai-provider-openrouter v0.1.7
 	connectrpc.com/connect v1.18.1
 	connectrpc.com/cors v0.1.0
 	connectrpc.com/grpcreflect v1.3.0
@@ -28,7 +28,7 @@ require (
 )
 
 require (
-	codeberg.org/gai-org/gai-provider-openai v0.0.3 // indirect
+	codeberg.org/gai-org/gai-provider-openai v0.0.7 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

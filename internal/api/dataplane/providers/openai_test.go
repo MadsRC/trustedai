@@ -126,7 +126,7 @@ type mockLLMClient struct {
 	streamChunks      []*gai.ResponseChunk
 }
 
-func (m *mockLLMClient) Generate(ctx context.Context, req gai.ResponseRequest) (*gai.Response, error) {
+func (m *mockLLMClient) Generate(ctx context.Context, req gai.GenerateRequest) (*gai.Response, error) {
 	return &gai.Response{
 		ID:        "test-response-123",
 		ModelID:   req.ModelID,
@@ -137,7 +137,7 @@ func (m *mockLLMClient) Generate(ctx context.Context, req gai.ResponseRequest) (
 	}, nil
 }
 
-func (m *mockLLMClient) GenerateStream(ctx context.Context, req gai.ResponseRequest) (gai.ResponseStream, error) {
+func (m *mockLLMClient) GenerateStream(ctx context.Context, req gai.GenerateRequest) (gai.ResponseStream, error) {
 	if m.shouldStreamError {
 		return nil, assert.AnError
 	}

@@ -1,0 +1,187 @@
+// SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
+syntax = "proto3";
+
+package llmgw.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1";
+
+service ModelManagementService {
+  // Provider operations
+  rpc GetProvider(ModelManagementServiceGetProviderRequest) returns (ModelManagementServiceGetProviderResponse);
+  rpc ListProviders(ModelManagementServiceListProvidersRequest) returns (ModelManagementServiceListProvidersResponse);
+
+  // OpenRouter Credential operations
+  rpc CreateOpenRouterCredential(ModelManagementServiceCreateOpenRouterCredentialRequest) returns (ModelManagementServiceCreateOpenRouterCredentialResponse);
+  rpc GetOpenRouterCredential(ModelManagementServiceGetOpenRouterCredentialRequest) returns (ModelManagementServiceGetOpenRouterCredentialResponse);
+  rpc ListOpenRouterCredentials(ModelManagementServiceListOpenRouterCredentialsRequest) returns (ModelManagementServiceListOpenRouterCredentialsResponse);
+  rpc UpdateOpenRouterCredential(ModelManagementServiceUpdateOpenRouterCredentialRequest) returns (ModelManagementServiceUpdateOpenRouterCredentialResponse);
+  rpc DeleteOpenRouterCredential(ModelManagementServiceDeleteOpenRouterCredentialRequest) returns (ModelManagementServiceDeleteOpenRouterCredentialResponse);
+
+  // Model operations
+  rpc CreateModel(ModelManagementServiceCreateModelRequest) returns (ModelManagementServiceCreateModelResponse);
+  rpc GetModel(ModelManagementServiceGetModelRequest) returns (ModelManagementServiceGetModelResponse);
+  rpc ListModels(ModelManagementServiceListModelsRequest) returns (ModelManagementServiceListModelsResponse);
+  rpc UpdateModel(ModelManagementServiceUpdateModelRequest) returns (ModelManagementServiceUpdateModelResponse);
+  rpc DeleteModel(ModelManagementServiceDeleteModelRequest) returns (ModelManagementServiceDeleteModelResponse);
+}
+
+// Core entity messages
+message Provider {
+  string id = 1;
+  string name = 2;
+  string provider_type = 3;
+  bool enabled = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message OpenRouterCredential {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string api_key = 4;
+  string site_name = 5;
+  string http_referer = 6;
+  bool enabled = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message ModelPricing {
+  double input_token_price = 1;
+  double output_token_price = 2;
+}
+
+message ModelCapabilities {
+  bool supports_streaming = 1;
+  bool supports_json = 2;
+  bool supports_tools = 3;
+  bool supports_vision = 4;
+  bool supports_reasoning = 5;
+  int32 max_input_tokens = 6;
+  int32 max_output_tokens = 7;
+}
+
+message Model {
+  string id = 1;
+  string name = 2;
+  string provider_id = 3;
+  string credential_id = 4;
+  string credential_type = 5;
+  string model_reference = 6; // Composite reference like "openrouter:deepseek/deepseek-r1-0528-qwen3-8b:free"
+  ModelPricing pricing = 7;
+  ModelCapabilities capabilities = 8;
+  bool enabled = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// Provider service messages
+message ModelManagementServiceGetProviderRequest {
+  string id = 1;
+}
+
+message ModelManagementServiceGetProviderResponse {
+  Provider provider = 1;
+}
+
+message ModelManagementServiceListProvidersRequest {
+  bool include_disabled = 1;
+}
+
+message ModelManagementServiceListProvidersResponse {
+  repeated Provider providers = 1;
+}
+
+// OpenRouter Credential service messages
+message ModelManagementServiceCreateOpenRouterCredentialRequest {
+  OpenRouterCredential credential = 1;
+}
+
+message ModelManagementServiceCreateOpenRouterCredentialResponse {
+  OpenRouterCredential credential = 1;
+}
+
+message ModelManagementServiceGetOpenRouterCredentialRequest {
+  string id = 1;
+}
+
+message ModelManagementServiceGetOpenRouterCredentialResponse {
+  OpenRouterCredential credential = 1;
+}
+
+message ModelManagementServiceListOpenRouterCredentialsRequest {
+  bool include_disabled = 1;
+}
+
+message ModelManagementServiceListOpenRouterCredentialsResponse {
+  repeated OpenRouterCredential credentials = 1;
+}
+
+message ModelManagementServiceUpdateOpenRouterCredentialRequest {
+  OpenRouterCredential credential = 1;
+  bool has_enabled = 2;
+}
+
+message ModelManagementServiceUpdateOpenRouterCredentialResponse {
+  OpenRouterCredential credential = 1;
+}
+
+message ModelManagementServiceDeleteOpenRouterCredentialRequest {
+  string id = 1;
+}
+
+message ModelManagementServiceDeleteOpenRouterCredentialResponse {
+  bool success = 1;
+}
+
+// Model service messages
+message ModelManagementServiceCreateModelRequest {
+  Model model = 1;
+}
+
+message ModelManagementServiceCreateModelResponse {
+  Model model = 1;
+}
+
+message ModelManagementServiceGetModelRequest {
+  string id = 1;
+}
+
+message ModelManagementServiceGetModelResponse {
+  Model model = 1;
+}
+
+message ModelManagementServiceListModelsRequest {
+  bool include_disabled = 1;
+  string provider_id = 2;
+  string credential_type = 3;
+}
+
+message ModelManagementServiceListModelsResponse {
+  repeated Model models = 1;
+}
+
+message ModelManagementServiceUpdateModelRequest {
+  Model model = 1;
+  bool has_enabled = 2;
+  bool has_pricing = 3;
+  bool has_capabilities = 4;
+}
+
+message ModelManagementServiceUpdateModelResponse {
+  Model model = 1;
+}
+
+message ModelManagementServiceDeleteModelRequest {
+  string id = 1;
+}
+
+message ModelManagementServiceDeleteModelResponse {
+  bool success = 1;
+}

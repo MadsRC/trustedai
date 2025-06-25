@@ -72,6 +72,15 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 		return nil, err
 	}
 
+	// Create Model Management service handler
+	modelManagementServiceHandler, err := services.NewModelManagement(
+		services.WithCredentialRepository(opts.CredentialRepository),
+		services.WithModelRepository(opts.ModelRepository),
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	mux := http.NewServeMux()
 
 	// Configure CORS early for use with individual handlers
@@ -112,11 +121,19 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 	)
 	servicesToRegister[iamPath] = iamHandler
 
+	// Model Management service
+	modelManagementPath, modelManagementHandler := llmgwv1connect.NewModelManagementServiceHandler(
+		modelManagementServiceHandler,
+		connect.WithInterceptors(interceptors...),
+	)
+	servicesToRegister[modelManagementPath] = modelManagementHandler
+
 	registerServiceHandlers(mux, interceptors, servicesToRegister)
 
 	// Add gRPC reflection support
 	reflector := grpcreflect.NewStaticReflector(
 		llmgwv1connect.IAMServiceName,
+		llmgwv1connect.ModelManagementServiceName,
 	)
 	reflectionV1Path, reflectionV1Handler := grpcreflect.NewHandlerV1(reflector)
 	reflectionV1AlphaPath, reflectionV1AlphaHandler := grpcreflect.NewHandlerV1Alpha(reflector)
@@ -153,6 +170,9 @@ type controlPlaneOptions struct {
 	UserRepository         llmgw.UserRepository
 	OrganizationRepository llmgw.OrganizationRepository
 	TokenRepository        llmgw.TokenRepository
+	ProviderRepository     llmgw.ProviderRepository
+	CredentialRepository   llmgw.CredentialRepository
+	ModelRepository        llmgw.ModelRepository
 	SsoHandler             http.Handler
 	SessionStore           auth.SessionStore
 	AuthInterceptor        *cauth.Interceptor
@@ -213,6 +233,27 @@ func WithControlPlaneOrganizationRepository(repository llmgw.OrganizationReposit
 func WithControlPlaneTokenRepository(repository llmgw.TokenRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.TokenRepository = repository
+	})
+}
+
+// WithControlPlaneProviderRepository returns a [ControlPlaneOption] that uses the provided ProviderRepository.
+func WithControlPlaneProviderRepository(repository llmgw.ProviderRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
+		opts.ProviderRepository = repository
+	})
+}
+
+// WithControlPlaneCredentialRepository returns a [ControlPlaneOption] that uses the provided CredentialRepository.
+func WithControlPlaneCredentialRepository(repository llmgw.CredentialRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
+		opts.CredentialRepository = repository
+	})
+}
+
+// WithControlPlaneModelRepository returns a [ControlPlaneOption] that uses the provided ModelRepository.
+func WithControlPlaneModelRepository(repository llmgw.ModelRepository) ControlPlaneOption {
+	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
+		opts.ModelRepository = repository
 	})
 }
 

@@ -21,7 +21,7 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 		name     string
 		req      openai.ChatCompletionNewParams
 		isStream bool
-		want     func(*testing.T, gai.ResponseRequest)
+		want     func(*testing.T, gai.GenerateRequest)
 	}{
 		{
 			name: "simple user message",
@@ -32,13 +32,17 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-3.5-turbo", result.ModelID)
 				assert.Equal(t, "", result.Instructions)
 				assert.False(t, result.Stream)
 
-				textInput, ok := result.Input.(gai.TextInput)
-				require.True(t, ok, "Expected TextInput, got %T", result.Input)
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 1)
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput, ok := conversation.Messages[0].Content.(gai.TextInput)
+				require.True(t, ok)
 				assert.Equal(t, "Hello, world!", textInput.Text)
 			},
 		},
@@ -52,13 +56,17 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: true,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-4", result.ModelID)
 				assert.Equal(t, "You are a helpful assistant.", result.Instructions)
 				assert.True(t, result.Stream)
 
-				textInput, ok := result.Input.(gai.TextInput)
-				require.True(t, ok, "Expected TextInput, got %T", result.Input)
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 1)
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput, ok := conversation.Messages[0].Content.(gai.TextInput)
+				require.True(t, ok)
 				assert.Equal(t, "What's the weather like?", textInput.Text)
 			},
 		},
@@ -73,12 +81,16 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-4", result.ModelID)
 				assert.Equal(t, "You are a helpful assistant.\n\nRespond concisely.", result.Instructions)
 
-				textInput, ok := result.Input.(gai.TextInput)
-				require.True(t, ok, "Expected TextInput, got %T", result.Input)
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 1)
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput, ok := conversation.Messages[0].Content.(gai.TextInput)
+				require.True(t, ok)
 				assert.Equal(t, "Tell me about cats", textInput.Text)
 			},
 		},
@@ -94,28 +106,31 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-3.5-turbo", result.ModelID)
 				assert.Equal(t, "You are helpful.", result.Instructions)
 
-				multiInput, ok := result.Input.(gai.MultiInput)
-				require.True(t, ok, "Expected MultiInput, got %T", result.Input)
-				require.Len(t, multiInput.Items, 3)
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 3)
 
-				// First item should be first user message
-				textItem1, ok := multiInput.Items[0].(gai.TextInputItem)
+				// First message should be first user message
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput1, ok := conversation.Messages[0].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "Hello", textItem1.Text)
+				assert.Equal(t, "Hello", textInput1.Text)
 
-				// Second item should be assistant message
-				textItem2, ok := multiInput.Items[1].(gai.TextInputItem)
+				// Second message should be assistant message
+				assert.Equal(t, gai.RoleAssistant, conversation.Messages[1].Role)
+				textInput2, ok := conversation.Messages[1].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "Assistant: Hi there! How can I help?", textItem2.Text)
+				assert.Equal(t, "Hi there! How can I help?", textInput2.Text)
 
-				// Third item should be second user message
-				textItem3, ok := multiInput.Items[2].(gai.TextInputItem)
+				// Third message should be second user message
+				assert.Equal(t, gai.RoleUser, conversation.Messages[2].Role)
+				textInput3, ok := conversation.Messages[2].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "Tell me a joke", textItem3.Text)
+				assert.Equal(t, "Tell me a joke", textInput3.Text)
 			},
 		},
 		{
@@ -132,22 +147,24 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-4-vision", result.ModelID)
 
-				multiInput, ok := result.Input.(gai.MultiInput)
-				require.True(t, ok, "Expected MultiInput, got %T", result.Input)
-				require.Len(t, multiInput.Items, 2)
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 2)
 
-				// First item should be text
-				textItem, ok := multiInput.Items[0].(gai.TextInputItem)
+				// First message should be text
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput, ok := conversation.Messages[0].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "What's in this image?", textItem.Text)
+				assert.Equal(t, "What's in this image?", textInput.Text)
 
-				// Second item should be image
-				imageItem, ok := multiInput.Items[1].(gai.ImageInputItem)
+				// Second message should be image
+				assert.Equal(t, gai.RoleUser, conversation.Messages[1].Role)
+				imageInput, ok := conversation.Messages[1].Content.(gai.ImageInput)
 				require.True(t, ok)
-				assert.Equal(t, "https://example.com/image.jpg", imageItem.URL)
+				assert.Equal(t, "https://example.com/image.jpg", imageInput.URL)
 			},
 		},
 		{
@@ -162,7 +179,7 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-3.5-turbo", result.ModelID)
 				assert.Equal(t, float32(0.7), result.Temperature)
 				assert.Equal(t, float32(0.9), result.TopP)
@@ -179,7 +196,7 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, 150, result.MaxOutputTokens)
 			},
 		},
@@ -194,7 +211,7 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, 200, result.MaxOutputTokens)
 			},
 		},
@@ -205,7 +222,7 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				Messages: []openai.ChatCompletionMessageParamUnion{},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
+			want: func(t *testing.T, result gai.GenerateRequest) {
 				assert.Equal(t, "gpt-3.5-turbo", result.ModelID)
 				assert.Equal(t, "", result.Instructions)
 
@@ -224,20 +241,22 @@ func TestOpenAIProvider_convertToGaiRequest(t *testing.T) {
 				},
 			},
 			isStream: false,
-			want: func(t *testing.T, result gai.ResponseRequest) {
-				multiInput, ok := result.Input.(gai.MultiInput)
-				require.True(t, ok, "Expected MultiInput, got %T", result.Input)
-				require.Len(t, multiInput.Items, 2)
+			want: func(t *testing.T, result gai.GenerateRequest) {
+				conversation, ok := result.Input.(gai.Conversation)
+				require.True(t, ok, "Expected Conversation, got %T", result.Input)
+				require.Len(t, conversation.Messages, 2)
 
-				// First item should be user message
-				textItem1, ok := multiInput.Items[0].(gai.TextInputItem)
+				// First message should be user message
+				assert.Equal(t, gai.RoleUser, conversation.Messages[0].Role)
+				textInput1, ok := conversation.Messages[0].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "What's the weather?", textItem1.Text)
+				assert.Equal(t, "What's the weather?", textInput1.Text)
 
-				// Second item should be tool response
-				textItem2, ok := multiInput.Items[1].(gai.TextInputItem)
+				// Second message should be tool response
+				assert.Equal(t, gai.RoleTool, conversation.Messages[1].Role)
+				textInput2, ok := conversation.Messages[1].Content.(gai.TextInput)
 				require.True(t, ok)
-				assert.Equal(t, "Tool response: The weather is sunny", textItem2.Text)
+				assert.Equal(t, "The weather is sunny", textInput2.Text)
 			},
 		},
 	}
@@ -296,51 +315,6 @@ func TestOpenAIProvider_extractTextFromMessage(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := provider.extractTextFromMessage(tt.msg)
-			assert.Equal(t, tt.want, result)
-		})
-	}
-}
-
-func TestOpenAIProvider_extractInputItemsFromMessage(t *testing.T) {
-	provider := NewOpenAIProvider()
-
-	tests := []struct {
-		name string
-		msg  openai.ChatCompletionMessageParamUnion
-		want []gai.InputItem
-	}{
-		{
-			name: "simple user text message",
-			msg:  openai.UserMessage("Hello world"),
-			want: []gai.InputItem{
-				gai.TextInputItem{Text: "Hello world"},
-			},
-		},
-		{
-			name: "multi-modal user message",
-			msg: openai.UserMessage([]openai.ChatCompletionContentPartUnionParam{
-				openai.TextContentPart("What's in this image?"),
-				openai.ImageContentPart(openai.ChatCompletionContentPartImageImageURLParam{
-					URL: "https://example.com/image.jpg",
-				}),
-			}),
-			want: []gai.InputItem{
-				gai.TextInputItem{Text: "What's in this image?"},
-				gai.ImageInputItem{URL: "https://example.com/image.jpg"},
-			},
-		},
-		{
-			name: "non-user message falls back to text extraction",
-			msg:  openai.SystemMessage("You are helpful"),
-			want: []gai.InputItem{
-				gai.TextInputItem{Text: "You are helpful"},
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := provider.extractInputItemsFromMessage(tt.msg)
 			assert.Equal(t, tt.want, result)
 		})
 	}

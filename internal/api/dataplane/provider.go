@@ -13,8 +13,8 @@ import (
 )
 
 type LLMClient interface {
-	Generate(ctx context.Context, req gai.ResponseRequest) (*gai.Response, error)
-	GenerateStream(ctx context.Context, req gai.ResponseRequest) (gai.ResponseStream, error)
+	Generate(ctx context.Context, req gai.GenerateRequest) (*gai.Response, error)
+	GenerateStream(ctx context.Context, req gai.GenerateRequest) (gai.ResponseStream, error)
 }
 
 type Provider interface {

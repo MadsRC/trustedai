@@ -8,233 +8,210 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"maps"
+	"log/slog"
+	"strings"
 
+	"codeberg.org/MadsRC/llmgw"
+	"codeberg.org/MadsRC/llmgw/internal/models"
+	"codeberg.org/MadsRC/llmgw/internal/postgres"
 	"codeberg.org/gai-org/gai"
+	openrouter "codeberg.org/gai-org/gai-provider-openrouter"
 )
 
 type ModelRouter struct {
-	providers          map[string]gai.ProviderClient
-	modelToProvider    map[string]string
-	modelAliases       map[string]string
-	aliasOnlyMode      bool
-	hardcodedModels    map[string]gai.Model
-	hardcodedProviders map[string]ProviderConfig
+	hardcodedProviders map[string]*models.Provider
+	modelRepo          llmgw.ModelRepository
+	credentialRepo     llmgw.CredentialRepository
+	logger             *slog.Logger
 }
 
-type ProviderConfig struct {
-	ID   string
-	Name string
+// modelIDTransformingClient wraps a provider client to transform aliased model IDs to actual provider model IDs
+type modelIDTransformingClient struct {
+	gai.ProviderClient
+	aliasedModelID string
+	actualModelID  string
+	logger         *slog.Logger
 }
 
-type ModelPricing struct {
-	InputTokenPrice  float64
-	OutputTokenPrice float64
+// Generate transforms the model ID in the request before forwarding to the underlying provider
+func (c *modelIDTransformingClient) Generate(ctx context.Context, req gai.GenerateRequest) (*gai.Response, error) {
+	if req.ModelID == c.aliasedModelID {
+		if c.logger != nil {
+			c.logger.Debug("Transforming aliased model ID to actual provider model ID",
+				"aliased", c.aliasedModelID, "actual", c.actualModelID)
+		}
+		req.ModelID = c.actualModelID
+	}
+	return c.ProviderClient.Generate(ctx, req)
 }
 
-type ModelConfig struct {
-	ID                string
-	Name              string
-	Provider          string
-	Pricing           ModelPricing
-	SupportsImages    bool
-	MaxInputTokens    int
-	MaxOutputTokens   int
-	SupportsReasoning bool
-	SupportsTools     bool
-	Capabilities      gai.ModelCapabilities
+// GenerateStream transforms the model ID in the request before forwarding to the underlying provider
+func (c *modelIDTransformingClient) GenerateStream(ctx context.Context, req gai.GenerateRequest) (gai.ResponseStream, error) {
+	if req.ModelID == c.aliasedModelID {
+		if c.logger != nil {
+			c.logger.Debug("Transforming aliased model ID to actual provider model ID for streaming",
+				"aliased", c.aliasedModelID, "actual", c.actualModelID)
+		}
+		req.ModelID = c.actualModelID
+	}
+	return c.ProviderClient.GenerateStream(ctx, req)
 }
 
-var (
-	ErrModelNotFound    = errors.New("model not found")
-	ErrProviderNotFound = errors.New("provider not found")
-)
+// extractActualModelID extracts the actual provider model ID from a model reference (provider:modelID)
+func extractActualModelID(modelReference string) (string, error) {
+	parts := strings.SplitN(modelReference, ":", 2)
+	if len(parts) != 2 {
+		return "", fmt.Errorf("invalid model reference format: %s (expected provider:modelID)", modelReference)
+	}
+	return parts[1], nil
+}
 
-func New() *ModelRouter {
+type Option func(*ModelRouter)
+
+func WithDatabase(pool postgres.PgxPoolInterface) Option {
+	return func(mr *ModelRouter) {
+		mr.modelRepo = postgres.NewModelRepository(pool)
+		mr.credentialRepo = postgres.NewCredentialRepository(pool)
+	}
+}
+
+func WithModelRepository(repo llmgw.ModelRepository) Option {
+	return func(mr *ModelRouter) {
+		mr.modelRepo = repo
+	}
+}
+
+func WithCredentialRepository(repo llmgw.CredentialRepository) Option {
+	return func(mr *ModelRouter) {
+		mr.credentialRepo = repo
+	}
+}
+
+func WithLogger(logger *slog.Logger) Option {
+	return func(mr *ModelRouter) {
+		mr.logger = logger
+	}
+}
+
+func New(opts ...Option) *ModelRouter {
 	mr := &ModelRouter{
-		providers:       make(map[string]gai.ProviderClient),
-		modelToProvider: make(map[string]string),
-		modelAliases:    make(map[string]string),
-		hardcodedModels: make(map[string]gai.Model),
-		hardcodedProviders: map[string]ProviderConfig{
-			"openrouter": {
-				ID:   "openrouter",
-				Name: "OpenRouter",
-			},
+		hardcodedProviders: map[string]*models.Provider{
+			models.OpenRouterProvider.ID: &models.OpenRouterProvider,
 		},
 	}
 
-	mr.initializeHardcodedModels()
+	for _, opt := range opts {
+		opt(mr)
+	}
+
 	return mr
 }
 
-func (mr *ModelRouter) initializeHardcodedModels() {
-	deepseekModel := gai.Model{
-		ID:       "deepseek/deepseek-r1-0528-qwen3-8b:free",
-		Name:     "DeepSeek-R1-0528-Qwen3-8B",
-		Provider: "openrouter",
-		Capabilities: gai.ModelCapabilities{
-			SupportsStreaming: true,
-			SupportsJSON:      true,
-			SupportsFunctions: true,
-			SupportsVision:    false,
-		},
-	}
-	llama4MaverickModel := gai.Model{
-		ID:       "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-		Name:     "LLama-4-Maverick-17b-128e-instruct",
-		Provider: "openrouter",
-		Capabilities: gai.ModelCapabilities{
-			SupportsStreaming: true,
-			SupportsJSON:      true,
-			SupportsFunctions: true,
-			SupportsVision:    false,
-		},
-	}
-	mr.hardcodedModels[deepseekModel.ID] = deepseekModel
-	mr.modelToProvider[deepseekModel.ID] = "openrouter"
-	mr.hardcodedModels[llama4MaverickModel.ID] = llama4MaverickModel
-	mr.modelToProvider[llama4MaverickModel.ID] = "openrouter"
-}
+func (mr *ModelRouter) createProviderClient(ctx context.Context, modelWithCreds *llmgw.ModelWithCredentials) (gai.ProviderClient, error) {
+	switch modelWithCreds.CredentialType {
+	case "openrouter":
+		creds, err := mr.credentialRepo.GetOpenRouterCredential(ctx, modelWithCreds.CredentialID)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get OpenRouter credentials: %w", err)
+		}
 
-func (mr *ModelRouter) GetModelConfig(modelID string) (*ModelConfig, error) {
-	resolvedModelID := mr.resolveModelAlias(modelID)
+		opts := []openrouter.ProviderOption{
+			openrouter.WithAPIKey(creds.APIKey),
+		}
+		if mr.logger != nil {
+			opts = append(opts, openrouter.WithLogger(mr.logger))
+		}
+		if creds.SiteName != "" {
+			opts = append(opts, openrouter.WithSiteName(creds.SiteName))
+		}
+		if creds.HTTPReferer != "" {
+			opts = append(opts, openrouter.WithHTTPReferer(creds.HTTPReferer))
+		}
 
-	model, exists := mr.hardcodedModels[resolvedModelID]
-	if !exists {
-		return nil, fmt.Errorf("%w: %s", ErrModelNotFound, resolvedModelID)
-	}
-
-	switch resolvedModelID {
-	case "deepseek/deepseek-r1-0528-qwen3-8b:free":
-		return &ModelConfig{
-			ID:       model.ID,
-			Name:     model.Name,
-			Provider: model.Provider,
-			Pricing: ModelPricing{
-				InputTokenPrice:  0.000001,
-				OutputTokenPrice: 0.000002,
-			},
-			SupportsImages:    false,
-			MaxInputTokens:    32768,
-			MaxOutputTokens:   8192,
-			SupportsReasoning: true,
-			SupportsTools:     true,
-			Capabilities:      model.Capabilities,
-		}, nil
-	case "meta-llama/llama-4-maverick-17b-128e-instruct:free":
-		return &ModelConfig{
-			ID:       model.ID,
-			Name:     model.Name,
-			Provider: model.Provider,
-			Pricing: ModelPricing{
-				InputTokenPrice:  0.0,
-				OutputTokenPrice: 0.0,
-			},
-			SupportsImages:    false,
-			MaxInputTokens:    124000,
-			MaxOutputTokens:   4000,
-			SupportsReasoning: true,
-			SupportsTools:     true,
-			Capabilities:      model.Capabilities,
-		}, nil
+		return openrouter.New(opts...), nil
 	default:
-		return nil, fmt.Errorf("model configuration not found for %s", resolvedModelID)
+		return nil, fmt.Errorf("unsupported credential type: %s", modelWithCreds.CredentialType)
 	}
 }
 
 func (mr *ModelRouter) RegisterProvider(ctx context.Context, provider gai.ProviderClient) error {
-	if provider == nil {
-		return errors.New("provider cannot be nil")
-	}
-
-	providerID := provider.ID()
-	if providerID == "" {
-		return errors.New("provider ID cannot be empty")
-	}
-
-	mr.providers[providerID] = provider
-	return nil
+	return errors.New("RegisterProvider is deprecated - providers are now managed through the database")
 }
 
 func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (gai.ProviderClient, error) {
-	resolvedModelID := mr.resolveModelAlias(modelID)
-
-	if mr.aliasOnlyMode && !mr.isAliased(modelID) {
-		return nil, fmt.Errorf("model %s not allowed in alias-only mode", modelID)
+	if mr.modelRepo == nil || mr.credentialRepo == nil {
+		return nil, errors.New("database repositories not configured")
 	}
 
-	providerID, exists := mr.modelToProvider[resolvedModelID]
-	if !exists {
-		return nil, fmt.Errorf("%w: %s", ErrModelNotFound, resolvedModelID)
+	modelWithCreds, err := mr.modelRepo.GetModelWithCredentials(ctx, modelID)
+	if err != nil {
+		return nil, err
 	}
 
-	provider, exists := mr.providers[providerID]
-	if !exists {
-		return nil, fmt.Errorf("%w: %s", ErrProviderNotFound, providerID)
+	providerClient, err := mr.createProviderClient(ctx, modelWithCreds)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create provider client: %w", err)
 	}
 
-	return provider, nil
+	// Extract the actual provider model ID from the model reference
+	actualModelID, err := extractActualModelID(modelWithCreds.ModelReference)
+	if err != nil {
+		return nil, fmt.Errorf("failed to extract actual model ID from reference %s: %w", modelWithCreds.ModelReference, err)
+	}
+
+	// Create a transforming wrapper that replaces the aliased model ID with the actual provider model ID
+	transformingClient := &modelIDTransformingClient{
+		ProviderClient: providerClient,
+		aliasedModelID: modelID,
+		actualModelID:  actualModelID,
+		logger:         mr.logger,
+	}
+
+	return transformingClient, nil
 }
 
-func (mr *ModelRouter) ListAvailableModels(ctx context.Context) ([]gai.Model, error) {
-	var models []gai.Model
+func (mr *ModelRouter) ListModels(ctx context.Context) ([]gai.Model, error) {
+	if mr.modelRepo == nil {
+		return nil, errors.New("model repository not configured")
+	}
 
-	for _, model := range mr.hardcodedModels {
-		if mr.aliasOnlyMode {
-			if mr.hasAlias(model.ID) {
-				models = append(models, model)
-			}
-		} else {
-			models = append(models, model)
+	return mr.modelRepo.GetAllModels(ctx)
+}
+
+func (mr *ModelRouter) ListProviders() []gai.ProviderClient {
+	if mr.logger != nil {
+		mr.logger.Debug("ListProviders called - providers are now created dynamically per model")
+	}
+	return []gai.ProviderClient{}
+}
+
+// CacheStatsProvider interface for repositories that support cache statistics
+type CacheStatsProvider interface {
+	CacheStats() map[string]any
+}
+
+// GetCacheStats returns cache statistics if cached repositories are being used
+func (mr *ModelRouter) GetCacheStats() map[string]any {
+	stats := make(map[string]any)
+
+	// Check if we're using cached repositories
+	if cacheProvider, ok := mr.modelRepo.(CacheStatsProvider); ok {
+		modelStats := cacheProvider.CacheStats()
+		for k, v := range modelStats {
+			stats["model_"+k] = v
 		}
 	}
 
-	return models, nil
-}
-
-func (mr *ModelRouter) AddModelAlias(alias, actualModelID string) {
-	if alias == "" || actualModelID == "" {
-		return
-	}
-	mr.modelAliases[alias] = actualModelID
-}
-
-func (mr *ModelRouter) RemoveModelAlias(alias string) {
-	delete(mr.modelAliases, alias)
-}
-
-func (mr *ModelRouter) ListModelAliases() map[string]string {
-	aliases := make(map[string]string)
-	maps.Copy(aliases, mr.modelAliases)
-	return aliases
-}
-
-func (mr *ModelRouter) SetAliasOnlyMode(enabled bool) {
-	mr.aliasOnlyMode = enabled
-}
-
-func (mr *ModelRouter) IsAliasOnlyMode() bool {
-	return mr.aliasOnlyMode
-}
-
-func (mr *ModelRouter) resolveModelAlias(modelID string) string {
-	if actualID, exists := mr.modelAliases[modelID]; exists {
-		return actualID
-	}
-	return modelID
-}
-
-func (mr *ModelRouter) isAliased(modelID string) bool {
-	_, exists := mr.modelAliases[modelID]
-	return exists
-}
-
-func (mr *ModelRouter) hasAlias(actualModelID string) bool {
-	for _, id := range mr.modelAliases {
-		if id == actualModelID {
-			return true
+	if cacheProvider, ok := mr.credentialRepo.(CacheStatsProvider); ok {
+		credStats := cacheProvider.CacheStats()
+		for k, v := range credStats {
+			stats["credential_"+k] = v
 		}
 	}
-	return false
+
+	if len(stats) == 0 {
+		stats["message"] = "caching not enabled"
+	}
+
+	return stats
 }

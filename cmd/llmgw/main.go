@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"codeberg.org/gai-org/gai"
-	openrouter "codeberg.org/gai-org/gai-provider-openrouter"
 
 	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
@@ -69,11 +68,6 @@ func main() {
 				Name:    "debug",
 				Usage:   "Enable debug logging",
 				Sources: cli.EnvVars("LLMGW_DEBUG"),
-			},
-			&cli.StringFlag{
-				Name:    "openrouter-api-key",
-				Usage:   "OpenRouter API key for LLM provider",
-				Sources: cli.EnvVars("OPENROUTER_API_KEY"),
 			},
 		},
 		Action: runServer,
@@ -142,6 +136,12 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("failed to create token repository: %w", err)
 	}
 
+	// Create credential repository
+	credentialRepo := postgres.NewCredentialRepository(dbPool)
+
+	// Create model repository
+	modelRepo := postgres.NewModelRepository(dbPool)
+
 	// Check and perform bootstrap if needed
 	logger.Info("Checking system bootstrap status...")
 	if err := bootstrap.CheckAndBootstrap(ctx, logger, orgRepo, userRepo, tokenRepo); err != nil {
@@ -185,6 +185,8 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		controlplane.WithControlPlaneUserRepository(userRepo),
 		controlplane.WithControlPlaneOrganizationRepository(orgRepo),
 		controlplane.WithControlPlaneTokenRepository(tokenRepo),
+		controlplane.WithControlPlaneCredentialRepository(credentialRepo),
+		controlplane.WithControlPlaneModelRepository(modelRepo),
 		controlplane.WithSSOHandler(ssoHandler),
 		controlplane.WithSessionStore(sessionStore),
 		controlplane.WithAuthInterceptor(authInterceptor),
@@ -195,8 +197,11 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("failed to create server: %w", err)
 	}
 
-	// Create custom model router with hardcoded models
-	customModelRouter := modelrouter.New()
+	// Create custom model router with database integration
+	customModelRouter := modelrouter.New(
+		modelrouter.WithDatabase(dbPool),
+		modelrouter.WithLogger(logger.WithGroup("modelrouter")),
+	)
 
 	// Create LLM client with custom router
 	llmClient := gai.New(
@@ -204,23 +209,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		gai.WithModelRouter(customModelRouter),
 	)
 
-	// Create and register OpenRouter provider if API key is provided
-	openrouterAPIKey := c.String("openrouter-api-key")
-	if openrouterAPIKey != "" {
-		openrouterProvider := openrouter.New(
-			openrouter.WithAPIKey(openrouterAPIKey),
-			openrouter.WithLogger(logger.WithGroup("openrouter")),
-			openrouter.WithSiteName("LLMGW"),
-			openrouter.WithHTTPReferer("https://codeberg.org/MadsRC/llmgw"),
-		)
-
-		if err := customModelRouter.RegisterProvider(ctx, openrouterProvider); err != nil {
-			return fmt.Errorf("failed to register OpenRouter provider: %w", err)
-		}
-		logger.Info("OpenRouter provider registered successfully")
-	} else {
-		logger.Warn("OpenRouter API key not provided, OpenRouter provider not available")
-	}
+	logger.Info("Model router configured with database integration - providers are managed through database")
 
 	// Create OpenAI provider
 	openaiProvider := providers.NewOpenAIProvider(

@@ -88,7 +88,7 @@ func (p *OpenAIProvider) handleChatCompletions(w http.ResponseWriter, r *http.Re
 		"messages_count", len(req.Messages),
 		"stream", isStream)
 
-	// Convert OpenAI request to gai ResponseRequest
+	// Convert OpenAI request to gai GenerateRequest
 	gaiReq := p.convertToGaiRequest(req, isStream)
 
 	if isStream {
@@ -145,10 +145,10 @@ func (p *OpenAIProvider) handleListModels(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (p *OpenAIProvider) convertToGaiRequest(req openai.ChatCompletionNewParams, isStream bool) gai.ResponseRequest {
-	// Extract system instructions and user input from messages
+func (p *OpenAIProvider) convertToGaiRequest(req openai.ChatCompletionNewParams, isStream bool) gai.GenerateRequest {
+	// Convert OpenAI messages to gai Messages for Conversation input
+	var messages []gai.Message
 	var instructions string
-	var inputItems []gai.InputItem
 
 	for _, msg := range req.Messages {
 		role := p.extractRoleFromMessage(msg)
@@ -164,40 +164,38 @@ func (p *OpenAIProvider) convertToGaiRequest(req openai.ChatCompletionNewParams,
 				}
 			}
 		case "user":
-			// User messages become input items
-			items := p.extractInputItemsFromMessage(msg)
-			inputItems = append(inputItems, items...)
+			// Convert user message to gai Message(s)
+			// For multimodal content, create separate messages for each part
+			userMessages := p.extractMessagesFromUserMessage(msg)
+			messages = append(messages, userMessages...)
 		case "assistant":
-			// Assistant messages can be handled as context, but for now we'll include them as text input
+			// Convert assistant message to gai Message
 			if textContent := p.extractTextFromMessage(msg); textContent != "" {
-				inputItems = append(inputItems, gai.TextInputItem{Text: "Assistant: " + textContent})
+				messages = append(messages, gai.Message{
+					Role:    gai.RoleAssistant,
+					Content: gai.TextInput{Text: textContent},
+				})
 			}
 		case "tool":
-			// Tool response messages
+			// Convert tool response to gai Message
 			if textContent := p.extractTextFromMessage(msg); textContent != "" {
-				inputItems = append(inputItems, gai.TextInputItem{Text: "Tool response: " + textContent})
+				messages = append(messages, gai.Message{
+					Role:    gai.RoleTool,
+					Content: gai.TextInput{Text: textContent},
+				})
 			}
 		}
 	}
 
-	// Create the appropriate input based on what we have
+	// Create conversation input or fallback to text input
 	var input gai.Input
-	if len(inputItems) == 0 {
-		// No input items, create empty text input
-		input = gai.TextInput{Text: ""}
-	} else if len(inputItems) == 1 {
-		// Single item - check if it's text and use TextInput for better compatibility
-		if textItem, ok := inputItems[0].(gai.TextInputItem); ok {
-			input = gai.TextInput(textItem)
-		} else {
-			input = gai.MultiInput{Items: inputItems}
-		}
+	if len(messages) > 0 {
+		input = gai.Conversation{Messages: messages}
 	} else {
-		// Multiple items - use MultiInput
-		input = gai.MultiInput{Items: inputItems}
+		input = gai.TextInput{Text: ""}
 	}
 
-	gaiReq := gai.ResponseRequest{
+	gaiReq := gai.GenerateRequest{
 		ModelID:      string(req.Model),
 		Instructions: instructions,
 		Input:        input,
@@ -276,18 +274,6 @@ func (p *OpenAIProvider) extractTextFromMessage(msg openai.ChatCompletionMessage
 	return ""
 }
 
-func (p *OpenAIProvider) extractInputItemsFromMessage(msg openai.ChatCompletionMessageParamUnion) []gai.InputItem {
-	// Handle different message types and extract input items
-	if msg.OfUser != nil {
-		return p.extractInputItemsFromUserMessage(msg.OfUser)
-	}
-	// For other message types, fall back to text extraction
-	if textContent := p.extractTextFromMessage(msg); textContent != "" {
-		return []gai.InputItem{gai.TextInputItem{Text: textContent}}
-	}
-	return []gai.InputItem{}
-}
-
 func (p *OpenAIProvider) extractTextFromSystemMessage(msg *openai.ChatCompletionSystemMessageParam) string {
 	if msg == nil {
 		return ""
@@ -328,31 +314,48 @@ func (p *OpenAIProvider) extractTextFromUserMessage(msg *openai.ChatCompletionUs
 	return ""
 }
 
-func (p *OpenAIProvider) extractInputItemsFromUserMessage(msg *openai.ChatCompletionUserMessageParam) []gai.InputItem {
-	if msg == nil {
-		return []gai.InputItem{}
+func (p *OpenAIProvider) extractMessagesFromUserMessage(msg openai.ChatCompletionMessageParamUnion) []gai.Message {
+	if msg.OfUser == nil {
+		// Fallback for non-user messages - treat as single text message
+		if textContent := p.extractTextFromMessage(msg); textContent != "" {
+			return []gai.Message{{
+				Role:    gai.RoleUser,
+				Content: gai.TextInput{Text: textContent},
+			}}
+		}
+		return []gai.Message{}
 	}
 
-	var items []gai.InputItem
+	userMsg := msg.OfUser
 
 	// Handle string content
-	if !param.IsOmitted(msg.Content.OfString) {
-		items = append(items, gai.TextInputItem{Text: msg.Content.OfString.Value})
-		return items
+	if !param.IsOmitted(userMsg.Content.OfString) {
+		return []gai.Message{{
+			Role:    gai.RoleUser,
+			Content: gai.TextInput{Text: userMsg.Content.OfString.Value},
+		}}
 	}
 
-	// Handle array of content parts
-	if msg.Content.OfArrayOfContentParts != nil {
-		for _, part := range msg.Content.OfArrayOfContentParts {
+	// Handle array of content parts - create separate messages for each part
+	if userMsg.Content.OfArrayOfContentParts != nil {
+		var messages []gai.Message
+		for _, part := range userMsg.Content.OfArrayOfContentParts {
 			if !param.IsOmitted(part.OfText) {
-				items = append(items, gai.TextInputItem{Text: part.OfText.Text})
+				messages = append(messages, gai.Message{
+					Role:    gai.RoleUser,
+					Content: gai.TextInput{Text: part.OfText.Text},
+				})
 			} else if !param.IsOmitted(part.OfImageURL) {
-				items = append(items, gai.ImageInputItem{URL: part.OfImageURL.ImageURL.URL})
+				messages = append(messages, gai.Message{
+					Role:    gai.RoleUser,
+					Content: gai.ImageInput{URL: part.OfImageURL.ImageURL.URL},
+				})
 			}
 		}
+		return messages
 	}
 
-	return items
+	return []gai.Message{}
 }
 
 func (p *OpenAIProvider) extractTextFromAssistantMessage(msg *openai.ChatCompletionAssistantMessageParam) string {
@@ -510,7 +513,7 @@ func (p *OpenAIProvider) convertFromGaiResponse(gaiResp *gai.Response, modelID s
 	return response
 }
 
-func (p *OpenAIProvider) handleStreamingResponse(w http.ResponseWriter, ctx context.Context, gaiReq gai.ResponseRequest, modelID string) {
+func (p *OpenAIProvider) handleStreamingResponse(w http.ResponseWriter, ctx context.Context, gaiReq gai.GenerateRequest, modelID string) {
 	// Set SSE headers
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
