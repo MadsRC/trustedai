@@ -153,10 +153,21 @@ func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (gai.Prov
 		return nil, fmt.Errorf("failed to create provider client: %w", err)
 	}
 
-	// Extract the actual provider model ID from the model reference
-	actualModelID, err := extractActualModelID(modelWithCreds.ModelReference)
+	// Extract the actual provider model ID from the model reference in metadata
+	modelReference := ""
+	if modelWithCreds.Model.Metadata != nil {
+		if ref, ok := modelWithCreds.Model.Metadata["model_reference"].(string); ok {
+			modelReference = ref
+		}
+	}
+
+	if modelReference == "" {
+		return nil, fmt.Errorf("model reference not found in metadata for model %s", modelID)
+	}
+
+	actualModelID, err := extractActualModelID(modelReference)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract actual model ID from reference %s: %w", modelWithCreds.ModelReference, err)
+		return nil, fmt.Errorf("failed to extract actual model ID from reference %s: %w", modelReference, err)
 	}
 
 	// Create a transforming wrapper that replaces the aliased model ID with the actual provider model ID

@@ -326,7 +326,7 @@ func (s *ModelManagement) CreateModel(
 	ctx context.Context,
 	req *connect.Request[llmgwv1.ModelManagementServiceCreateModelRequest],
 ) (*connect.Response[llmgwv1.ModelManagementServiceCreateModelResponse], error) {
-	s.options.Logger.Debug("[ModelManagementService] CreateModel invoked", "id", req.Msg.GetModel().GetId(), "reference", req.Msg.GetModel().GetModelReference())
+	s.options.Logger.Debug("[ModelManagementService] CreateModel invoked", "id", req.Msg.GetModel().GetId())
 
 	// Validate request
 	if req.Msg.GetModel() == nil {
@@ -337,8 +337,14 @@ func (s *ModelManagement) CreateModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: model ID is required"))
 	}
 
-	if req.Msg.GetModel().GetModelReference() == "" {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: model reference is required"))
+	// Extract model reference from metadata
+	modelReference := ""
+	if req.Msg.GetModel().GetMetadata() != nil {
+		modelReference = req.Msg.GetModel().GetMetadata()["model_reference"]
+	}
+
+	if modelReference == "" {
+		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: model_reference must be provided in metadata"))
 	}
 
 	if req.Msg.GetModel().GetProviderId() == "" {
@@ -354,7 +360,7 @@ func (s *ModelManagement) CreateModel(
 	}
 
 	// Look up hardcoded model for inference
-	hardcodedModel, err := models.GetModelByReference(req.Msg.GetModel().GetModelReference())
+	hardcodedModel, err := models.GetModelByReference(modelReference)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("model management service: invalid model reference: %w", err))
 	}
@@ -366,10 +372,10 @@ func (s *ModelManagement) CreateModel(
 	}
 
 	// Create enhanced model with inference from hardcoded model
-	gaiModel := createModelWithInference(req.Msg.GetModel(), hardcodedModel)
+	gaiModel := createModelWithInference(req.Msg.GetModel(), hardcodedModel, modelReference)
 
 	// Create model in repository
-	err = s.options.ModelRepository.CreateModel(ctx, gaiModel, credentialID, req.Msg.GetModel().GetCredentialType(), req.Msg.GetModel().GetModelReference())
+	err = s.options.ModelRepository.CreateModel(ctx, gaiModel, credentialID, req.Msg.GetModel().GetCredentialType())
 	if err != nil {
 		s.options.Logger.Error("Failed to create model", "error", err)
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("model management service: failed to create model: %w", err))
@@ -377,7 +383,6 @@ func (s *ModelManagement) CreateModel(
 
 	// Convert back to proto for response
 	protoModel := gaiModelToProto(gaiModel, req.Msg.GetModel().GetCredentialId(), req.Msg.GetModel().GetCredentialType())
-	protoModel.ModelReference = req.Msg.GetModel().GetModelReference()
 
 	// Return response
 	response := &llmgwv1.ModelManagementServiceCreateModelResponse{
@@ -413,7 +418,7 @@ func (s *ModelManagement) GetModel(
 		ProviderId:     modelWithRef.Model.Provider,
 		CredentialId:   "", // Not available in current model structure
 		CredentialType: "", // Not available in current model structure
-		ModelReference: modelWithRef.ModelReference,
+		Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 		Enabled:        true,
 		CreatedAt:      timestamppb.New(time.Now()),
 		UpdatedAt:      timestamppb.New(time.Now()),
@@ -469,7 +474,7 @@ func (s *ModelManagement) ListModels(
 			ProviderId:     modelWithRef.Model.Provider,
 			CredentialId:   "", // Not available in current model structure
 			CredentialType: "", // Not available in current model structure
-			ModelReference: modelWithRef.ModelReference,
+			Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 			Enabled:        true,
 			CreatedAt:      timestamppb.New(time.Now()),
 			UpdatedAt:      timestamppb.New(time.Now()),
@@ -547,7 +552,7 @@ func (s *ModelManagement) UpdateModel(
 	gaiModel := protoModelToGaiModel(req.Msg.GetModel())
 
 	// Update model in repository
-	err = s.options.ModelRepository.UpdateModel(ctx, gaiModel, credentialID, req.Msg.GetModel().GetCredentialType(), req.Msg.GetModel().GetModelReference())
+	err = s.options.ModelRepository.UpdateModel(ctx, gaiModel, credentialID, req.Msg.GetModel().GetCredentialType())
 	if err != nil {
 		s.options.Logger.Error("Failed to update model", "error", err)
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("model management service: failed to update model: %w", err))
@@ -555,7 +560,6 @@ func (s *ModelManagement) UpdateModel(
 
 	// Convert back to proto for response
 	protoModel := gaiModelToProto(gaiModel, req.Msg.GetModel().GetCredentialId(), req.Msg.GetModel().GetCredentialType())
-	protoModel.ModelReference = req.Msg.GetModel().GetModelReference()
 
 	// Return response
 	response := &llmgwv1.ModelManagementServiceUpdateModelResponse{
@@ -595,11 +599,15 @@ func (s *ModelManagement) DeleteModel(
 // Helper functions
 
 // createModelWithInference creates a gai.Model with automatic inference from hardcoded models
-func createModelWithInference(protoModel *llmgwv1.Model, hardcodedModel *gai.Model) *gai.Model {
+func createModelWithInference(protoModel *llmgwv1.Model, hardcodedModel *gai.Model, modelReference string) *gai.Model {
 	gaiModel := &gai.Model{
 		ID:       protoModel.GetId(),
 		Provider: protoModel.GetProviderId(),
+		Metadata: make(map[string]any),
 	}
+
+	// Store model reference in metadata
+	gaiModel.Metadata["model_reference"] = modelReference
 
 	// Infer name if not provided
 	if protoModel.GetName() != "" {
@@ -682,6 +690,7 @@ func protoModelToGaiModel(protoModel *llmgwv1.Model) *gai.Model {
 		ID:       protoModel.GetId(),
 		Name:     protoModel.GetName(),
 		Provider: protoModel.GetProviderId(),
+		Metadata: convertProtoMetadataToGai(protoModel.GetMetadata()),
 	}
 
 	// Convert pricing
@@ -716,6 +725,7 @@ func gaiModelToProto(gaiModel *gai.Model, credentialID, credentialType string) *
 		ProviderId:     gaiModel.Provider,
 		CredentialId:   credentialID,
 		CredentialType: credentialType,
+		Metadata:       convertGaiMetadataToProto(gaiModel.Metadata),
 		Enabled:        true,
 		CreatedAt:      timestamppb.New(time.Now()),
 		UpdatedAt:      timestamppb.New(time.Now()),
@@ -741,4 +751,36 @@ func gaiModelToProto(gaiModel *gai.Model, credentialID, credentialType string) *
 	}
 
 	return protoModel
+}
+
+// convertProtoMetadataToGai converts proto metadata (map[string]string) to gai metadata (map[string]any)
+func convertProtoMetadataToGai(protoMetadata map[string]string) map[string]any {
+	if protoMetadata == nil {
+		return make(map[string]any)
+	}
+
+	gaiMetadata := make(map[string]any, len(protoMetadata))
+	for key, value := range protoMetadata {
+		gaiMetadata[key] = value
+	}
+	return gaiMetadata
+}
+
+// convertGaiMetadataToProto converts gai metadata (map[string]any) to proto metadata (map[string]string)
+func convertGaiMetadataToProto(gaiMetadata map[string]any) map[string]string {
+	if gaiMetadata == nil {
+		return make(map[string]string)
+	}
+
+	protoMetadata := make(map[string]string, len(gaiMetadata))
+	for key, value := range gaiMetadata {
+		// Convert any value to string for proto compatibility
+		if strValue, ok := value.(string); ok {
+			protoMetadata[key] = strValue
+		} else {
+			// For non-string values, convert to string representation
+			protoMetadata[key] = fmt.Sprintf("%v", value)
+		}
+	}
+	return protoMetadata
 }

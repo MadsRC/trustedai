@@ -73,9 +73,9 @@ message Model {
   string provider_id = 3;
   string credential_id = 4;
   string credential_type = 5;
-  string model_reference = 6; // Composite reference like "openrouter:deepseek/deepseek-r1-0528-qwen3-8b:free"
-  ModelPricing pricing = 7;
-  ModelCapabilities capabilities = 8;
+  ModelPricing pricing = 6;
+  ModelCapabilities capabilities = 7;
+  map<string, string> metadata = 8; // Mirrors gai.Model.Metadata
   bool enabled = 9;
   google.protobuf.Timestamp created_at = 10;
   google.protobuf.Timestamp updated_at = 11;

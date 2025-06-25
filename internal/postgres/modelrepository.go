@@ -24,7 +24,7 @@ func NewModelRepository(pool PgxPoolInterface) *ModelRepository {
 
 func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
 		WHERE m.enabled = true
 	`
@@ -38,7 +38,7 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 	var modelList []gai.Model
 	for rows.Next() {
 		var model gai.Model
-		var pricingJSON, capabilitiesJSON []byte
+		var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 		err := rows.Scan(
 			&model.ID,
@@ -46,6 +46,7 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 			&model.Provider,
 			&pricingJSON,
 			&capabilitiesJSON,
+			&metadataJSON,
 		)
 		if err != nil {
 			return nil, err
@@ -56,6 +57,10 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 		}
 
 		if err := json.Unmarshal(capabilitiesJSON, &model.Capabilities); err != nil {
+			return nil, err
+		}
+
+		if err := json.Unmarshal(metadataJSON, &model.Metadata); err != nil {
 			return nil, err
 		}
 
@@ -71,7 +76,7 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 
 func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmgw.ModelWithReference, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.model_reference
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
 		WHERE m.enabled = true
 	`
@@ -85,7 +90,7 @@ func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmg
 	var modelList []llmgw.ModelWithReference
 	for rows.Next() {
 		var modelWithRef llmgw.ModelWithReference
-		var pricingJSON, capabilitiesJSON []byte
+		var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 		err := rows.Scan(
 			&modelWithRef.Model.ID,
@@ -93,7 +98,7 @@ func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmg
 			&modelWithRef.Model.Provider,
 			&pricingJSON,
 			&capabilitiesJSON,
-			&modelWithRef.ModelReference,
+			&metadataJSON,
 		)
 		if err != nil {
 			return nil, err
@@ -104,6 +109,10 @@ func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmg
 		}
 
 		if err := json.Unmarshal(capabilitiesJSON, &modelWithRef.Model.Capabilities); err != nil {
+			return nil, err
+		}
+
+		if err := json.Unmarshal(metadataJSON, &modelWithRef.Model.Metadata); err != nil {
 			return nil, err
 		}
 
@@ -119,7 +128,7 @@ func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmg
 
 func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*gai.Model, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
 		WHERE m.id = $1 AND m.enabled = true
 	`
@@ -127,7 +136,7 @@ func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*ga
 	row := r.pool.QueryRow(ctx, query, modelID)
 
 	var model gai.Model
-	var pricingJSON, capabilitiesJSON []byte
+	var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 	err := row.Scan(
 		&model.ID,
@@ -135,6 +144,7 @@ func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*ga
 		&model.Provider,
 		&pricingJSON,
 		&capabilitiesJSON,
+		&metadataJSON,
 	)
 	if err != nil {
 		return nil, models.ErrModelNotFound
@@ -148,12 +158,16 @@ func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*ga
 		return nil, err
 	}
 
+	if err := json.Unmarshal(metadataJSON, &model.Metadata); err != nil {
+		return nil, err
+	}
+
 	return &model, nil
 }
 
 func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*llmgw.ModelWithReference, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.model_reference
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
 		WHERE m.id = $1 AND m.enabled = true
 	`
@@ -161,7 +175,7 @@ func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID
 	row := r.pool.QueryRow(ctx, query, modelID)
 
 	var modelWithRef llmgw.ModelWithReference
-	var pricingJSON, capabilitiesJSON []byte
+	var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 	err := row.Scan(
 		&modelWithRef.Model.ID,
@@ -169,7 +183,7 @@ func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID
 		&modelWithRef.Model.Provider,
 		&pricingJSON,
 		&capabilitiesJSON,
-		&modelWithRef.ModelReference,
+		&metadataJSON,
 	)
 	if err != nil {
 		return nil, models.ErrModelNotFound
@@ -183,12 +197,16 @@ func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID
 		return nil, err
 	}
 
+	if err := json.Unmarshal(metadataJSON, &modelWithRef.Model.Metadata); err != nil {
+		return nil, err
+	}
+
 	return &modelWithRef, nil
 }
 
 func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*llmgw.ModelWithCredentials, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.credential_id, m.credential_type, m.model_reference
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.credential_id, m.credential_type, m.metadata
 		FROM models m
 		WHERE m.id = $1 AND m.enabled = true
 	`
@@ -196,7 +214,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 	row := r.pool.QueryRow(ctx, query, modelID)
 
 	var modelWithCreds llmgw.ModelWithCredentials
-	var pricingJSON, capabilitiesJSON []byte
+	var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 	err := row.Scan(
 		&modelWithCreds.Model.ID,
@@ -206,7 +224,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 		&capabilitiesJSON,
 		&modelWithCreds.CredentialID,
 		&modelWithCreds.CredentialType,
-		&modelWithCreds.ModelReference,
+		&metadataJSON,
 	)
 	if err != nil {
 		return nil, models.ErrModelNotFound
@@ -220,12 +238,16 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 		return nil, err
 	}
 
+	if err := json.Unmarshal(metadataJSON, &modelWithCreds.Model.Metadata); err != nil {
+		return nil, err
+	}
+
 	return &modelWithCreds, nil
 }
 
-func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error {
+func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
 	query := `
-		INSERT INTO models (id, name, provider_id, pricing, capabilities, credential_id, credential_type, model_reference, enabled)
+		INSERT INTO models (id, name, provider_id, pricing, capabilities, credential_id, credential_type, metadata, enabled)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	`
 
@@ -239,6 +261,11 @@ func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, cre
 		return err
 	}
 
+	metadataJSON, err := json.Marshal(model.Metadata)
+	if err != nil {
+		return err
+	}
+
 	_, err = r.pool.Exec(ctx, query,
 		model.ID,
 		model.Name,
@@ -247,16 +274,16 @@ func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, cre
 		capabilitiesJSON,
 		credentialID,
 		credentialType,
-		modelReference,
+		metadataJSON,
 		true, // enabled by default
 	)
 	return err
 }
 
-func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error {
+func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
 	query := `
 		UPDATE models 
-		SET name = $2, provider_id = $3, pricing = $4, capabilities = $5, credential_id = $6, credential_type = $7, model_reference = $8
+		SET name = $2, provider_id = $3, pricing = $4, capabilities = $5, credential_id = $6, credential_type = $7, metadata = $8
 		WHERE id = $1
 	`
 
@@ -270,6 +297,11 @@ func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, cre
 		return err
 	}
 
+	metadataJSON, err := json.Marshal(model.Metadata)
+	if err != nil {
+		return err
+	}
+
 	result, err := r.pool.Exec(ctx, query,
 		model.ID,
 		model.Name,
@@ -278,7 +310,7 @@ func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, cre
 		capabilitiesJSON,
 		credentialID,
 		credentialType,
-		modelReference,
+		metadataJSON,
 	)
 	if err != nil {
 		return err

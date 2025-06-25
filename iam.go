@@ -179,13 +179,11 @@ type ModelWithCredentials struct {
 	Model          gai.Model
 	CredentialID   uuid.UUID
 	CredentialType string
-	ModelReference string
 }
 
 // ModelWithReference represents a model with its model reference for aliasing
 type ModelWithReference struct {
-	Model          gai.Model
-	ModelReference string
+	Model gai.Model
 }
 
 // ProviderRepository defines persistence operations for Providers
@@ -213,8 +211,8 @@ type ModelRepository interface {
 	GetModelByID(ctx context.Context, modelID string) (*gai.Model, error)
 	GetModelByIDWithReference(ctx context.Context, modelID string) (*ModelWithReference, error)
 	GetModelWithCredentials(ctx context.Context, modelID string) (*ModelWithCredentials, error)
-	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error
-	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string, modelReference string) error
+	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error
+	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error
 	DeleteModel(ctx context.Context, modelID string) error
 }
 
