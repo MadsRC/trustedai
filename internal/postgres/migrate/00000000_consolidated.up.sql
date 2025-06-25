@@ -41,23 +41,6 @@ CREATE TABLE IF NOT EXISTS tokens (
     last_used_at TIMESTAMP WITH TIME ZONE
 );
 
--- Create connectors tables
-CREATE TABLE IF NOT EXISTS connectors (
-    id VARCHAR(255) PRIMARY KEY,
-    type VARCHAR(50) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    last_seen BIGINT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS kubernetes_connectors (
-    connector_id VARCHAR(255) PRIMARY KEY,
-    version VARCHAR(50) NOT NULL,
-    cluster_id VARCHAR(255) NOT NULL,
-    api_endpoint VARCHAR(255) NOT NULL,
-    FOREIGN KEY (connector_id) REFERENCES connectors(id) ON DELETE CASCADE
-);
-
 -- Create credential tables for different provider types
 CREATE TABLE openrouter_credentials (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -100,8 +83,6 @@ CREATE UNIQUE INDEX idx_users_provider_external_id ON users(provider, external_i
 CREATE INDEX idx_tokens_prefix_hash ON tokens(prefix_hash);
 CREATE INDEX idx_tokens_user_id ON tokens(user_id);
 CREATE INDEX idx_tokens_expires_at ON tokens(expires_at);
-CREATE INDEX idx_connectors_type ON connectors(type);
-CREATE INDEX idx_connectors_status ON connectors(status);
 CREATE INDEX idx_models_provider_id ON models(provider_id);
 CREATE INDEX idx_models_enabled ON models(enabled);
 CREATE INDEX idx_models_credential_type ON models(credential_type);

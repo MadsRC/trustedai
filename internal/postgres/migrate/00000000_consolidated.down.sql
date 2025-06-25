@@ -11,8 +11,6 @@ DROP FUNCTION IF EXISTS validate_credential_reference();
 -- Drop tables in reverse dependency order
 DROP TABLE IF EXISTS models;
 DROP TABLE IF EXISTS openrouter_credentials;
-DROP TABLE IF EXISTS kubernetes_connectors;
-DROP TABLE IF EXISTS connectors;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS organizations;
