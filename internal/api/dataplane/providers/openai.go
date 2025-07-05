@@ -49,11 +49,11 @@ func (p *OpenAIProvider) SetLLMClient(client dataplane.LLMClient) {
 
 func (p *OpenAIProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler) {
 	if baseAuth != nil {
-		mux.Handle("POST /openai/chat/completions", baseAuth(http.HandlerFunc(p.handleChatCompletions)))
-		mux.Handle("GET /openai/models", baseAuth(http.HandlerFunc(p.handleListModels)))
+		mux.Handle("POST /openai/v1/chat/completions", baseAuth(http.HandlerFunc(p.handleChatCompletions)))
+		mux.Handle("GET /openai/v1/models", baseAuth(http.HandlerFunc(p.handleListModels)))
 	} else {
-		mux.HandleFunc("POST /openai/chat/completions", p.handleChatCompletions)
-		mux.HandleFunc("GET /openai/models", p.handleListModels)
+		mux.HandleFunc("POST /openai/v1/chat/completions", p.handleChatCompletions)
+		mux.HandleFunc("GET /openai/v1/models", p.handleListModels)
 	}
 }
 

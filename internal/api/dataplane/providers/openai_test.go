@@ -37,7 +37,7 @@ func TestOpenAIProvider_ChatCompletions(t *testing.T) {
 	mux := http.NewServeMux()
 	provider.SetupRoutes(mux, nil)
 
-	req := httptest.NewRequest("POST", "/openai/chat/completions", strings.NewReader(`{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"Hello"}]}`))
+	req := httptest.NewRequest("POST", "/openai/v1/chat/completions", strings.NewReader(`{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"Hello"}]}`))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
@@ -72,7 +72,7 @@ func TestOpenAIProvider_ListModels(t *testing.T) {
 	mux := http.NewServeMux()
 	provider.SetupRoutes(mux, nil)
 
-	req := httptest.NewRequest("GET", "/openai/models", nil)
+	req := httptest.NewRequest("GET", "/openai/v1/models", nil)
 	w := httptest.NewRecorder()
 
 	mux.ServeHTTP(w, req)
@@ -259,7 +259,7 @@ func TestOpenAIProvider_ChatCompletions_Streaming(t *testing.T) {
 			mux := http.NewServeMux()
 			provider.SetupRoutes(mux, nil)
 
-			req := httptest.NewRequest("POST", "/openai/chat/completions", strings.NewReader(tt.requestBody))
+			req := httptest.NewRequest("POST", "/openai/v1/chat/completions", strings.NewReader(tt.requestBody))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
