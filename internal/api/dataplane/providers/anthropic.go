@@ -17,6 +17,13 @@ import (
 	"codeberg.org/gai-org/gai"
 )
 
+const (
+	AnthropicVersionHeader     = "anthropic-version"
+	AnthropicVersion2023_01_01 = "2023-01-01"
+	AnthropicVersion2023_06_01 = "2023-06-01"
+	AnthropicVersionLatest     = AnthropicVersion2023_06_01
+)
+
 type AnthropicProvider struct {
 	options   *dataplane.ProviderOptions
 	llmClient dataplane.LLMClient
@@ -109,6 +116,15 @@ func (p *AnthropicProvider) SetLLMClient(client dataplane.LLMClient) {
 	p.llmClient = client
 }
 
+func (p *AnthropicProvider) isValidVersion(version string) bool {
+	switch version {
+	case AnthropicVersion2023_01_01, AnthropicVersion2023_06_01:
+		return true
+	default:
+		return false
+	}
+}
+
 func (p *AnthropicProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler) {
 	if baseAuth != nil {
 		mux.Handle("POST /anthropic/v1/messages", baseAuth(http.HandlerFunc(p.handleMessages)))
@@ -119,6 +135,19 @@ func (p *AnthropicProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.H
 
 func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	// Validate anthropic-version header
+	version := r.Header.Get(AnthropicVersionHeader)
+	if version == "" {
+		p.options.Logger.Debug("Missing anthropic-version header, using latest version")
+		version = AnthropicVersionLatest
+	}
+
+	if !p.isValidVersion(version) {
+		p.options.Logger.Error("Invalid anthropic-version header", "version", version)
+		http.Error(w, "Invalid anthropic-version header", http.StatusBadRequest)
+		return
+	}
 
 	var req AnthropicRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -135,7 +164,7 @@ func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Reques
 	gaiReq := p.convertToGaiRequest(req)
 
 	if req.Stream {
-		p.handleStreamingResponse(w, r.Context(), gaiReq, req.Model)
+		p.handleStreamingResponse(w, r.Context(), gaiReq, req.Model, version)
 		return
 	}
 
@@ -341,7 +370,7 @@ func (p *AnthropicProvider) convertFromGaiResponse(gaiResp *gai.Response, modelI
 	return response
 }
 
-func (p *AnthropicProvider) handleStreamingResponse(w http.ResponseWriter, ctx context.Context, gaiReq gai.GenerateRequest, modelID string) {
+func (p *AnthropicProvider) handleStreamingResponse(w http.ResponseWriter, ctx context.Context, gaiReq gai.GenerateRequest, modelID string, version string) {
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
@@ -375,7 +404,7 @@ func (p *AnthropicProvider) handleStreamingResponse(w http.ResponseWriter, ctx c
 			break
 		}
 
-		event := p.convertChunkToAnthropicEvent(chunk, modelID)
+		event := p.convertChunkToAnthropicEvent(chunk, modelID, version)
 		data, err := json.Marshal(event)
 		if err != nil {
 			p.options.Logger.Error("Failed to marshal chunk", "error", err)
@@ -394,7 +423,7 @@ func (p *AnthropicProvider) handleStreamingResponse(w http.ResponseWriter, ctx c
 	}
 }
 
-func (p *AnthropicProvider) convertChunkToAnthropicEvent(chunk *gai.ResponseChunk, modelID string) AnthropicStreamEvent {
+func (p *AnthropicProvider) convertChunkToAnthropicEvent(chunk *gai.ResponseChunk, modelID string, version string) AnthropicStreamEvent {
 	if chunk.Finished {
 		event := AnthropicStreamEvent{
 			Type: "message_stop",
@@ -408,6 +437,8 @@ func (p *AnthropicProvider) convertChunkToAnthropicEvent(chunk *gai.ResponseChun
 		return event
 	}
 
+	// Version 2023-06-01 introduced the new streaming format with named events
+	// Version 2023-01-01 used a simpler format (though we implement the newer format for both)
 	return AnthropicStreamEvent{
 		Type:  "content_block_delta",
 		Index: 0,

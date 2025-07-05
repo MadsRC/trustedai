@@ -43,6 +43,7 @@ func TestAnthropicProvider_Messages(t *testing.T) {
 
 	req := httptest.NewRequest("POST", "/anthropic/v1/messages", strings.NewReader(requestBody))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("anthropic-version", "2023-06-01")
 	w := httptest.NewRecorder()
 
 	mux.ServeHTTP(w, req)
@@ -309,7 +310,7 @@ func TestAnthropicProvider_convertChunkToAnthropicEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := provider.convertChunkToAnthropicEvent(tt.chunk, tt.modelID)
+			result := provider.convertChunkToAnthropicEvent(tt.chunk, tt.modelID, "2023-06-01")
 
 			assert.Equal(t, tt.wantType, result.Type)
 
@@ -518,4 +519,103 @@ func TestAnthropicProvider_NoLLMClient(t *testing.T) {
 	mux.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}
+
+func TestAnthropicProvider_VersionValidation(t *testing.T) {
+	provider := NewAnthropicProvider()
+
+	tests := []struct {
+		name    string
+		version string
+		valid   bool
+	}{
+		{
+			name:    "valid version 2023-01-01",
+			version: "2023-01-01",
+			valid:   true,
+		},
+		{
+			name:    "valid version 2023-06-01",
+			version: "2023-06-01",
+			valid:   true,
+		},
+		{
+			name:    "invalid version",
+			version: "2022-01-01",
+			valid:   false,
+		},
+		{
+			name:    "invalid version format",
+			version: "invalid",
+			valid:   false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := provider.isValidVersion(tt.version)
+			assert.Equal(t, tt.valid, result)
+		})
+	}
+}
+
+func TestAnthropicProvider_VersionHeader(t *testing.T) {
+	provider := NewAnthropicProvider()
+
+	mockClient := &mockLLMClient{}
+	provider.SetLLMClient(mockClient)
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	requestBody := `{
+		"model": "claude-sonnet-4-20250514",
+		"max_tokens": 1024,
+		"messages": [
+			{"role": "user", "content": "Hello"}
+		]
+	}`
+
+	tests := []struct {
+		name               string
+		version            string
+		expectedStatusCode int
+	}{
+		{
+			name:               "with valid version 2023-06-01",
+			version:            "2023-06-01",
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name:               "with valid version 2023-01-01",
+			version:            "2023-01-01",
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name:               "with invalid version",
+			version:            "2022-01-01",
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name:               "without version header (should use default)",
+			version:            "",
+			expectedStatusCode: http.StatusOK,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest("POST", "/anthropic/v1/messages", strings.NewReader(requestBody))
+			req.Header.Set("Content-Type", "application/json")
+
+			if tt.version != "" {
+				req.Header.Set("anthropic-version", tt.version)
+			}
+
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, req)
+
+			assert.Equal(t, tt.expectedStatusCode, w.Code)
+		})
+	}
 }
