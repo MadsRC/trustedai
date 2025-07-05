@@ -7,5 +7,10 @@
 - Ensure code is formatted by running `mise run format`
 - Lint code with `mise run lint`
 - Run unit tests with `mise run test:unit`
-- For GoLang tests, make sure the assert or require package from testify is used
-- Testing methodology is described in TESTING.md
+- Read [TESTING.md](TESTING.md) before any sort of modification or creation of tests
+- git commit messages must follow conventional commits
+
+## Golang instructions
+
+- Make sure the assert or require package from testify is used
+- Use `any` instead of `interface{}`
