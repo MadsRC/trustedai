@@ -25,6 +25,7 @@
 # Go workspace file
 go.work
 /llmgw
-.claude
+.claude/settings.local.json
 frontend/node_modules
 frontend/build
+build/
