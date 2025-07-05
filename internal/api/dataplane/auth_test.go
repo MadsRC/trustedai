@@ -166,13 +166,13 @@ func TestDataPlaneAuthenticationIntegration(t *testing.T) {
 			name:           "Hello endpoint without auth",
 			authHeader:     "",
 			expectedStatus: http.StatusUnauthorized,
-			expectedBody:   "Unauthorized: missing Bearer token\n",
+			expectedBody:   "Unauthorized: missing Bearer token or x-api-key\n",
 		},
 		{
 			name:           "Hello endpoint with invalid token",
 			authHeader:     "Bearer invalid-token",
 			expectedStatus: http.StatusUnauthorized,
-			expectedBody:   "Unauthorized: invalid token\n",
+			expectedBody:   "Unauthorized: invalid credentials\n",
 		},
 	}
 
@@ -192,6 +192,99 @@ func TestDataPlaneAuthenticationIntegration(t *testing.T) {
 
 			if tt.authHeader != "" {
 				req.Header.Set("Authorization", tt.authHeader)
+			}
+
+			rr := httptest.NewRecorder()
+			server.GetMux().ServeHTTP(rr, req)
+
+			if rr.Code != tt.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tt.expectedStatus, rr.Code)
+			}
+
+			if rr.Body.String() != tt.expectedBody {
+				t.Errorf("Expected body %q, got %q", tt.expectedBody, rr.Body.String())
+			}
+		})
+	}
+}
+
+func TestDataPlaneXAPIKeyAuthentication(t *testing.T) {
+	// Setup mock repositories
+	tokenRepo := newMockTokenRepository()
+	userRepo := newMockUserRepository()
+
+	// Create a mock user
+	testUser := &llmgw.User{
+		ID:   "test-user-id",
+		Name: "Test User",
+	}
+	userRepo.users["test-user-id"] = testUser
+
+	// Create a mock token with a simplified hash for testing
+	testToken := &llmgw.APIToken{
+		ID:         "test-token-id",
+		UserID:     "test-user-id",
+		PrefixHash: "test-prefix-hash",
+		TokenHash:  "test-token-hash",
+		ExpiresAt:  time.Now().Add(time.Hour),
+	}
+	tokenRepo.tokens["test-prefix-hash"] = testToken
+
+	// Create token authenticator
+	tokenAuth := auth.NewTokenAuthenticator(tokenRepo, userRepo)
+
+	// Create DataPlane server with authentication
+	server, err := NewDataPlaneServer(
+		WithDataPlaneLogger(slog.Default()),
+		WithDataPlaneAddr(":0"),
+		WithDataPlaneTokenAuthenticator(tokenAuth),
+	)
+	if err != nil {
+		t.Fatalf("Failed to create server: %v", err)
+	}
+
+	tests := []struct {
+		name           string
+		headers        map[string]string
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "Hello endpoint with x-api-key header - invalid key",
+			headers:        map[string]string{"x-api-key": "invalid-key"},
+			expectedStatus: http.StatusUnauthorized,
+			expectedBody:   "Unauthorized: invalid credentials\n",
+		},
+		{
+			name:           "Hello endpoint with Bearer token and x-api-key - Bearer takes precedence",
+			headers:        map[string]string{"Authorization": "Bearer invalid-token", "x-api-key": "some-key"},
+			expectedStatus: http.StatusUnauthorized,
+			expectedBody:   "Unauthorized: invalid credentials\n",
+		},
+		{
+			name:           "Hello endpoint with x-api-key only",
+			headers:        map[string]string{"x-api-key": "some-key"},
+			expectedStatus: http.StatusUnauthorized,
+			expectedBody:   "Unauthorized: invalid credentials\n",
+		},
+		{
+			name:           "Hello endpoint with no auth headers",
+			headers:        map[string]string{},
+			expectedStatus: http.StatusUnauthorized,
+			expectedBody:   "Unauthorized: missing Bearer token or x-api-key\n",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/hello", nil)
+			if err != nil {
+				t.Fatalf("Failed to create request: %v", err)
+			}
+
+			// Set headers
+			for key, value := range tt.headers {
+				req.Header.Set(key, value)
 			}
 
 			rr := httptest.NewRecorder()

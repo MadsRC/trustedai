@@ -23,18 +23,20 @@ type AnthropicProvider struct {
 }
 
 type AnthropicMessage struct {
-	Role    string      `json:"role"`
-	Content interface{} `json:"content"`
+	Role    string `json:"role"`
+	Content any    `json:"content"`
 }
 
 type AnthropicContentBlock struct {
-	Type   string `json:"type"`
-	Text   string `json:"text,omitempty"`
-	Source struct {
-		Type      string `json:"type"`
-		MediaType string `json:"media_type"`
-		Data      string `json:"data"`
-	} `json:"source,omitempty"`
+	Type   string                  `json:"type"`
+	Text   string                  `json:"text,omitempty"`
+	Source *AnthropicContentSource `json:"source,omitempty"`
+}
+
+type AnthropicContentSource struct {
+	Type      string `json:"type"`
+	MediaType string `json:"media_type"`
+	Data      string `json:"data"`
 }
 
 type AnthropicRequest struct {
@@ -48,13 +50,13 @@ type AnthropicRequest struct {
 	Stream        bool               `json:"stream,omitempty"`
 	System        string             `json:"system,omitempty"`
 	Tools         []AnthropicTool    `json:"tools,omitempty"`
-	ToolChoice    interface{}        `json:"tool_choice,omitempty"`
+	ToolChoice    any                `json:"tool_choice,omitempty"`
 }
 
 type AnthropicTool struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	InputSchema interface{} `json:"input_schema"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	InputSchema any    `json:"input_schema"`
 }
 
 type AnthropicResponse struct {
@@ -76,7 +78,7 @@ type AnthropicUsage struct {
 type AnthropicStreamEvent struct {
 	Type  string          `json:"type"`
 	Index int             `json:"index,omitempty"`
-	Delta interface{}     `json:"delta,omitempty"`
+	Delta any             `json:"delta,omitempty"`
 	Usage *AnthropicUsage `json:"usage,omitempty"`
 }
 
@@ -219,10 +221,10 @@ func (p *AnthropicProvider) extractTextFromAnthropicMessage(msg AnthropicMessage
 	switch content := msg.Content.(type) {
 	case string:
 		return content
-	case []interface{}:
+	case []any:
 		var textParts []string
 		for _, part := range content {
-			if partMap, ok := part.(map[string]interface{}); ok {
+			if partMap, ok := part.(map[string]any); ok {
 				if partType, ok := partMap["type"].(string); ok && partType == "text" {
 					if text, ok := partMap["text"].(string); ok {
 						textParts = append(textParts, text)
@@ -242,10 +244,10 @@ func (p *AnthropicProvider) extractMessagesFromAnthropicMessage(msg AnthropicMes
 			Role:    gai.RoleUser,
 			Content: gai.TextInput{Text: content},
 		}}
-	case []interface{}:
+	case []any:
 		var messages []gai.Message
 		for _, part := range content {
-			if partMap, ok := part.(map[string]interface{}); ok {
+			if partMap, ok := part.(map[string]any); ok {
 				if partType, ok := partMap["type"].(string); ok {
 					switch partType {
 					case "text":
@@ -256,7 +258,7 @@ func (p *AnthropicProvider) extractMessagesFromAnthropicMessage(msg AnthropicMes
 							})
 						}
 					case "image":
-						if source, ok := partMap["source"].(map[string]interface{}); ok {
+						if source, ok := partMap["source"].(map[string]any); ok {
 							if mediaType, ok := source["media_type"].(string); ok {
 								if data, ok := source["data"].(string); ok {
 									imageURL := fmt.Sprintf("data:%s;base64,%s", mediaType, data)
@@ -291,11 +293,11 @@ func (p *AnthropicProvider) convertToolsToGai(anthropicTools []AnthropicTool) []
 	return gaiTools
 }
 
-func (p *AnthropicProvider) convertToolChoiceToGai(toolChoice interface{}) *gai.ToolChoice {
+func (p *AnthropicProvider) convertToolChoiceToGai(toolChoice any) *gai.ToolChoice {
 	switch tc := toolChoice.(type) {
 	case string:
 		return &gai.ToolChoice{Type: tc}
-	case map[string]interface{}:
+	case map[string]any:
 		if tcType, ok := tc["type"].(string); ok {
 			choice := &gai.ToolChoice{Type: tcType}
 			if tcType == "tool" {

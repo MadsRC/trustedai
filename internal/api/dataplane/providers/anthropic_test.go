@@ -420,12 +420,12 @@ func TestAnthropicProvider_extractTextFromAnthropicMessage(t *testing.T) {
 			name: "array content with text blocks",
 			message: AnthropicMessage{
 				Role: "user",
-				Content: []interface{}{
-					map[string]interface{}{
+				Content: []any{
+					map[string]any{
 						"type": "text",
 						"text": "Hello",
 					},
-					map[string]interface{}{
+					map[string]any{
 						"type": "text",
 						"text": "world",
 					},
@@ -437,14 +437,14 @@ func TestAnthropicProvider_extractTextFromAnthropicMessage(t *testing.T) {
 			name: "array content with mixed types",
 			message: AnthropicMessage{
 				Role: "user",
-				Content: []interface{}{
-					map[string]interface{}{
+				Content: []any{
+					map[string]any{
 						"type": "text",
 						"text": "Look at this image:",
 					},
-					map[string]interface{}{
+					map[string]any{
 						"type": "image",
-						"source": map[string]interface{}{
+						"source": map[string]any{
 							"type":       "base64",
 							"media_type": "image/jpeg",
 							"data":       "base64data",

@@ -17,12 +17,12 @@ import (
 )
 
 type DataPlaneServer struct {
-	options          *dataPlaneOptions
-	mux              *http.ServeMux
-	httpServer       *http.Server
-	bearerMiddleware *dauth.BearerMiddleware
-	providers        []Provider
-	LLMClient        LLMClient
+	options        *dataPlaneOptions
+	mux            *http.ServeMux
+	httpServer     *http.Server
+	authMiddleware *dauth.CombinedAuthMiddleware
+	providers      []Provider
+	LLMClient      LLMClient
 }
 
 type dataPlaneOptions struct {
@@ -116,9 +116,9 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 		LLMClient: opts.LLMClient,
 	}
 
-	// Initialize Bearer middleware if TokenAuthenticator is provided
+	// Initialize Combined authentication middleware if TokenAuthenticator is provided
 	if opts.TokenAuthenticator != nil {
-		server.bearerMiddleware = dauth.NewBearerMiddleware(opts.TokenAuthenticator, opts.Logger)
+		server.authMiddleware = dauth.NewCombinedAuthMiddleware(opts.TokenAuthenticator, opts.Logger)
 	}
 
 	// Set LLMClient on all providers if available
@@ -145,11 +145,11 @@ func (s *DataPlaneServer) setupRoutes() {
 	// Health endpoint - no authentication required
 	s.mux.HandleFunc("GET /health", s.handleHealth)
 
-	// Protected endpoints - require Bearer token authentication
+	// Protected endpoints - require Bearer token or x-api-key authentication
 	var baseAuth func(http.Handler) http.Handler
-	if s.bearerMiddleware != nil {
-		baseAuth = s.bearerMiddleware.Authenticate
-		s.mux.Handle("GET /hello", s.bearerMiddleware.Authenticate(http.HandlerFunc(s.handleHello)))
+	if s.authMiddleware != nil {
+		baseAuth = s.authMiddleware.Authenticate
+		s.mux.Handle("GET /hello", s.authMiddleware.Authenticate(http.HandlerFunc(s.handleHello)))
 	} else {
 		// Fallback if no authentication is configured (for backward compatibility)
 		s.mux.HandleFunc("GET /hello", s.handleHello)
