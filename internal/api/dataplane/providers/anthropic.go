@@ -38,6 +38,14 @@ type AnthropicContentBlock struct {
 	Type   string                  `json:"type"`
 	Text   string                  `json:"text,omitempty"`
 	Source *AnthropicContentSource `json:"source,omitempty"`
+	// Tool use fields
+	ID    string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Input any    `json:"input,omitempty"`
+	// Tool result fields
+	ToolUseID string `json:"tool_use_id,omitempty"`
+	Content   string `json:"content,omitempty"`
+	IsError   bool   `json:"is_error,omitempty"`
 }
 
 type AnthropicContentSource struct {
@@ -202,12 +210,8 @@ func (p *AnthropicProvider) convertToGaiRequest(req AnthropicRequest) gai.Genera
 			userMessages := p.extractMessagesFromAnthropicMessage(msg)
 			messages = append(messages, userMessages...)
 		case "assistant":
-			if textContent := p.extractTextFromAnthropicMessage(msg); textContent != "" {
-				messages = append(messages, gai.Message{
-					Role:    gai.RoleAssistant,
-					Content: gai.TextInput{Text: textContent},
-				})
-			}
+			assistantMessages := p.extractMessagesFromAnthropicAssistantMessage(msg)
+			messages = append(messages, assistantMessages...)
 		}
 	}
 
@@ -266,6 +270,62 @@ func (p *AnthropicProvider) extractTextFromAnthropicMessage(msg AnthropicMessage
 	return ""
 }
 
+func (p *AnthropicProvider) extractMessagesFromAnthropicAssistantMessage(msg AnthropicMessage) []gai.Message {
+	switch content := msg.Content.(type) {
+	case string:
+		if content != "" {
+			return []gai.Message{{
+				Role:    gai.RoleAssistant,
+				Content: gai.TextInput{Text: content},
+			}}
+		}
+	case []any:
+		var messages []gai.Message
+		for _, part := range content {
+			if partMap, ok := part.(map[string]any); ok {
+				if partType, ok := partMap["type"].(string); ok {
+					switch partType {
+					case "text":
+						if text, ok := partMap["text"].(string); ok && text != "" {
+							messages = append(messages, gai.Message{
+								Role:    gai.RoleAssistant,
+								Content: gai.TextInput{Text: text},
+							})
+						}
+					case "tool_use":
+						if id, ok := partMap["id"].(string); ok {
+							if name, ok := partMap["name"].(string); ok {
+								if input, ok := partMap["input"]; ok {
+									var arguments string
+									if inputBytes, err := json.Marshal(input); err == nil {
+										arguments = string(inputBytes)
+									}
+									messages = append(messages, gai.Message{
+										Role:    gai.RoleAssistant,
+										Content: gai.TextInput{Text: ""},
+										ToolCalls: []gai.ToolCall{
+											{
+												ID:   id,
+												Type: "function",
+												Function: gai.ToolCallFunction{
+													Name:      name,
+													Arguments: arguments,
+												},
+											},
+										},
+									})
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return messages
+	}
+	return []gai.Message{}
+}
+
 func (p *AnthropicProvider) extractMessagesFromAnthropicMessage(msg AnthropicMessage) []gai.Message {
 	switch content := msg.Content.(type) {
 	case string:
@@ -296,6 +356,16 @@ func (p *AnthropicProvider) extractMessagesFromAnthropicMessage(msg AnthropicMes
 										Content: gai.ImageInput{URL: imageURL},
 									})
 								}
+							}
+						}
+					case "tool_result":
+						if toolUseID, ok := partMap["tool_use_id"].(string); ok {
+							if content, ok := partMap["content"].(string); ok {
+								messages = append(messages, gai.Message{
+									Role:       gai.RoleTool,
+									Content:    gai.TextInput{Text: content},
+									ToolCallID: toolUseID,
+								})
 							}
 						}
 					}
@@ -343,10 +413,26 @@ func (p *AnthropicProvider) convertToolChoiceToGai(toolChoice any) *gai.ToolChoi
 func (p *AnthropicProvider) convertFromGaiResponse(gaiResp *gai.Response, modelID string) *AnthropicResponse {
 	var content []AnthropicContentBlock
 	for _, output := range gaiResp.Output {
-		if textOutput, ok := output.(gai.TextOutput); ok {
+		switch outputItem := output.(type) {
+		case gai.TextOutput:
 			content = append(content, AnthropicContentBlock{
 				Type: "text",
-				Text: textOutput.Text,
+				Text: outputItem.Text,
+			})
+		case gai.ToolCallOutput:
+			// Convert GAI tool call to Anthropic tool_use format
+			var input any
+			if outputItem.Arguments != "" {
+				if err := json.Unmarshal([]byte(outputItem.Arguments), &input); err != nil {
+					// If JSON parsing fails, use arguments as a string
+					input = outputItem.Arguments
+				}
+			}
+			content = append(content, AnthropicContentBlock{
+				Type:  "tool_use",
+				ID:    outputItem.ID,
+				Name:  outputItem.Name,
+				Input: input,
 			})
 		}
 	}
@@ -435,6 +521,23 @@ func (p *AnthropicProvider) convertChunkToAnthropicEvent(chunk *gai.ResponseChun
 			}
 		}
 		return event
+	}
+
+	// Handle tool call deltas
+	if chunk.Delta.ToolCall != nil {
+		// For tool calls, we need to send appropriate events
+		// This is a simplified implementation - in practice, you might need
+		// to track tool call state and send multiple events
+		return AnthropicStreamEvent{
+			Type:  "content_block_delta",
+			Index: 0,
+			Delta: map[string]any{
+				"type":         "tool_use_delta",
+				"tool_call_id": chunk.Delta.ToolCall.ID,
+				"name":         chunk.Delta.ToolCall.Name,
+				"arguments":    chunk.Delta.ToolCall.Arguments,
+			},
+		}
 	}
 
 	// Version 2023-06-01 introduced the new streaming format with named events

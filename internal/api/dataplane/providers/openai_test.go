@@ -124,9 +124,13 @@ func TestOpenAIProvider_WithLogger(t *testing.T) {
 type mockLLMClient struct {
 	shouldStreamError bool
 	streamChunks      []*gai.ResponseChunk
+	toolCallResponse  *gai.Response
 }
 
 func (m *mockLLMClient) Generate(ctx context.Context, req gai.GenerateRequest) (*gai.Response, error) {
+	if m.toolCallResponse != nil {
+		return m.toolCallResponse, nil
+	}
 	return &gai.Response{
 		ID:        "test-response-123",
 		ModelID:   req.ModelID,

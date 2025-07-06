@@ -12,6 +12,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/gai-org/gai"
@@ -618,4 +619,80 @@ func TestAnthropicProvider_VersionHeader(t *testing.T) {
 			assert.Equal(t, tt.expectedStatusCode, w.Code)
 		})
 	}
+}
+
+// Tool use tests
+func TestAnthropicProvider_ToolUse(t *testing.T) {
+	provider := NewAnthropicProvider()
+
+	mockClient := &mockLLMClient{
+		toolCallResponse: &gai.Response{
+			ID:      "test-tool-123",
+			ModelID: "claude-sonnet-4-20250514",
+			Status:  "completed",
+			Output: []gai.OutputItem{
+				gai.ToolCallOutput{
+					ID:        "tool-call-123",
+					Name:      "get_weather",
+					Arguments: `{"location": "San Francisco"}`,
+					Status:    "pending",
+				},
+			},
+			Usage:     &gai.TokenUsage{PromptTokens: 20, CompletionTokens: 25, TotalTokens: 45},
+			CreatedAt: time.Now(),
+		},
+	}
+	provider.SetLLMClient(mockClient)
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	requestBody := `{
+		"model": "claude-sonnet-4-20250514",
+		"max_tokens": 1024,
+		"tools": [{
+			"name": "get_weather",
+			"description": "Get current weather for a location",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"location": {
+						"type": "string",
+						"description": "The city and state"
+					}
+				},
+				"required": ["location"]
+			}
+		}],
+		"messages": [
+			{"role": "user", "content": "What's the weather like in San Francisco?"}
+		]
+	}`
+
+	req := httptest.NewRequest("POST", "/anthropic/v1/messages", strings.NewReader(requestBody))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("anthropic-version", "2023-06-01")
+	w := httptest.NewRecorder()
+
+	mux.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	body, err := io.ReadAll(w.Body)
+	require.NoError(t, err)
+
+	var response AnthropicResponse
+	err = json.Unmarshal(body, &response)
+	require.NoError(t, err)
+
+	assert.Equal(t, "message", response.Type)
+	assert.Equal(t, "assistant", response.Role)
+	assert.Len(t, response.Content, 1)
+	assert.Equal(t, "tool_use", response.Content[0].Type)
+	assert.Equal(t, "tool-call-123", response.Content[0].ID)
+	assert.Equal(t, "get_weather", response.Content[0].Name)
+	assert.NotNil(t, response.Content[0].Input)
+	assert.NotNil(t, response.Usage)
+	assert.Equal(t, 20, response.Usage.InputTokens)
+	assert.Equal(t, 25, response.Usage.OutputTokens)
 }
