@@ -18,10 +18,16 @@ import (
 )
 
 const (
-	AnthropicVersionHeader     = "anthropic-version"
-	AnthropicVersion2023_01_01 = "2023-01-01"
-	AnthropicVersion2023_06_01 = "2023-06-01"
-	AnthropicVersionLatest     = AnthropicVersion2023_06_01
+	AnthropicVersionHeader          = "anthropic-version"
+	AnthropicVersion2023_01_01      = "2023-01-01"
+	AnthropicVersion2023_06_01      = "2023-06-01"
+	AnthropicVersionLatest          = AnthropicVersion2023_06_01
+	AnthropicStopReasonEndTurn      = "end_turn"
+	AnthropicStopReasonMaxTokens    = "max_tokens"
+	AnthropicStopReasonStopSequence = "stop_sequence"
+	AnthropicStopReasonToolUse      = "tool_use"
+	AnthropicStopReasonPauseTurn    = "pause_turn"
+	AnthropicStopReasonRefusal      = "refusal"
 )
 
 type AnthropicProvider struct {
