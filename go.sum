@@ -1,12 +1,8 @@
-codeberg.org/gai-org/gai v0.6.0 h1:hvqIdFzo82Nw1D6ZJfkA2AnWlM0fHwXuMzWh7zPFiH4=
-codeberg.org/gai-org/gai v0.6.0/go.mod h1:AfLfvjOc5beN5GySrjugQ4Bn00+DOm1m8kZMmcYyj6s=
-codeberg.org/gai-org/gai v0.8.0 h1:Nz42NpI1UKw520MviljLq2QVIktisxO8BOC9u/D+bfo=
-codeberg.org/gai-org/gai v0.8.0/go.mod h1:AfLfvjOc5beN5GySrjugQ4Bn00+DOm1m8kZMmcYyj6s=
-codeberg.org/gai-org/gai-provider-openai v0.0.7 h1:cWPXVqloj5e4JFEno3ODBagsqrAh1qOZkAvHpTOzajU=
-codeberg.org/gai-org/gai-provider-openai v0.0.7/go.mod h1:KN975vb7RVKcpQBi7lwN9XeUndV2lYWXpM4fmwEY7o0=
+codeberg.org/gai-org/gai v0.9.0 h1:o45+1Njc65SmETgjSN4ek034oVIvr7mzGfeW/6Ny1rg=
+codeberg.org/gai-org/gai v0.9.0/go.mod h1:AfLfvjOc5beN5GySrjugQ4Bn00+DOm1m8kZMmcYyj6s=
+codeberg.org/gai-org/gai-provider-openai v0.1.0 h1:fSm6beqzLP2hwfi4iKZjJBSXPl6b9axXpWQW2VSaIn8=
 codeberg.org/gai-org/gai-provider-openai v0.1.0/go.mod h1:eCiefmqTaVIRNimL+xWbRbyHSqH336ITsg8wCOMr510=
-codeberg.org/gai-org/gai-provider-openrouter v0.1.6 h1:gwy1WumZj650/kSGdLK26h+DXjHF0VCo3qeSCasB+pk=
-codeberg.org/gai-org/gai-provider-openrouter v0.1.6/go.mod h1:mrs9hKBBJPtqOd4j3+4+BIAmnrWiXH8TO+xyJkAPtCk=
+codeberg.org/gai-org/gai-provider-openrouter v0.1.7 h1:Pp7tOsMNhHDO9iYwVMxUeniKClWH78tTRe8fhYG2Uck=
 codeberg.org/gai-org/gai-provider-openrouter v0.1.7/go.mod h1:dbt5bt+EAqMu4HTqPG18RCBrpqve9pXpNvAp1T1lVJk=
 connectrpc.com/connect v1.18.1 h1:PAg7CjSAGvscaf6YZKUefjoih5Z/qYkyaTrBW8xvYPw=
 connectrpc.com/connect v1.18.1/go.mod h1:0292hj1rnx8oFrStN7cB4jjVBeqs+Yx5yDIC2prWDO8=

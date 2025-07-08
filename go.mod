@@ -7,7 +7,7 @@ module codeberg.org/MadsRC/llmgw
 go 1.24.4
 
 require (
-	codeberg.org/gai-org/gai v0.8.0
+	codeberg.org/gai-org/gai v0.9.0
 	codeberg.org/gai-org/gai-provider-openrouter v0.1.7
 	connectrpc.com/connect v1.18.1
 	connectrpc.com/cors v0.1.0

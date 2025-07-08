@@ -244,6 +244,9 @@ func (p *AnthropicProvider) convertToGaiRequest(req AnthropicRequest) gai.Genera
 	if req.MaxTokens > 0 {
 		gaiReq.MaxOutputTokens = req.MaxTokens
 	}
+	if len(req.StopSequences) > 0 {
+		gaiReq.StopSequences = req.StopSequences
+	}
 
 	if len(req.Tools) > 0 {
 		gaiReq.Tools = p.convertToolsToGai(req.Tools)
@@ -449,7 +452,12 @@ func (p *AnthropicProvider) convertFromGaiResponse(gaiResp *gai.Response, modelI
 		Role:       "assistant",
 		Content:    content,
 		Model:      modelID,
-		StopReason: "end_turn",
+		StopReason: p.convertFinishReasonToAnthropicStopReason(gaiResp.FinishReason),
+	}
+
+	// Set stop sequence if present
+	if gaiResp.StopSequence != nil {
+		response.StopSequence = gaiResp.StopSequence
 	}
 
 	if gaiResp.Usage != nil {
@@ -460,6 +468,23 @@ func (p *AnthropicProvider) convertFromGaiResponse(gaiResp *gai.Response, modelI
 	}
 
 	return response
+}
+
+func (p *AnthropicProvider) convertFinishReasonToAnthropicStopReason(finishReason gai.FinishReason) string {
+	switch finishReason {
+	case gai.FinishReasonStop:
+		return AnthropicStopReasonStopSequence
+	case gai.FinishReasonLength:
+		return AnthropicStopReasonMaxTokens
+	case gai.FinishReasonToolCalls:
+		return AnthropicStopReasonToolUse
+	case gai.FinishReasonError:
+		return AnthropicStopReasonRefusal
+	case gai.FinishReasonContentFilter:
+		return AnthropicStopReasonRefusal
+	default:
+		return AnthropicStopReasonEndTurn
+	}
 }
 
 func (p *AnthropicProvider) handleStreamingResponse(w http.ResponseWriter, ctx context.Context, gaiReq gai.GenerateRequest, modelID string, version string) {
