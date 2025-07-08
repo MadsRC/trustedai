@@ -51,9 +51,11 @@ func (p *OpenAIProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Hand
 	if baseAuth != nil {
 		mux.Handle("POST /openai/v1/chat/completions", baseAuth(http.HandlerFunc(p.handleChatCompletions)))
 		mux.Handle("GET /openai/v1/models", baseAuth(http.HandlerFunc(p.handleListModels)))
+		mux.Handle("POST /openai/v1/responses", baseAuth(http.HandlerFunc(p.handleCreateResponse)))
 	} else {
 		mux.HandleFunc("POST /openai/v1/chat/completions", p.handleChatCompletions)
 		mux.HandleFunc("GET /openai/v1/models", p.handleListModels)
+		mux.HandleFunc("POST /openai/v1/responses", p.handleCreateResponse)
 	}
 }
 
@@ -636,6 +638,259 @@ func (p *OpenAIProvider) convertChunkToOpenAI(chunk *gai.ResponseChunk, modelID 
 	}
 
 	return response
+}
+
+func (p *OpenAIProvider) handleCreateResponse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var req CreateResponseRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		p.options.Logger.Error("Failed to decode create response request", "error", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	p.options.Logger.Info("Received create response request",
+		"model", req.Model,
+		"stream", req.Stream != nil && *req.Stream)
+
+	gaiReq := p.convertCreateResponseToGaiRequest(req)
+
+	isStream := req.Stream != nil && *req.Stream
+
+	if isStream {
+		p.handleResponseStreaming(w, r.Context(), gaiReq, req.Model)
+		return
+	}
+
+	if p.llmClient == nil {
+		p.options.Logger.Error("LLM client not set")
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	gaiResp, err := p.llmClient.Generate(r.Context(), gaiReq)
+	if err != nil {
+		p.options.Logger.Error("Failed to generate response", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	response := p.convertGaiResponseToResponse(gaiResp, req.Model)
+
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		p.options.Logger.Error("Failed to encode response", "error", err)
+	}
+}
+
+func (p *OpenAIProvider) convertCreateResponseToGaiRequest(req CreateResponseRequest) gai.GenerateRequest {
+	var input gai.Input
+	var instructions string
+
+	if req.Instructions != "" {
+		instructions = req.Instructions
+	}
+
+	if req.Input != "" {
+		input = gai.TextInput{Text: req.Input}
+	} else if len(req.InputItems) > 0 {
+		var messages []gai.Message
+		for _, item := range req.InputItems {
+			if item.Type == InputItemTypeMessage {
+				var msgContent map[string]any
+				if err := json.Unmarshal(item.Content, &msgContent); err == nil {
+					if role, ok := msgContent["role"].(string); ok {
+						if content, ok := msgContent["content"].(string); ok {
+							var gaiRole gai.Role
+							switch role {
+							case "user":
+								gaiRole = gai.RoleUser
+							case "assistant":
+								gaiRole = gai.RoleAssistant
+							case "system", "developer":
+								if instructions != "" {
+									instructions += "\n\n" + content
+								} else {
+									instructions = content
+								}
+								continue
+							default:
+								gaiRole = gai.RoleUser
+							}
+							messages = append(messages, gai.Message{
+								Role:    gaiRole,
+								Content: gai.TextInput{Text: content},
+							})
+						}
+					}
+				}
+			}
+		}
+		if len(messages) > 0 {
+			input = gai.Conversation{Messages: messages}
+		} else {
+			input = gai.TextInput{Text: ""}
+		}
+	} else {
+		input = gai.TextInput{Text: ""}
+	}
+
+	gaiReq := gai.GenerateRequest{
+		ModelID:      req.Model,
+		Instructions: instructions,
+		Input:        input,
+		Stream:       req.Stream != nil && *req.Stream,
+	}
+
+	if req.Temperature != nil {
+		gaiReq.Temperature = float32(*req.Temperature)
+	}
+	if req.TopP != nil {
+		gaiReq.TopP = float32(*req.TopP)
+	}
+	if req.MaxOutputTokens != nil {
+		gaiReq.MaxOutputTokens = *req.MaxOutputTokens
+	}
+
+	return gaiReq
+}
+
+func (p *OpenAIProvider) convertGaiResponseToResponse(gaiResp *gai.Response, modelID string) *Response {
+	response := NewResponse(gaiResp.ID)
+	response.Model = modelID
+	response.SetCompleted()
+
+	for _, output := range gaiResp.Output {
+		if textOutput, ok := output.(gai.TextOutput); ok {
+			outputItemContent := map[string]any{
+				"role":    "assistant",
+				"content": textOutput.Text,
+			}
+			contentBytes, _ := json.Marshal(outputItemContent)
+			response.AddOutputItem(OutputItem{
+				Type:    OutputItemTypeMessage,
+				Content: contentBytes,
+			})
+			if response.OutputText == nil {
+				outputText := textOutput.Text
+				response.OutputText = &outputText
+			}
+		}
+	}
+
+	if gaiResp.Usage != nil {
+		response.Usage = &ResponseUsage{
+			InputTokens:  int(gaiResp.Usage.PromptTokens),
+			OutputTokens: int(gaiResp.Usage.CompletionTokens),
+			TotalTokens:  int(gaiResp.Usage.TotalTokens),
+			InputTokensDetails: InputTokensDetails{
+				CachedTokens: 0,
+			},
+			OutputTokensDetails: OutputTokensDetails{
+				ReasoningTokens: 0,
+			},
+		}
+	}
+
+	return response
+}
+
+func (p *OpenAIProvider) handleResponseStreaming(w http.ResponseWriter, ctx context.Context, gaiReq gai.GenerateRequest, modelID string) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		p.options.Logger.Error("Streaming not supported by response writer")
+		http.Error(w, "Streaming not supported", http.StatusInternalServerError)
+		return
+	}
+
+	if p.llmClient == nil {
+		p.options.Logger.Error("LLM client not set")
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	stream, err := p.llmClient.GenerateStream(ctx, gaiReq)
+	if err != nil {
+		p.options.Logger.Error("Failed to start streaming", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer func() {
+		if err := stream.Close(); err != nil {
+			p.options.Logger.Error("Failed to close stream", "error", err)
+		}
+	}()
+
+	responseID := gaiReq.ModelID + "_" + fmt.Sprintf("%d", time.Now().UnixNano())
+
+	for {
+		chunk, err := stream.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			p.options.Logger.Error("Error reading stream chunk", "error", err)
+			break
+		}
+
+		streamEvent := p.convertChunkToResponseStreamEvent(chunk, responseID)
+		data, err := json.Marshal(streamEvent)
+		if err != nil {
+			p.options.Logger.Error("Failed to marshal stream event", "error", err)
+			continue
+		}
+
+		if _, err := fmt.Fprintf(w, "data: %s\n\n", data); err != nil {
+			p.options.Logger.Error("Failed to write SSE data", "error", err)
+			break
+		}
+		flusher.Flush()
+
+		if chunk.Finished {
+			break
+		}
+	}
+
+	if _, err := fmt.Fprintf(w, "data: [DONE]\n\n"); err != nil {
+		p.options.Logger.Error("Failed to write final SSE message", "error", err)
+	}
+	flusher.Flush()
+}
+
+func (p *OpenAIProvider) convertChunkToResponseStreamEvent(chunk *gai.ResponseChunk, responseID string) ResponseStreamEvent {
+	eventData := map[string]any{
+		"id":      responseID,
+		"object":  "response.stream_event",
+		"created": time.Now().Unix(),
+	}
+
+	if chunk.Delta.Text != "" {
+		eventData["type"] = "response.text.delta"
+		eventData["delta"] = map[string]any{
+			"text": chunk.Delta.Text,
+		}
+	} else if chunk.Finished {
+		eventData["type"] = "response.completed"
+		if chunk.Usage != nil {
+			eventData["usage"] = map[string]any{
+				"input_tokens":  chunk.Usage.PromptTokens,
+				"output_tokens": chunk.Usage.CompletionTokens,
+				"total_tokens":  chunk.Usage.TotalTokens,
+			}
+		}
+	} else {
+		eventData["type"] = "response.created"
+	}
+
+	eventDataBytes, _ := json.Marshal(eventData)
+	return ResponseStreamEvent{
+		Type: eventData["type"].(string),
+		Data: eventDataBytes,
+	}
 }
 
 func (p *OpenAIProvider) Shutdown(ctx context.Context) error {
