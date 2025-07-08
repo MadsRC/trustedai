@@ -142,8 +142,10 @@ func (p *AnthropicProvider) isValidVersion(version string) bool {
 func (p *AnthropicProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler) {
 	if baseAuth != nil {
 		mux.Handle("POST /anthropic/v1/messages", baseAuth(http.HandlerFunc(p.handleMessages)))
+		mux.Handle("GET /anthropic/v1/models", baseAuth(http.HandlerFunc(p.handleListModels)))
 	} else {
 		mux.HandleFunc("POST /anthropic/v1/messages", p.handleMessages)
+		mux.HandleFunc("GET /anthropic/v1/models", p.handleListModels)
 	}
 }
 
@@ -199,6 +201,73 @@ func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Reques
 
 	if err := json.NewEncoder(w).Encode(anthropicResp); err != nil {
 		p.options.Logger.Error("Failed to encode messages response", "error", err)
+	}
+}
+
+func (p *AnthropicProvider) handleListModels(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	// Validate anthropic-version header
+	version := r.Header.Get(AnthropicVersionHeader)
+	if version == "" {
+		p.options.Logger.Debug("Missing anthropic-version header, using latest version")
+		version = AnthropicVersionLatest
+	}
+
+	if !p.isValidVersion(version) {
+		p.options.Logger.Error("Invalid anthropic-version header", "version", version)
+		http.Error(w, "Invalid anthropic-version header", http.StatusBadRequest)
+		return
+	}
+
+	// Get models from ModelRouter
+	if p.options.ModelRouter == nil {
+		p.options.Logger.Error("ModelRouter not configured")
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	models, err := p.options.ModelRouter.ListModels(r.Context())
+	if err != nil {
+		p.options.Logger.Error("Failed to list models", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Convert GAI models to Anthropic API format
+	var anthropicModels []map[string]any
+	for _, model := range models {
+		anthropicModel := map[string]any{
+			"id":           model.ID,
+			"type":         "model",
+			"display_name": model.Name,
+			"created_at":   model.Metadata["created_at"],
+		}
+
+		// Use created_at from metadata if available, otherwise use a default
+		if createdAt, ok := model.Metadata["created_at"].(string); ok {
+			anthropicModel["created_at"] = createdAt
+		} else {
+			anthropicModel["created_at"] = "2024-01-01T00:00:00Z"
+		}
+
+		anthropicModels = append(anthropicModels, anthropicModel)
+	}
+
+	// Build Anthropic API response format
+	response := map[string]any{
+		"data":     anthropicModels,
+		"has_more": false,
+	}
+
+	if len(anthropicModels) > 0 {
+		response["first_id"] = anthropicModels[0]["id"]
+		response["last_id"] = anthropicModels[len(anthropicModels)-1]["id"]
+	}
+
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		p.options.Logger.Error("Failed to encode models response", "error", err)
 	}
 }
 

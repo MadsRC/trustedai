@@ -12,7 +12,6 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/gai-org/gai"
@@ -68,7 +67,28 @@ func TestOpenAIProvider_ChatCompletions(t *testing.T) {
 }
 
 func TestOpenAIProvider_ListModels(t *testing.T) {
-	provider := NewOpenAIProvider()
+	mockRouter := &mockModelRouter{
+		models: []gai.Model{
+			{
+				ID:       "gpt-4o",
+				Name:     "GPT-4o",
+				Provider: "openai",
+				Metadata: map[string]any{
+					"created_at": "2024-05-13T00:00:00Z",
+				},
+			},
+			{
+				ID:       "gpt-3.5-turbo",
+				Name:     "GPT-3.5 Turbo",
+				Provider: "openai",
+				Metadata: map[string]any{
+					"created_at": "2023-03-01T00:00:00Z",
+				},
+			},
+		},
+	}
+
+	provider := NewOpenAIProvider(dataplane.WithModelRouter(mockRouter))
 	mux := http.NewServeMux()
 	provider.SetupRoutes(mux, nil)
 
@@ -77,28 +97,30 @@ func TestOpenAIProvider_ListModels(t *testing.T) {
 
 	mux.ServeHTTP(w, req)
 
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
-	}
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "application/json", w.Header().Get("Content-Type"))
 
 	body, err := io.ReadAll(w.Body)
-	if err != nil {
-		t.Fatalf("Failed to read response body: %v", err)
-	}
+	require.NoError(t, err)
 
 	var response map[string]any
-	if err := json.Unmarshal(body, &response); err != nil {
-		t.Fatalf("Failed to unmarshal response: %v", err)
-	}
+	err = json.Unmarshal(body, &response)
+	require.NoError(t, err)
 
-	if response["object"] != "list" {
-		t.Errorf("Expected object to be 'list', got %v", response["object"])
-	}
+	assert.Equal(t, "list", response["object"])
+	assert.Contains(t, response, "data")
 
 	data, ok := response["data"].([]any)
-	if !ok || len(data) == 0 {
-		t.Errorf("Expected data to be a non-empty array")
-	}
+	require.True(t, ok)
+	assert.Len(t, data, 2)
+
+	// Check first model
+	model1, ok := data[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "gpt-4o", model1["id"])
+	assert.Equal(t, "model", model1["object"])
+	assert.Equal(t, "openai", model1["owned_by"])
+	assert.Contains(t, model1, "created")
 }
 
 func TestOpenAIProvider_Shutdown(t *testing.T) {
@@ -118,90 +140,6 @@ func TestOpenAIProvider_WithLogger(t *testing.T) {
 	if provider.options.Logger != nil {
 		t.Errorf("Expected logger to be nil, got %v", provider.options.Logger)
 	}
-}
-
-// mockLLMClient is a mock implementation of LLMClient for testing
-type mockLLMClient struct {
-	shouldStreamError bool
-	streamChunks      []*gai.ResponseChunk
-	toolCallResponse  *gai.Response
-}
-
-func (m *mockLLMClient) Generate(ctx context.Context, req gai.GenerateRequest) (*gai.Response, error) {
-	if m.toolCallResponse != nil {
-		return m.toolCallResponse, nil
-	}
-	return &gai.Response{
-		ID:        "test-response-123",
-		ModelID:   req.ModelID,
-		Status:    "completed",
-		Output:    []gai.OutputItem{gai.TextOutput{Text: "Hello! This is a test response."}},
-		Usage:     &gai.TokenUsage{PromptTokens: 10, CompletionTokens: 15, TotalTokens: 25},
-		CreatedAt: time.Now(),
-	}, nil
-}
-
-func (m *mockLLMClient) GenerateStream(ctx context.Context, req gai.GenerateRequest) (gai.ResponseStream, error) {
-	if m.shouldStreamError {
-		return nil, assert.AnError
-	}
-
-	chunks := m.streamChunks
-	if chunks == nil {
-		// Default test chunks
-		chunks = []*gai.ResponseChunk{
-			{
-				ID:       "test-stream-123",
-				Delta:    gai.OutputDelta{Text: "Hello"},
-				Finished: false,
-				Status:   "generating",
-			},
-			{
-				ID:       "test-stream-123",
-				Delta:    gai.OutputDelta{Text: " world"},
-				Finished: false,
-				Status:   "generating",
-			},
-			{
-				ID:       "test-stream-123",
-				Delta:    gai.OutputDelta{Text: "!"},
-				Finished: true,
-				Status:   "completed",
-				Usage:    &gai.TokenUsage{PromptTokens: 5, CompletionTokens: 10, TotalTokens: 15},
-			},
-		}
-	}
-
-	return &mockResponseStream{chunks: chunks}, nil
-}
-
-// mockResponseStream implements the ResponseStream interface
-type mockResponseStream struct {
-	chunks []*gai.ResponseChunk
-	index  int
-	closed bool
-}
-
-func (m *mockResponseStream) Next() (*gai.ResponseChunk, error) {
-	if m.closed {
-		return nil, io.EOF
-	}
-	if m.index >= len(m.chunks) {
-		return nil, io.EOF
-	}
-
-	chunk := m.chunks[m.index]
-	m.index++
-	return chunk, nil
-}
-
-func (m *mockResponseStream) Close() error {
-	m.closed = true
-	return nil
-}
-
-func (m *mockResponseStream) Err() error {
-	return nil
 }
 
 func TestOpenAIProvider_ChatCompletions_Streaming(t *testing.T) {
@@ -395,4 +333,18 @@ func TestOpenAIProvider_convertChunkToOpenAI(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestOpenAIProvider_ListModels_NoModelRouter(t *testing.T) {
+	provider := NewOpenAIProvider()
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	req := httptest.NewRequest("GET", "/openai/v1/models", nil)
+	w := httptest.NewRecorder()
+
+	mux.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
 }

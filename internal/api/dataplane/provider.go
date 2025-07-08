@@ -17,6 +17,10 @@ type LLMClient interface {
 	GenerateStream(ctx context.Context, req gai.GenerateRequest) (gai.ResponseStream, error)
 }
 
+type ModelRouter interface {
+	ListModels(ctx context.Context) ([]gai.Model, error)
+}
+
 type Provider interface {
 	Name() string
 	SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler)
@@ -25,7 +29,8 @@ type Provider interface {
 }
 
 type ProviderOptions struct {
-	Logger *slog.Logger
+	Logger      *slog.Logger
+	ModelRouter ModelRouter
 }
 
 type ProviderOption interface {
@@ -41,5 +46,11 @@ func (f providerOptionFunc) Apply(opts *ProviderOptions) {
 func WithProviderLogger(logger *slog.Logger) ProviderOption {
 	return providerOptionFunc(func(opts *ProviderOptions) {
 		opts.Logger = logger
+	})
+}
+
+func WithModelRouter(router ModelRouter) ProviderOption {
+	return providerOptionFunc(func(opts *ProviderOptions) {
+		opts.ModelRouter = router
 	})
 }

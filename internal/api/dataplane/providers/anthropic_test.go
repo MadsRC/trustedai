@@ -696,3 +696,94 @@ func TestAnthropicProvider_ToolUse(t *testing.T) {
 	assert.Equal(t, 20, response.Usage.InputTokens)
 	assert.Equal(t, 25, response.Usage.OutputTokens)
 }
+
+func TestAnthropicProvider_ListModels(t *testing.T) {
+	mockRouter := &mockModelRouter{
+		models: []gai.Model{
+			{
+				ID:       "claude-3-5-sonnet-20241022",
+				Name:     "Claude 3.5 Sonnet",
+				Provider: "anthropic",
+				Metadata: map[string]any{
+					"created_at": "2024-10-22T00:00:00Z",
+				},
+			},
+			{
+				ID:       "claude-3-haiku-20240307",
+				Name:     "Claude 3 Haiku",
+				Provider: "anthropic",
+				Metadata: map[string]any{
+					"created_at": "2024-03-07T00:00:00Z",
+				},
+			},
+		},
+	}
+
+	provider := NewAnthropicProvider(dataplane.WithModelRouter(mockRouter))
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	req := httptest.NewRequest("GET", "/anthropic/v1/models", nil)
+	req.Header.Set("anthropic-version", "2023-06-01")
+	w := httptest.NewRecorder()
+
+	mux.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "application/json", w.Header().Get("Content-Type"))
+
+	body, err := io.ReadAll(w.Body)
+	require.NoError(t, err)
+
+	var response map[string]any
+	err = json.Unmarshal(body, &response)
+	require.NoError(t, err)
+
+	assert.Contains(t, response, "data")
+	assert.Contains(t, response, "has_more")
+	assert.Equal(t, false, response["has_more"])
+
+	data, ok := response["data"].([]any)
+	require.True(t, ok)
+	assert.Len(t, data, 2)
+
+	// Check first model
+	model1, ok := data[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "claude-3-5-sonnet-20241022", model1["id"])
+	assert.Equal(t, "model", model1["type"])
+	assert.Equal(t, "Claude 3.5 Sonnet", model1["display_name"])
+	assert.Equal(t, "2024-10-22T00:00:00Z", model1["created_at"])
+}
+
+func TestAnthropicProvider_ListModels_NoModelRouter(t *testing.T) {
+	provider := NewAnthropicProvider()
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	req := httptest.NewRequest("GET", "/anthropic/v1/models", nil)
+	req.Header.Set("anthropic-version", "2023-06-01")
+	w := httptest.NewRecorder()
+
+	mux.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}
+
+func TestAnthropicProvider_ListModels_InvalidVersion(t *testing.T) {
+	mockRouter := &mockModelRouter{}
+	provider := NewAnthropicProvider(dataplane.WithModelRouter(mockRouter))
+
+	mux := http.NewServeMux()
+	provider.SetupRoutes(mux, nil)
+
+	req := httptest.NewRequest("GET", "/anthropic/v1/models", nil)
+	req.Header.Set("anthropic-version", "invalid-version")
+	w := httptest.NewRecorder()
+
+	mux.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+}

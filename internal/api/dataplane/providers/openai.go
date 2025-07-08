@@ -120,26 +120,51 @@ func (p *OpenAIProvider) handleChatCompletions(w http.ResponseWriter, r *http.Re
 
 func (p *OpenAIProvider) handleListModels(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+
+	// Get models from ModelRouter
+	if p.options.ModelRouter == nil {
+		p.options.Logger.Error("ModelRouter not configured")
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	models, err := p.options.ModelRouter.ListModels(r.Context())
+	if err != nil {
+		p.options.Logger.Error("Failed to list models", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Convert GAI models to OpenAI API format
+	var openaiModels []map[string]any
+	for _, model := range models {
+		openaiModel := map[string]any{
+			"id":       model.ID,
+			"object":   "model",
+			"owned_by": model.Provider,
+		}
+
+		// Use created timestamp from metadata if available, otherwise use current time
+		if createdAt, ok := model.Metadata["created_at"].(string); ok {
+			// Try to parse the timestamp and convert to Unix timestamp
+			if t, err := time.Parse(time.RFC3339, createdAt); err == nil {
+				openaiModel["created"] = t.Unix()
+			} else {
+				openaiModel["created"] = time.Now().Unix()
+			}
+		} else {
+			openaiModel["created"] = time.Now().Unix()
+		}
+
+		openaiModels = append(openaiModels, openaiModel)
+	}
 
 	response := map[string]any{
 		"object": "list",
-		"data": []map[string]any{
-			{
-				"id":       "gpt-3.5-turbo",
-				"object":   "model",
-				"created":  time.Now().Unix(),
-				"owned_by": "openai",
-			},
-			{
-				"id":       "gpt-4",
-				"object":   "model",
-				"created":  time.Now().Unix(),
-				"owned_by": "openai",
-			},
-		},
+		"data":   openaiModels,
 	}
 
+	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		p.options.Logger.Error("Failed to encode models response", "error", err)
 	}
