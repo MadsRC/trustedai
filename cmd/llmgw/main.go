@@ -216,12 +216,17 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		dataplane.WithProviderLogger(logger),
 	)
 
+	// Create Anthropic provider
+	anthropicProvider := providers.NewAnthropicProvider(
+		dataplane.WithProviderLogger(logger),
+	)
+
 	// Create DataPlane server
 	dataPlaneServer, err := dataplane.NewDataPlaneServer(
 		dataplane.WithDataPlaneLogger(logger),
 		dataplane.WithDataPlaneAddr(c.String("data-plane-listen")),
 		dataplane.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
-		dataplane.WithDataPlaneProviders(openaiProvider),
+		dataplane.WithDataPlaneProviders(openaiProvider, anthropicProvider),
 		dataplane.WithDataPlaneLLMClient(llmClient),
 	)
 	if err != nil {
