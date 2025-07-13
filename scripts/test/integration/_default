@@ -3,6 +3,11 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run integration tests for the project"
 
+# Detect if running on macOS and set TESTCONTAINERS_RYUK_DISABLED for podman compatibility
+if [ "$(uname)" = "Darwin" ]; then
+    export TESTCONTAINERS_RYUK_DISABLED=true
+fi
+
 # Run Go tests with the 'integration' build tag
 # The ./... pattern ensures tests are run in all subdirectories
 # -count=1 disables test caching for this run
