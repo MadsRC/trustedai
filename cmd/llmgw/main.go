@@ -26,6 +26,7 @@ import (
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/providers"
 	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
 	"codeberg.org/MadsRC/llmgw/internal/modelrouter"
+	"codeberg.org/MadsRC/llmgw/internal/monitoring"
 	"codeberg.org/MadsRC/llmgw/internal/oidc"
 	"codeberg.org/MadsRC/llmgw/internal/postgres"
 	"codeberg.org/MadsRC/llmgw/internal/services"
@@ -69,6 +70,12 @@ func main() {
 				Name:    "debug",
 				Usage:   "Enable debug logging",
 				Sources: cli.EnvVars("LLMGW_DEBUG"),
+			},
+			&cli.StringFlag{
+				Name:     "otlp-endpoint",
+				Usage:    "OTLP endpoint for metrics export (required)",
+				Sources:  cli.EnvVars("LLMGW_OTLP_ENDPOINT"),
+				Required: true,
 			},
 		},
 		Action: runServer,
@@ -167,6 +174,23 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("bootstrap failed: %w", err)
 	}
 
+	// Set up monitoring system
+	logger.Info("Setting up monitoring system...")
+	monitoringConfig := monitoring.Config{
+		ServiceName:    "llmgw",
+		ServiceVersion: "0.1.0",
+		OTLPEndpoint:   c.String("otlp-endpoint"),
+	}
+
+	monitoringManager, err := monitoring.NewManager(monitoringConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create monitoring manager: %w", err)
+	}
+
+	// Get usage metrics
+	usageMetrics := monitoringManager.GetUsageMetrics()
+	logger.Info("Monitoring system initialized with OTLP export", "endpoint", c.String("otlp-endpoint"))
+
 	// Create session store
 	sessionStore := auth.NewMemorySessionStore()
 
@@ -237,6 +261,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		billingRepo,
 		services.WithLogger(logger.WithGroup("cost-calculator")),
 		services.WithBatchSize(50),
+		services.WithMetrics(usageMetrics),
 	)
 
 	// Create scheduler for background jobs
@@ -261,6 +286,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		dataplane.WithDataPlaneAddr(c.String("data-plane-listen")),
 		dataplane.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
 		dataplane.WithDataPlaneUsageRepository(usageRepo),
+		dataplane.WithDataPlaneUsageMetrics(usageMetrics),
 		dataplane.WithDataPlaneProviders(openaiProvider, anthropicProvider),
 		dataplane.WithDataPlaneLLMClient(llmClient),
 	)
@@ -340,6 +366,11 @@ func runServer(ctx context.Context, c *cli.Command) error {
 
 		// Stop background scheduler
 		scheduler.Stop()
+
+		// Shutdown monitoring system
+		if err := monitoringManager.Shutdown(context.Background()); err != nil {
+			logger.Error("Failed to shutdown monitoring system", "error", err)
+		}
 
 		// Create shutdown context with timeout
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 30*time.Second)

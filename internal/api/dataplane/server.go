@@ -16,6 +16,7 @@ import (
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	dauth "codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/middleware"
+	"codeberg.org/MadsRC/llmgw/internal/monitoring"
 )
 
 type DataPlaneServer struct {
@@ -36,6 +37,7 @@ type dataPlaneOptions struct {
 	Addr               string
 	TokenAuthenticator *auth.TokenAuthenticator
 	UsageRepository    llmgw.UsageRepository
+	UsageMetrics       *monitoring.UsageMetrics
 	Providers          []Provider
 	LLMClient          LLMClient
 }
@@ -104,6 +106,12 @@ func WithDataPlaneUsageRepository(repo llmgw.UsageRepository) DataPlaneOption {
 	})
 }
 
+func WithDataPlaneUsageMetrics(metrics *monitoring.UsageMetrics) DataPlaneOption {
+	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
+		opts.UsageMetrics = metrics
+	})
+}
+
 func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 	opts := &dataPlaneOptions{
 		Logger:       slog.Default(),
@@ -133,7 +141,7 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 
 	// Initialize usage tracking middleware if UsageRepository is provided
 	if opts.UsageRepository != nil {
-		server.usageMiddleware = middleware.NewUsageTrackingMiddleware(opts.UsageRepository, opts.Logger)
+		server.usageMiddleware = middleware.NewUsageTrackingMiddleware(opts.UsageRepository, opts.Logger, opts.UsageMetrics)
 	}
 
 	// Set LLMClient on all providers if available

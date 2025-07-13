@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"codeberg.org/MadsRC/llmgw"
+	"codeberg.org/MadsRC/llmgw/internal/monitoring"
 	"codeberg.org/gai-org/gai"
 )
 
@@ -21,6 +22,7 @@ type CostCalculator struct {
 	billingRepo llmgw.BillingRepository
 	logger      *slog.Logger
 	batchSize   int
+	metrics     *monitoring.UsageMetrics
 }
 
 // CostCalculatorOption configures CostCalculator behavior
@@ -37,6 +39,13 @@ func WithBatchSize(size int) CostCalculatorOption {
 func WithLogger(logger *slog.Logger) CostCalculatorOption {
 	return func(c *CostCalculator) {
 		c.logger = logger
+	}
+}
+
+// WithMetrics sets the metrics for the cost calculator
+func WithMetrics(metrics *monitoring.UsageMetrics) CostCalculatorOption {
+	return func(c *CostCalculator) {
+		c.metrics = metrics
 	}
 }
 
@@ -64,6 +73,7 @@ func NewCostCalculator(
 
 // ProcessUsageEvents processes uncalculated usage events and calculates their costs
 func (c *CostCalculator) ProcessUsageEvents(ctx context.Context) error {
+	startTime := time.Now()
 	c.logger.Info("Starting cost calculation for usage events", "batchSize", c.batchSize)
 
 	for {
@@ -94,10 +104,20 @@ func (c *CostCalculator) ProcessUsageEvents(ctx context.Context) error {
 
 		c.logger.Info("Completed batch processing", "processedCount", len(events))
 
+		// Record batch write metrics
+		if c.metrics != nil {
+			c.metrics.RecordBatchWrite(ctx, int64(len(events)))
+		}
+
 		// If we got fewer events than the batch size, we're done
 		if len(events) < c.batchSize {
 			break
 		}
+	}
+
+	// Record total cost calculation duration
+	if c.metrics != nil {
+		c.metrics.RecordCostCalculationDuration(ctx, time.Since(startTime))
 	}
 
 	c.logger.Info("Cost calculation completed")

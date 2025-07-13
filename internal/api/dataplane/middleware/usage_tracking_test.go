@@ -59,7 +59,7 @@ func TestUsageTrackingMiddleware_Track(t *testing.T) {
 	logger := slog.Default()
 
 	// Create middleware
-	middleware := NewUsageTrackingMiddleware(mockRepo, logger)
+	middleware := NewUsageTrackingMiddleware(mockRepo, logger, nil)
 	defer middleware.Shutdown()
 
 	// Set up expectation for CreateUsageEvent (without user context, userID will be empty)
@@ -110,7 +110,7 @@ func TestUsageTrackingMiddleware_CreateEventFromGAIResponse(t *testing.T) {
 	logger := slog.Default()
 
 	// Create middleware
-	middleware := NewUsageTrackingMiddleware(mockRepo, logger)
+	middleware := NewUsageTrackingMiddleware(mockRepo, logger, nil)
 	defer middleware.Shutdown()
 
 	// Set up expectation for CreateUsageEvent
@@ -150,7 +150,7 @@ func TestUsageTrackingMiddleware_ErrorHandling(t *testing.T) {
 	logger := slog.Default()
 
 	// Create middleware
-	middleware := NewUsageTrackingMiddleware(mockRepo, logger)
+	middleware := NewUsageTrackingMiddleware(mockRepo, logger, nil)
 	defer middleware.Shutdown()
 
 	// Set up expectation for CreateUsageEvent with error status

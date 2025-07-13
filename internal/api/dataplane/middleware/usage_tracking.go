@@ -13,6 +13,7 @@ import (
 	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
+	"codeberg.org/MadsRC/llmgw/internal/monitoring"
 	"github.com/google/uuid"
 )
 
@@ -31,15 +32,17 @@ type UsageTrackingMiddleware struct {
 	logger    *slog.Logger
 	eventsCh  chan *llmgw.UsageEvent
 	done      chan struct{}
+	metrics   *monitoring.UsageMetrics
 }
 
 // NewUsageTrackingMiddleware creates a new usage tracking middleware
-func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Logger) *UsageTrackingMiddleware {
+func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Logger, metrics *monitoring.UsageMetrics) *UsageTrackingMiddleware {
 	middleware := &UsageTrackingMiddleware{
 		usageRepo: usageRepo,
 		logger:    logger,
 		eventsCh:  make(chan *llmgw.UsageEvent, 1000), // Buffered channel for non-blocking operation
 		done:      make(chan struct{}),
+		metrics:   metrics,
 	}
 
 	// Start background worker to process events
@@ -122,9 +125,16 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 		select {
 		case m.eventsCh <- event:
 			// Event queued successfully
+			if m.metrics != nil {
+				m.metrics.RecordEventCaptured(r.Context())
+				m.metrics.UpdateChannelSize(r.Context(), int64(len(m.eventsCh)))
+			}
 		default:
 			// Channel is full, drop event to prevent blocking
 			m.logger.Warn("Usage tracking channel full, dropping event", "request_id", requestID)
+			if m.metrics != nil {
+				m.metrics.RecordEventDropped(r.Context())
+			}
 		}
 	})
 }
@@ -173,9 +183,29 @@ func (m *UsageTrackingMiddleware) CreateEventFromGAIResponse(ctx context.Context
 	select {
 	case m.eventsCh <- event:
 		// Event queued successfully
+		if m.metrics != nil {
+			m.metrics.RecordEventCaptured(ctx)
+			m.metrics.UpdateChannelSize(ctx, int64(len(m.eventsCh)))
+
+			// Record business metrics
+			if userID != "" {
+				m.metrics.RecordModelUsage(ctx, modelID, userID)
+			}
+
+			// Record token usage metrics
+			if usage != nil {
+				if userID != "" {
+					m.metrics.RecordTokenUsage(ctx, int64(usage.PromptTokens), modelID, "input", userID)
+					m.metrics.RecordTokenUsage(ctx, int64(usage.CompletionTokens), modelID, "output", userID)
+				}
+			}
+		}
 	default:
 		// Channel is full, drop event
 		m.logger.Warn("Usage tracking channel full, dropping GAI event", "request_id", requestID)
+		if m.metrics != nil {
+			m.metrics.RecordEventDropped(ctx)
+		}
 	}
 }
 
@@ -184,6 +214,7 @@ func (m *UsageTrackingMiddleware) processEvents() {
 	for {
 		select {
 		case event := <-m.eventsCh:
+			startTime := time.Now()
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 
 			if err := m.usageRepo.CreateUsageEvent(ctx, event); err != nil {
@@ -191,12 +222,20 @@ func (m *UsageTrackingMiddleware) processEvents() {
 					"error", err,
 					"request_id", event.RequestID,
 					"user_id", event.UserID)
+
+				if m.metrics != nil {
+					m.metrics.RecordDatabaseError(ctx, "create_usage_event", "persistence_error")
+				}
 			} else {
 				m.logger.Debug("Usage event persisted",
 					"request_id", event.RequestID,
 					"user_id", event.UserID,
 					"model_id", event.ModelID,
 					"status", event.Status)
+
+				if m.metrics != nil {
+					m.metrics.RecordProcessingLatency(ctx, time.Since(startTime))
+				}
 			}
 
 			cancel()
