@@ -1,0 +1,166 @@
+// SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
+syntax = "proto3";
+
+package llmgw.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1";
+
+service UsageAnalyticsService {
+  // User usage queries
+  rpc GetUsageSummary(UsageAnalyticsServiceGetUsageSummaryRequest) returns (UsageAnalyticsServiceGetUsageSummaryResponse);
+  rpc GetUsageDetails(UsageAnalyticsServiceGetUsageDetailsRequest) returns (UsageAnalyticsServiceGetUsageDetailsResponse);
+  rpc GetUsageCosts(UsageAnalyticsServiceGetUsageCostsRequest) returns (UsageAnalyticsServiceGetUsageCostsResponse);
+
+  // Organization reporting (admin only)
+  rpc GetOrganizationUsageSummary(UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) returns (UsageAnalyticsServiceGetOrganizationUsageSummaryResponse);
+  rpc GetOrganizationUsageByUser(UsageAnalyticsServiceGetOrganizationUsageByUserRequest) returns (UsageAnalyticsServiceGetOrganizationUsageByUserResponse);
+  rpc GetOrganizationUsageByModel(UsageAnalyticsServiceGetOrganizationUsageByModelRequest) returns (UsageAnalyticsServiceGetOrganizationUsageByModelResponse);
+}
+
+// Core data structures
+message UsagePeriod {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+}
+
+message UsageSummary {
+  int32 total_requests = 1;
+  int64 total_input_tokens = 2;
+  int64 total_output_tokens = 3;
+  int64 total_cost_cents = 4;
+  repeated ModelUsage models = 5;
+}
+
+message ModelUsage {
+  string model_id = 1;
+  int32 requests = 2;
+  int64 input_tokens = 3;
+  int64 output_tokens = 4;
+  int64 cost_cents = 5;
+}
+
+message UsageEvent {
+  string id = 1;
+  string request_id = 2;
+  string user_id = 3;
+  string model_id = 4;
+  optional int32 input_tokens = 5;
+  optional int32 output_tokens = 6;
+  optional int32 cached_tokens = 7;
+  optional int32 reasoning_tokens = 8;
+  string status = 9;
+  optional string failure_stage = 10;
+  optional string error_type = 11;
+  optional string error_message = 12;
+  string usage_data_source = 13;
+  bool data_complete = 14;
+  google.protobuf.Timestamp timestamp = 15;
+  optional int32 duration_ms = 16;
+  optional int64 input_cost_cents = 17;
+  optional int64 output_cost_cents = 18;
+  optional int64 total_cost_cents = 19;
+}
+
+message UserUsageSummary {
+  string user_id = 1;
+  string user_email = 2;
+  string user_name = 3;
+  UsageSummary summary = 4;
+}
+
+// Request/Response messages for GetUsageSummary
+message UsageAnalyticsServiceGetUsageSummaryRequest {
+  string period = 1; // "day", "week", "month"
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  optional string model_id = 4; // filter by specific model
+}
+
+message UsageAnalyticsServiceGetUsageSummaryResponse {
+  UsagePeriod period = 1;
+  UsageSummary summary = 2;
+}
+
+// Request/Response messages for GetUsageDetails
+message UsageAnalyticsServiceGetUsageDetailsRequest {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+  optional string model_id = 3; // filter by specific model
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message UsageAnalyticsServiceGetUsageDetailsResponse {
+  repeated UsageEvent events = 1;
+  int32 total_count = 2;
+}
+
+// Request/Response messages for GetUsageCosts
+message UsageAnalyticsServiceGetUsageCostsRequest {
+  string period = 1; // "day", "week", "month"
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  optional string model_id = 4; // filter by specific model
+}
+
+message UsageAnalyticsServiceGetUsageCostsResponse {
+  UsagePeriod period = 1;
+  repeated CostBreakdown cost_breakdown = 2;
+  int64 total_cost_cents = 3;
+}
+
+message CostBreakdown {
+  string model_id = 1;
+  int64 input_cost_cents = 2;
+  int64 output_cost_cents = 3;
+  int64 total_cost_cents = 4;
+  int32 requests = 5;
+}
+
+// Request/Response messages for GetOrganizationUsageSummary
+message UsageAnalyticsServiceGetOrganizationUsageSummaryRequest {
+  string organization_id = 1;
+  string period = 2; // "day", "week", "month"
+  google.protobuf.Timestamp start = 3;
+  google.protobuf.Timestamp end = 4;
+  optional string model_id = 5; // filter by specific model
+}
+
+message UsageAnalyticsServiceGetOrganizationUsageSummaryResponse {
+  UsagePeriod period = 1;
+  UsageSummary summary = 2;
+  repeated UserUsageSummary user_summaries = 3;
+}
+
+// Request/Response messages for GetOrganizationUsageByUser
+message UsageAnalyticsServiceGetOrganizationUsageByUserRequest {
+  string organization_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message UsageAnalyticsServiceGetOrganizationUsageByUserResponse {
+  repeated UserUsageSummary user_summaries = 1;
+  int32 total_count = 2;
+}
+
+// Request/Response messages for GetOrganizationUsageByModel
+message UsageAnalyticsServiceGetOrganizationUsageByModelRequest {
+  string organization_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message UsageAnalyticsServiceGetOrganizationUsageByModelResponse {
+  repeated ModelUsage model_usage = 1;
+  int32 total_count = 2;
+}
