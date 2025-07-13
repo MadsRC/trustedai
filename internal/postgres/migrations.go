@@ -18,6 +18,11 @@ import (
 //go:embed migrate/*.sql
 var migrationFiles embed.FS
 
+// GetMigrationFiles returns the embedded migration files for testing
+func GetMigrationFiles() embed.FS {
+	return migrationFiles
+}
+
 // RunMigrations runs all pending database migrations
 func RunMigrations(logger *slog.Logger, databaseURL string) error {
 	logger.Info("Running database migrations...")
