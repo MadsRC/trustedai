@@ -21,13 +21,14 @@ import (
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"codeberg.org/MadsRC/llmgw/internal/api/controlplane"
 	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
+	controlplaneservices "codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/providers"
 	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
 	"codeberg.org/MadsRC/llmgw/internal/modelrouter"
 	"codeberg.org/MadsRC/llmgw/internal/oidc"
 	"codeberg.org/MadsRC/llmgw/internal/postgres"
+	"codeberg.org/MadsRC/llmgw/internal/services"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/urfave/cli/v3"
 	"golang.org/x/net/http2"
@@ -142,6 +143,24 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	// Create model repository
 	modelRepo := postgres.NewModelRepository(dbPool)
 
+	// Create usage repository
+	usageRepo, err := postgres.NewUsageRepository(
+		postgres.WithUsageRepositoryLogger(logger),
+		postgres.WithUsageRepositoryDb(dbPool),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create usage repository: %w", err)
+	}
+
+	// Create billing repository
+	billingRepo, err := postgres.NewBillingRepository(
+		postgres.WithBillingRepositoryLogger(logger),
+		postgres.WithBillingRepositoryDb(dbPool),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create billing repository: %w", err)
+	}
+
 	// Check and perform bootstrap if needed
 	logger.Info("Checking system bootstrap status...")
 	if err := bootstrap.CheckAndBootstrap(ctx, logger, orgRepo, userRepo, tokenRepo); err != nil {
@@ -164,10 +183,10 @@ func runServer(ctx context.Context, c *cli.Command) error {
 
 	// Create SSO callback service
 	logger.Info("Creating SSO callback service...")
-	ssoHandler, err := services.NewSsoCallback(
-		services.WithSsoCallbackLogger(logger),
-		services.WithSsoCallbackProvider("oidc", oidcProvider),
-		services.WithSsoCallbackSessionStore(sessionStore),
+	ssoHandler, err := controlplaneservices.NewSsoCallback(
+		controlplaneservices.WithSsoCallbackLogger(logger),
+		controlplaneservices.WithSsoCallbackProvider("oidc", oidcProvider),
+		controlplaneservices.WithSsoCallbackSessionStore(sessionStore),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create SSO handler: %w", err)
@@ -210,6 +229,21 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	)
 
 	logger.Info("Model router configured with database integration - providers are managed through database")
+
+	// Create cost calculator
+	costCalculator := services.NewCostCalculator(
+		usageRepo,
+		modelRepo,
+		billingRepo,
+		services.WithLogger(logger.WithGroup("cost-calculator")),
+		services.WithBatchSize(50),
+	)
+
+	// Create scheduler for background jobs
+	scheduler := services.NewScheduler(
+		costCalculator,
+		services.WithSchedulerLogger(logger.WithGroup("scheduler")),
+	)
 
 	// Create OpenAI provider
 	openaiProvider := providers.NewOpenAIProvider(
@@ -287,6 +321,9 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		}
 	}()
 
+	// Start background scheduler
+	scheduler.Start(ctx)
+
 	// Wait for interrupt signal
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
@@ -299,6 +336,9 @@ func runServer(ctx context.Context, c *cli.Command) error {
 
 		// Cancel context to stop DataPlane server
 		cancel()
+
+		// Stop background scheduler
+		scheduler.Stop()
 
 		// Create shutdown context with timeout
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 30*time.Second)
