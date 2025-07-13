@@ -260,6 +260,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		dataplane.WithDataPlaneLogger(logger),
 		dataplane.WithDataPlaneAddr(c.String("data-plane-listen")),
 		dataplane.WithDataPlaneTokenAuthenticator(tokenAuthenticator),
+		dataplane.WithDataPlaneUsageRepository(usageRepo),
 		dataplane.WithDataPlaneProviders(openaiProvider, anthropicProvider),
 		dataplane.WithDataPlaneLLMClient(llmClient),
 	)

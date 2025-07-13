@@ -12,17 +12,20 @@ import (
 	"net/http"
 	"time"
 
+	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	dauth "codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/middleware"
 )
 
 type DataPlaneServer struct {
-	options        *dataPlaneOptions
-	mux            *http.ServeMux
-	httpServer     *http.Server
-	authMiddleware *dauth.CombinedAuthMiddleware
-	providers      []Provider
-	LLMClient      LLMClient
+	options         *dataPlaneOptions
+	mux             *http.ServeMux
+	httpServer      *http.Server
+	authMiddleware  *dauth.CombinedAuthMiddleware
+	usageMiddleware *middleware.UsageTrackingMiddleware
+	providers       []Provider
+	LLMClient       LLMClient
 }
 
 type dataPlaneOptions struct {
@@ -32,6 +35,7 @@ type dataPlaneOptions struct {
 	IdleTimeout        time.Duration
 	Addr               string
 	TokenAuthenticator *auth.TokenAuthenticator
+	UsageRepository    llmgw.UsageRepository
 	Providers          []Provider
 	LLMClient          LLMClient
 }
@@ -94,6 +98,12 @@ func WithDataPlaneLLMClient(client LLMClient) DataPlaneOption {
 	})
 }
 
+func WithDataPlaneUsageRepository(repo llmgw.UsageRepository) DataPlaneOption {
+	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
+		opts.UsageRepository = repo
+	})
+}
+
 func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 	opts := &dataPlaneOptions{
 		Logger:       slog.Default(),
@@ -121,10 +131,22 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 		server.authMiddleware = dauth.NewCombinedAuthMiddleware(opts.TokenAuthenticator, opts.Logger)
 	}
 
+	// Initialize usage tracking middleware if UsageRepository is provided
+	if opts.UsageRepository != nil {
+		server.usageMiddleware = middleware.NewUsageTrackingMiddleware(opts.UsageRepository, opts.Logger)
+	}
+
 	// Set LLMClient on all providers if available
 	if server.LLMClient != nil {
 		for _, provider := range server.providers {
 			provider.SetLLMClient(server.LLMClient)
+		}
+	}
+
+	// Set UsageMiddleware on all providers if available
+	if server.usageMiddleware != nil {
+		for _, provider := range server.providers {
+			provider.SetUsageMiddleware(server.usageMiddleware)
 		}
 	}
 
@@ -145,17 +167,34 @@ func (s *DataPlaneServer) setupRoutes() {
 	// Health endpoint - no authentication required
 	s.mux.HandleFunc("GET /health", s.handleHealth)
 
-	// Protected endpoints - require Bearer token or x-api-key authentication
+	// Build middleware chain for protected endpoints
 	var baseAuth func(http.Handler) http.Handler
+
+	// Start with usage tracking middleware (innermost)
+	if s.usageMiddleware != nil {
+		baseAuth = s.usageMiddleware.Track
+	}
+
+	// Add authentication middleware (outermost for provider routes)
 	if s.authMiddleware != nil {
-		baseAuth = s.authMiddleware.Authenticate
+		if baseAuth != nil {
+			// Chain: auth -> usage tracking
+			authHandler := s.authMiddleware.Authenticate
+			baseAuth = func(next http.Handler) http.Handler {
+				return authHandler(baseAuth(next))
+			}
+		} else {
+			baseAuth = s.authMiddleware.Authenticate
+		}
+
+		// Apply to hello endpoint (auth only, no usage tracking needed)
 		s.mux.Handle("GET /hello", s.authMiddleware.Authenticate(http.HandlerFunc(s.handleHello)))
 	} else {
 		// Fallback if no authentication is configured (for backward compatibility)
 		s.mux.HandleFunc("GET /hello", s.handleHello)
 	}
 
-	// Setup provider routes
+	// Setup provider routes with full middleware chain
 	for _, provider := range s.providers {
 		s.options.Logger.Info("Setting up provider routes", "provider", provider.Name())
 		provider.SetupRoutes(s.mux, baseAuth)
@@ -220,6 +259,11 @@ func (s *DataPlaneServer) Shutdown(ctx context.Context) error {
 		if err := provider.Shutdown(ctx); err != nil {
 			s.options.Logger.Error("Failed to shutdown provider", "provider", provider.Name(), "error", err)
 		}
+	}
+
+	// Shutdown usage middleware
+	if s.usageMiddleware != nil {
+		s.usageMiddleware.Shutdown()
 	}
 
 	shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)

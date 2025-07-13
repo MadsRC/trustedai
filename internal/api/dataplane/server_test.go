@@ -12,6 +12,8 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
 )
 
 func TestNewDataPlaneServer(t *testing.T) {
@@ -303,6 +305,10 @@ func (m *mockProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handle
 }
 
 func (m *mockProvider) SetLLMClient(client LLMClient) {
+	// Mock implementation - does nothing
+}
+
+func (m *mockProvider) SetUsageMiddleware(middleware interfaces.UsageMiddleware) {
 	// Mock implementation - does nothing
 }
 

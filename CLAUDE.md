@@ -17,6 +17,11 @@
     are not implemented in our codebase, but our codebase does interact with them via the GAI
     GAI library. Furthermore, code that deals with "models" may refer to providers, in which
     case the term refers to a model provider
+- Commit messages for code that implements or closes issues from Linear, use the term "Closes"
+followed by the issue ID. Separate several IDs with ", " (comma + space)
+- Commit messages for code that references or relates to Linear issues, use the term "References"
+followed by the issue ID. Separate several IDs with ", " (commad + space). If the commit instead
+implements or closes an issue, use the term "Closes" instead
 
 ## Golang instructions
 

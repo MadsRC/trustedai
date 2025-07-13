@@ -12,8 +12,10 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
+	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
 	"codeberg.org/gai-org/gai"
 )
 
@@ -31,8 +33,9 @@ const (
 )
 
 type AnthropicProvider struct {
-	options   *dataplane.ProviderOptions
-	llmClient dataplane.LLMClient
+	options         *dataplane.ProviderOptions
+	llmClient       dataplane.LLMClient
+	usageMiddleware interfaces.UsageMiddleware
 }
 
 type AnthropicMessage struct {
@@ -130,6 +133,10 @@ func (p *AnthropicProvider) SetLLMClient(client dataplane.LLMClient) {
 	p.llmClient = client
 }
 
+func (p *AnthropicProvider) SetUsageMiddleware(middleware interfaces.UsageMiddleware) {
+	p.usageMiddleware = middleware
+}
+
 func (p *AnthropicProvider) isValidVersion(version string) bool {
 	switch version {
 	case AnthropicVersion2023_01_01, AnthropicVersion2023_06_01:
@@ -190,11 +197,47 @@ func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	// Track request timing
+	startTime := time.Now()
+
 	gaiResp, err := p.llmClient.Generate(r.Context(), gaiReq)
+	duration := time.Since(startTime)
+
 	if err != nil {
+		// Track failed request
+		if p.usageMiddleware != nil {
+			p.usageMiddleware.CreateEventFromGAIResponse(
+				r.Context(),
+				req.Model,
+				nil, // No usage data on error
+				"failed",
+				duration,
+			)
+		}
+
 		p.options.Logger.Error("Failed to generate response", "error", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
+	}
+
+	// Track successful request with token usage
+	if p.usageMiddleware != nil {
+		var usage *interfaces.TokenUsage
+		if gaiResp.Usage != nil {
+			usage = &interfaces.TokenUsage{
+				PromptTokens:     gaiResp.Usage.PromptTokens,
+				CompletionTokens: gaiResp.Usage.CompletionTokens,
+				TotalTokens:      gaiResp.Usage.TotalTokens,
+			}
+		}
+
+		p.usageMiddleware.CreateEventFromGAIResponse(
+			r.Context(),
+			req.Model,
+			usage,
+			"success",
+			duration,
+		)
 	}
 
 	anthropicResp := p.convertFromGaiResponse(gaiResp, req.Model)
