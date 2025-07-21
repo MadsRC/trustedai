@@ -10,6 +10,11 @@ path = [
     "gen/**",
     "assets/**.png",
     "frontend/package-lock.json",
+    ".idea/**",
+    "frontend/package.json",
+    "frontend/tsconfig.json",
+    "frontend/tsconfig.app.json",
+    "frontend/tsconfig.node.json",
 ]
 SPDX-FileCopyrightText = "2025 Mads R. Havmand <mads@v42.dk>"
 SPDX-License-Identifier = "AGPL-3.0-only"

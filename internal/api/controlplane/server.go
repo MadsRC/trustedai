@@ -173,7 +173,7 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 		mux.Handle("/", fileServer)
 	} else {
 		// Fallback to filesystem if no embedded FS provided
-		fileServer := http.FileServer(http.Dir("frontend/build/"))
+		fileServer := http.FileServer(http.Dir("frontend/dist/"))
 		mux.Handle("/", fileServer)
 	}
 

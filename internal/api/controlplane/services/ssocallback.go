@@ -187,7 +187,7 @@ func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, pro
 		Name:     "session_id",
 		Value:    session.ID,
 		Path:     "/",
-		HttpOnly: true,
+		HttpOnly: false, // TODO: Re-enable HttpOnly for security once session handling is fully working
 		Secure:   r.TLS != nil,
 		MaxAge:   int(24 * time.Hour.Seconds()), // 24 hours
 		SameSite: http.SameSiteLaxMode,

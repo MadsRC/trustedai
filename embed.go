@@ -9,13 +9,13 @@ import (
 	"io/fs"
 )
 
-//go:embed frontend/build
+//go:embed frontend/dist
 var frontendFS embed.FS
 
 // GetFrontendFS returns the embedded frontend filesystem
 func GetFrontendFS() fs.FS {
-	// Strip the "frontend/build" prefix from the embedded filesystem
-	subFS, err := fs.Sub(frontendFS, "frontend/build")
+	// Strip the "frontend/dist" prefix from the embedded filesystem
+	subFS, err := fs.Sub(frontendFS, "frontend/dist")
 	if err != nil {
 		panic("failed to create sub filesystem: " + err.Error())
 	}

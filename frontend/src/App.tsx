@@ -2,92 +2,35 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
-import Users from "./pages/Users";
-import Organizations from "./pages/Organizations";
-import Tokens from "./pages/Tokens";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import SSOCallback from "./pages/SSOCallback";
-import { setAuthData } from "./utils/auth";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuth } from "./hooks/useAuth";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 
-const AppRoutes: React.FC = () => {
-  const { isAuthenticated, isLoading, refreshAuth } = useAuth();
+function AppContent() {
+  const { isLoggedIn, loading } = useAuth();
 
-  // Show loading spinner while checking authentication
-  if (isLoading) {
+  if (loading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          fontSize: "18px",
-          backgroundColor: "#000",
-          color: "#00ff00",
-          fontFamily: "monospace",
-        }}
-      >
-        Loading...
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  const handleLogin = (apiKey: string, username: string) => {
-    setAuthData(apiKey, username);
-    refreshAuth(); // Trigger auth state refresh after login
-  };
-
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={
-          isAuthenticated ? (
-            <Navigate to="/" replace />
-          ) : (
-            <Login onLogin={handleLogin} />
-          )
-        }
-      />
-      <Route
-        path="/sso/callback"
-        element={<SSOCallback onLogin={handleLogin} />}
-      />
-      <Route
-        path="/"
-        element={
-          isAuthenticated ? <Layout /> : <Navigate to="/login" replace />
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="users" element={<Users />} />
-        <Route path="organizations" element={<Organizations />} />
-        <Route path="tokens" element={<Tokens />} />
-        <Route path="profile" element={<Profile />} />
-      </Route>
-    </Routes>
+    <div className="min-h-screen">{isLoggedIn ? <Dashboard /> : <Login />}</div>
   );
-};
+}
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

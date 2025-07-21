@@ -24,11 +24,7 @@ type Manager struct {
 }
 
 func NewManager(config Config) (*Manager, error) {
-	telemetryConfig := TelemetryConfig{
-		ServiceName:    config.ServiceName,
-		ServiceVersion: config.ServiceVersion,
-		OTLPEndpoint:   config.OTLPEndpoint,
-	}
+	telemetryConfig := TelemetryConfig(config)
 
 	telemetry, err := NewTelemetryManager(telemetryConfig)
 	if err != nil {

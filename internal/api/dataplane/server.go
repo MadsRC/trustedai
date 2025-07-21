@@ -188,8 +188,9 @@ func (s *DataPlaneServer) setupRoutes() {
 		if baseAuth != nil {
 			// Chain: auth -> usage tracking
 			authHandler := s.authMiddleware.Authenticate
+			prevBaseAuth := baseAuth // Capture current value before redefining
 			baseAuth = func(next http.Handler) http.Handler {
-				return authHandler(baseAuth(next))
+				return authHandler(prevBaseAuth(next))
 			}
 		} else {
 			baseAuth = s.authMiddleware.Authenticate

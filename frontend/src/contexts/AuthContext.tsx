@@ -2,84 +2,155 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { isAuthenticatedAsync } from "../utils/auth";
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  refreshAuth: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { createClient } from "@connectrpc/connect";
+import { createConnectTransport } from "@connectrpc/connect-web";
+import {
+  IAMService,
+  type User,
+  IAMServiceGetCurrentUserRequestSchema,
+} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+import { create } from "@bufbuild/protobuf";
+import { type AuthContextType } from "../types/auth";
+import { AuthContext } from "./AuthContextDefinition";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authMethod, setAuthMethod] = useState<"sso" | "apikey">();
+  const [token, setToken] = useState<string>();
+  const [user, setUser] = useState<User>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
 
-  const refreshAuth = async (showLoading: boolean = true) => {
-    if (showLoading) {
-      setIsLoading(true);
-    }
-    const authenticated = await isAuthenticatedAsync();
-    setIsAuthenticated(authenticated);
-    if (showLoading) {
-      setIsLoading(false);
+  const fetchCurrentUser = useCallback(
+    async (authToken?: string): Promise<User> => {
+      const tokenToUse = authToken || token;
+      const tempTransport = createConnectTransport({
+        baseUrl: "",
+        fetch: (input, init) =>
+          fetch(input, { ...init, credentials: "include" }),
+        interceptors: [
+          (next) => async (req) => {
+            if (tokenToUse) {
+              req.header.set("Authorization", `Bearer ${tokenToUse}`);
+            }
+            return next(req);
+          },
+        ],
+      });
+      const tempClient = createClient(IAMService, tempTransport);
+
+      const request = create(IAMServiceGetCurrentUserRequestSchema, {});
+      const response = await tempClient.getCurrentUser(request);
+      if (!response.user) {
+        throw new Error("No user data received");
+      }
+      return response.user;
+    },
+    [token],
+  );
+
+  const refreshCurrentUser = async () => {
+    if (!isLoggedIn) return;
+
+    try {
+      setLoading(true);
+      setError(undefined);
+      const currentUser = await fetchCurrentUser();
+      setUser(currentUser);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch user data";
+      setError(errorMessage);
+      console.error("Failed to fetch current user:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Check auth status on mount
-  useEffect(() => {
-    refreshAuth();
-  }, []);
+  const login = useCallback(
+    async (authMethod: "sso" | "apikey", token?: string) => {
+      try {
+        setLoading(true);
+        setError(undefined);
 
-  // Set up periodic auth check only when authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
+        setAuthMethod(authMethod);
+        setToken(token);
+        setIsLoggedIn(true);
 
-    // Set up periodic auth check (every 5 seconds) to handle token expiration
-    const interval = setInterval(() => {
-      refreshAuth(false); // Don't show loading for background checks
-    }, 5000);
+        if (authMethod === "apikey" && token) {
+          localStorage.setItem("apiKey", token);
+        }
 
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
+        const currentUser = await fetchCurrentUser(token);
+        setUser(currentUser);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Authentication failed";
+        setError(errorMessage);
 
-  // Listen for storage changes (for logout in other tabs)
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "llmgw_auth") {
-        refreshAuth(false); // Don't show loading for storage changes
+        setIsLoggedIn(false);
+        setAuthMethod(undefined);
+        setToken(undefined);
+        setUser(undefined);
+        localStorage.removeItem("apiKey");
+
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, refreshAuth }}>
-      {children}
-    </AuthContext.Provider>
+    },
+    [fetchCurrentUser],
   );
-};
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setAuthMethod(undefined);
+    setToken(undefined);
+    setUser(undefined);
+    setError(undefined);
+    localStorage.removeItem("apiKey");
+  };
+
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem("apiKey");
+    if (savedApiKey) {
+      login("apikey", savedApiKey).catch(() => {
+        localStorage.removeItem("apiKey");
+      });
+    } else {
+      // Check if we have a session cookie from SSO login
+      const cookies = document.cookie.split(";").map((c) => c.trim());
+      const sessionCookie = cookies.find((c) => c.startsWith("session_id="));
+      console.log("Available cookies:", cookies);
+      console.log("Session cookie found:", sessionCookie);
+
+      if (sessionCookie) {
+        console.log("Attempting SSO login with session cookie");
+        login("sso").catch((err) => {
+          console.error("SSO session validation failed:", err);
+        });
+      } else {
+        console.log("No session cookie found, staying on login page");
+      }
+    }
+  }, [login]);
+
+  const value: AuthContextType = {
+    isLoggedIn,
+    authMethod,
+    token,
+    user,
+    loading,
+    error,
+    login,
+    logout,
+    refreshCurrentUser,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}

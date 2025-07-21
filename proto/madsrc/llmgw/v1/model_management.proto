@@ -10,10 +10,22 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1";
 
+// Enums
+enum ProviderId {
+  PROVIDER_ID_UNSPECIFIED = 0;
+  PROVIDER_ID_OPENROUTER = 1;
+}
+
+enum CredentialType {
+  CREDENTIAL_TYPE_UNSPECIFIED = 0;
+  CREDENTIAL_TYPE_OPENROUTER = 1;
+}
+
 service ModelManagementService {
   // Provider operations
   rpc GetProvider(ModelManagementServiceGetProviderRequest) returns (ModelManagementServiceGetProviderResponse);
   rpc ListProviders(ModelManagementServiceListProvidersRequest) returns (ModelManagementServiceListProvidersResponse);
+  rpc ListSupportedProviders(ModelManagementServiceListSupportedProvidersRequest) returns (ModelManagementServiceListSupportedProvidersResponse);
 
   // OpenRouter Credential operations
   rpc CreateOpenRouterCredential(ModelManagementServiceCreateOpenRouterCredentialRequest) returns (ModelManagementServiceCreateOpenRouterCredentialResponse);
@@ -21,6 +33,7 @@ service ModelManagementService {
   rpc ListOpenRouterCredentials(ModelManagementServiceListOpenRouterCredentialsRequest) returns (ModelManagementServiceListOpenRouterCredentialsResponse);
   rpc UpdateOpenRouterCredential(ModelManagementServiceUpdateOpenRouterCredentialRequest) returns (ModelManagementServiceUpdateOpenRouterCredentialResponse);
   rpc DeleteOpenRouterCredential(ModelManagementServiceDeleteOpenRouterCredentialRequest) returns (ModelManagementServiceDeleteOpenRouterCredentialResponse);
+  rpc ListSupportedCredentialTypes(ModelManagementServiceListSupportedCredentialTypesRequest) returns (ModelManagementServiceListSupportedCredentialTypesResponse);
 
   // Model operations
   rpc CreateModel(ModelManagementServiceCreateModelRequest) returns (ModelManagementServiceCreateModelResponse);
@@ -28,6 +41,7 @@ service ModelManagementService {
   rpc ListModels(ModelManagementServiceListModelsRequest) returns (ModelManagementServiceListModelsResponse);
   rpc UpdateModel(ModelManagementServiceUpdateModelRequest) returns (ModelManagementServiceUpdateModelResponse);
   rpc DeleteModel(ModelManagementServiceDeleteModelRequest) returns (ModelManagementServiceDeleteModelResponse);
+  rpc ListSupportedModelsForProvider(ModelManagementServiceListSupportedModelsForProviderRequest) returns (ModelManagementServiceListSupportedModelsForProviderResponse);
 }
 
 // Core entity messages
@@ -184,4 +198,32 @@ message ModelManagementServiceDeleteModelRequest {
 
 message ModelManagementServiceDeleteModelResponse {
   bool success = 1;
+}
+
+// Supported credential type message
+message SupportedCredentialType {
+  CredentialType type = 1;
+  string display_name = 2;
+  string description = 3;
+}
+
+// Supported service messages
+message ModelManagementServiceListSupportedCredentialTypesRequest {}
+
+message ModelManagementServiceListSupportedCredentialTypesResponse {
+  repeated SupportedCredentialType credential_types = 1;
+}
+
+message ModelManagementServiceListSupportedProvidersRequest {}
+
+message ModelManagementServiceListSupportedProvidersResponse {
+  repeated Provider providers = 1;
+}
+
+message ModelManagementServiceListSupportedModelsForProviderRequest {
+  ProviderId provider_id = 1;
+}
+
+message ModelManagementServiceListSupportedModelsForProviderResponse {
+  repeated Model models = 1;
 }

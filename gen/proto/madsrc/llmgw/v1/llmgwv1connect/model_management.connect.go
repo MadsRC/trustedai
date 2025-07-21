@@ -43,6 +43,9 @@ const (
 	// ModelManagementServiceListProvidersProcedure is the fully-qualified name of the
 	// ModelManagementService's ListProviders RPC.
 	ModelManagementServiceListProvidersProcedure = "/llmgw.v1.ModelManagementService/ListProviders"
+	// ModelManagementServiceListSupportedProvidersProcedure is the fully-qualified name of the
+	// ModelManagementService's ListSupportedProviders RPC.
+	ModelManagementServiceListSupportedProvidersProcedure = "/llmgw.v1.ModelManagementService/ListSupportedProviders"
 	// ModelManagementServiceCreateOpenRouterCredentialProcedure is the fully-qualified name of the
 	// ModelManagementService's CreateOpenRouterCredential RPC.
 	ModelManagementServiceCreateOpenRouterCredentialProcedure = "/llmgw.v1.ModelManagementService/CreateOpenRouterCredential"
@@ -58,6 +61,9 @@ const (
 	// ModelManagementServiceDeleteOpenRouterCredentialProcedure is the fully-qualified name of the
 	// ModelManagementService's DeleteOpenRouterCredential RPC.
 	ModelManagementServiceDeleteOpenRouterCredentialProcedure = "/llmgw.v1.ModelManagementService/DeleteOpenRouterCredential"
+	// ModelManagementServiceListSupportedCredentialTypesProcedure is the fully-qualified name of the
+	// ModelManagementService's ListSupportedCredentialTypes RPC.
+	ModelManagementServiceListSupportedCredentialTypesProcedure = "/llmgw.v1.ModelManagementService/ListSupportedCredentialTypes"
 	// ModelManagementServiceCreateModelProcedure is the fully-qualified name of the
 	// ModelManagementService's CreateModel RPC.
 	ModelManagementServiceCreateModelProcedure = "/llmgw.v1.ModelManagementService/CreateModel"
@@ -73,6 +79,9 @@ const (
 	// ModelManagementServiceDeleteModelProcedure is the fully-qualified name of the
 	// ModelManagementService's DeleteModel RPC.
 	ModelManagementServiceDeleteModelProcedure = "/llmgw.v1.ModelManagementService/DeleteModel"
+	// ModelManagementServiceListSupportedModelsForProviderProcedure is the fully-qualified name of the
+	// ModelManagementService's ListSupportedModelsForProvider RPC.
+	ModelManagementServiceListSupportedModelsForProviderProcedure = "/llmgw.v1.ModelManagementService/ListSupportedModelsForProvider"
 )
 
 // ModelManagementServiceClient is a client for the llmgw.v1.ModelManagementService service.
@@ -80,18 +89,21 @@ type ModelManagementServiceClient interface {
 	// Provider operations
 	GetProvider(context.Context, *connect.Request[v1.ModelManagementServiceGetProviderRequest]) (*connect.Response[v1.ModelManagementServiceGetProviderResponse], error)
 	ListProviders(context.Context, *connect.Request[v1.ModelManagementServiceListProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListProvidersResponse], error)
+	ListSupportedProviders(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedProvidersResponse], error)
 	// OpenRouter Credential operations
 	CreateOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceCreateOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceCreateOpenRouterCredentialResponse], error)
 	GetOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceGetOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceGetOpenRouterCredentialResponse], error)
 	ListOpenRouterCredentials(context.Context, *connect.Request[v1.ModelManagementServiceListOpenRouterCredentialsRequest]) (*connect.Response[v1.ModelManagementServiceListOpenRouterCredentialsResponse], error)
 	UpdateOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceUpdateOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceUpdateOpenRouterCredentialResponse], error)
 	DeleteOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceDeleteOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceDeleteOpenRouterCredentialResponse], error)
+	ListSupportedCredentialTypes(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedCredentialTypesRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedCredentialTypesResponse], error)
 	// Model operations
 	CreateModel(context.Context, *connect.Request[v1.ModelManagementServiceCreateModelRequest]) (*connect.Response[v1.ModelManagementServiceCreateModelResponse], error)
 	GetModel(context.Context, *connect.Request[v1.ModelManagementServiceGetModelRequest]) (*connect.Response[v1.ModelManagementServiceGetModelResponse], error)
 	ListModels(context.Context, *connect.Request[v1.ModelManagementServiceListModelsRequest]) (*connect.Response[v1.ModelManagementServiceListModelsResponse], error)
 	UpdateModel(context.Context, *connect.Request[v1.ModelManagementServiceUpdateModelRequest]) (*connect.Response[v1.ModelManagementServiceUpdateModelResponse], error)
 	DeleteModel(context.Context, *connect.Request[v1.ModelManagementServiceDeleteModelRequest]) (*connect.Response[v1.ModelManagementServiceDeleteModelResponse], error)
+	ListSupportedModelsForProvider(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedModelsForProviderRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedModelsForProviderResponse], error)
 }
 
 // NewModelManagementServiceClient constructs a client for the llmgw.v1.ModelManagementService
@@ -115,6 +127,12 @@ func NewModelManagementServiceClient(httpClient connect.HTTPClient, baseURL stri
 			httpClient,
 			baseURL+ModelManagementServiceListProvidersProcedure,
 			connect.WithSchema(modelManagementServiceMethods.ByName("ListProviders")),
+			connect.WithClientOptions(opts...),
+		),
+		listSupportedProviders: connect.NewClient[v1.ModelManagementServiceListSupportedProvidersRequest, v1.ModelManagementServiceListSupportedProvidersResponse](
+			httpClient,
+			baseURL+ModelManagementServiceListSupportedProvidersProcedure,
+			connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedProviders")),
 			connect.WithClientOptions(opts...),
 		),
 		createOpenRouterCredential: connect.NewClient[v1.ModelManagementServiceCreateOpenRouterCredentialRequest, v1.ModelManagementServiceCreateOpenRouterCredentialResponse](
@@ -147,6 +165,12 @@ func NewModelManagementServiceClient(httpClient connect.HTTPClient, baseURL stri
 			connect.WithSchema(modelManagementServiceMethods.ByName("DeleteOpenRouterCredential")),
 			connect.WithClientOptions(opts...),
 		),
+		listSupportedCredentialTypes: connect.NewClient[v1.ModelManagementServiceListSupportedCredentialTypesRequest, v1.ModelManagementServiceListSupportedCredentialTypesResponse](
+			httpClient,
+			baseURL+ModelManagementServiceListSupportedCredentialTypesProcedure,
+			connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedCredentialTypes")),
+			connect.WithClientOptions(opts...),
+		),
 		createModel: connect.NewClient[v1.ModelManagementServiceCreateModelRequest, v1.ModelManagementServiceCreateModelResponse](
 			httpClient,
 			baseURL+ModelManagementServiceCreateModelProcedure,
@@ -177,23 +201,32 @@ func NewModelManagementServiceClient(httpClient connect.HTTPClient, baseURL stri
 			connect.WithSchema(modelManagementServiceMethods.ByName("DeleteModel")),
 			connect.WithClientOptions(opts...),
 		),
+		listSupportedModelsForProvider: connect.NewClient[v1.ModelManagementServiceListSupportedModelsForProviderRequest, v1.ModelManagementServiceListSupportedModelsForProviderResponse](
+			httpClient,
+			baseURL+ModelManagementServiceListSupportedModelsForProviderProcedure,
+			connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedModelsForProvider")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // modelManagementServiceClient implements ModelManagementServiceClient.
 type modelManagementServiceClient struct {
-	getProvider                *connect.Client[v1.ModelManagementServiceGetProviderRequest, v1.ModelManagementServiceGetProviderResponse]
-	listProviders              *connect.Client[v1.ModelManagementServiceListProvidersRequest, v1.ModelManagementServiceListProvidersResponse]
-	createOpenRouterCredential *connect.Client[v1.ModelManagementServiceCreateOpenRouterCredentialRequest, v1.ModelManagementServiceCreateOpenRouterCredentialResponse]
-	getOpenRouterCredential    *connect.Client[v1.ModelManagementServiceGetOpenRouterCredentialRequest, v1.ModelManagementServiceGetOpenRouterCredentialResponse]
-	listOpenRouterCredentials  *connect.Client[v1.ModelManagementServiceListOpenRouterCredentialsRequest, v1.ModelManagementServiceListOpenRouterCredentialsResponse]
-	updateOpenRouterCredential *connect.Client[v1.ModelManagementServiceUpdateOpenRouterCredentialRequest, v1.ModelManagementServiceUpdateOpenRouterCredentialResponse]
-	deleteOpenRouterCredential *connect.Client[v1.ModelManagementServiceDeleteOpenRouterCredentialRequest, v1.ModelManagementServiceDeleteOpenRouterCredentialResponse]
-	createModel                *connect.Client[v1.ModelManagementServiceCreateModelRequest, v1.ModelManagementServiceCreateModelResponse]
-	getModel                   *connect.Client[v1.ModelManagementServiceGetModelRequest, v1.ModelManagementServiceGetModelResponse]
-	listModels                 *connect.Client[v1.ModelManagementServiceListModelsRequest, v1.ModelManagementServiceListModelsResponse]
-	updateModel                *connect.Client[v1.ModelManagementServiceUpdateModelRequest, v1.ModelManagementServiceUpdateModelResponse]
-	deleteModel                *connect.Client[v1.ModelManagementServiceDeleteModelRequest, v1.ModelManagementServiceDeleteModelResponse]
+	getProvider                    *connect.Client[v1.ModelManagementServiceGetProviderRequest, v1.ModelManagementServiceGetProviderResponse]
+	listProviders                  *connect.Client[v1.ModelManagementServiceListProvidersRequest, v1.ModelManagementServiceListProvidersResponse]
+	listSupportedProviders         *connect.Client[v1.ModelManagementServiceListSupportedProvidersRequest, v1.ModelManagementServiceListSupportedProvidersResponse]
+	createOpenRouterCredential     *connect.Client[v1.ModelManagementServiceCreateOpenRouterCredentialRequest, v1.ModelManagementServiceCreateOpenRouterCredentialResponse]
+	getOpenRouterCredential        *connect.Client[v1.ModelManagementServiceGetOpenRouterCredentialRequest, v1.ModelManagementServiceGetOpenRouterCredentialResponse]
+	listOpenRouterCredentials      *connect.Client[v1.ModelManagementServiceListOpenRouterCredentialsRequest, v1.ModelManagementServiceListOpenRouterCredentialsResponse]
+	updateOpenRouterCredential     *connect.Client[v1.ModelManagementServiceUpdateOpenRouterCredentialRequest, v1.ModelManagementServiceUpdateOpenRouterCredentialResponse]
+	deleteOpenRouterCredential     *connect.Client[v1.ModelManagementServiceDeleteOpenRouterCredentialRequest, v1.ModelManagementServiceDeleteOpenRouterCredentialResponse]
+	listSupportedCredentialTypes   *connect.Client[v1.ModelManagementServiceListSupportedCredentialTypesRequest, v1.ModelManagementServiceListSupportedCredentialTypesResponse]
+	createModel                    *connect.Client[v1.ModelManagementServiceCreateModelRequest, v1.ModelManagementServiceCreateModelResponse]
+	getModel                       *connect.Client[v1.ModelManagementServiceGetModelRequest, v1.ModelManagementServiceGetModelResponse]
+	listModels                     *connect.Client[v1.ModelManagementServiceListModelsRequest, v1.ModelManagementServiceListModelsResponse]
+	updateModel                    *connect.Client[v1.ModelManagementServiceUpdateModelRequest, v1.ModelManagementServiceUpdateModelResponse]
+	deleteModel                    *connect.Client[v1.ModelManagementServiceDeleteModelRequest, v1.ModelManagementServiceDeleteModelResponse]
+	listSupportedModelsForProvider *connect.Client[v1.ModelManagementServiceListSupportedModelsForProviderRequest, v1.ModelManagementServiceListSupportedModelsForProviderResponse]
 }
 
 // GetProvider calls llmgw.v1.ModelManagementService.GetProvider.
@@ -204,6 +237,11 @@ func (c *modelManagementServiceClient) GetProvider(ctx context.Context, req *con
 // ListProviders calls llmgw.v1.ModelManagementService.ListProviders.
 func (c *modelManagementServiceClient) ListProviders(ctx context.Context, req *connect.Request[v1.ModelManagementServiceListProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListProvidersResponse], error) {
 	return c.listProviders.CallUnary(ctx, req)
+}
+
+// ListSupportedProviders calls llmgw.v1.ModelManagementService.ListSupportedProviders.
+func (c *modelManagementServiceClient) ListSupportedProviders(ctx context.Context, req *connect.Request[v1.ModelManagementServiceListSupportedProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedProvidersResponse], error) {
+	return c.listSupportedProviders.CallUnary(ctx, req)
 }
 
 // CreateOpenRouterCredential calls llmgw.v1.ModelManagementService.CreateOpenRouterCredential.
@@ -231,6 +269,11 @@ func (c *modelManagementServiceClient) DeleteOpenRouterCredential(ctx context.Co
 	return c.deleteOpenRouterCredential.CallUnary(ctx, req)
 }
 
+// ListSupportedCredentialTypes calls llmgw.v1.ModelManagementService.ListSupportedCredentialTypes.
+func (c *modelManagementServiceClient) ListSupportedCredentialTypes(ctx context.Context, req *connect.Request[v1.ModelManagementServiceListSupportedCredentialTypesRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedCredentialTypesResponse], error) {
+	return c.listSupportedCredentialTypes.CallUnary(ctx, req)
+}
+
 // CreateModel calls llmgw.v1.ModelManagementService.CreateModel.
 func (c *modelManagementServiceClient) CreateModel(ctx context.Context, req *connect.Request[v1.ModelManagementServiceCreateModelRequest]) (*connect.Response[v1.ModelManagementServiceCreateModelResponse], error) {
 	return c.createModel.CallUnary(ctx, req)
@@ -256,24 +299,33 @@ func (c *modelManagementServiceClient) DeleteModel(ctx context.Context, req *con
 	return c.deleteModel.CallUnary(ctx, req)
 }
 
+// ListSupportedModelsForProvider calls
+// llmgw.v1.ModelManagementService.ListSupportedModelsForProvider.
+func (c *modelManagementServiceClient) ListSupportedModelsForProvider(ctx context.Context, req *connect.Request[v1.ModelManagementServiceListSupportedModelsForProviderRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedModelsForProviderResponse], error) {
+	return c.listSupportedModelsForProvider.CallUnary(ctx, req)
+}
+
 // ModelManagementServiceHandler is an implementation of the llmgw.v1.ModelManagementService
 // service.
 type ModelManagementServiceHandler interface {
 	// Provider operations
 	GetProvider(context.Context, *connect.Request[v1.ModelManagementServiceGetProviderRequest]) (*connect.Response[v1.ModelManagementServiceGetProviderResponse], error)
 	ListProviders(context.Context, *connect.Request[v1.ModelManagementServiceListProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListProvidersResponse], error)
+	ListSupportedProviders(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedProvidersResponse], error)
 	// OpenRouter Credential operations
 	CreateOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceCreateOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceCreateOpenRouterCredentialResponse], error)
 	GetOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceGetOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceGetOpenRouterCredentialResponse], error)
 	ListOpenRouterCredentials(context.Context, *connect.Request[v1.ModelManagementServiceListOpenRouterCredentialsRequest]) (*connect.Response[v1.ModelManagementServiceListOpenRouterCredentialsResponse], error)
 	UpdateOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceUpdateOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceUpdateOpenRouterCredentialResponse], error)
 	DeleteOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceDeleteOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceDeleteOpenRouterCredentialResponse], error)
+	ListSupportedCredentialTypes(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedCredentialTypesRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedCredentialTypesResponse], error)
 	// Model operations
 	CreateModel(context.Context, *connect.Request[v1.ModelManagementServiceCreateModelRequest]) (*connect.Response[v1.ModelManagementServiceCreateModelResponse], error)
 	GetModel(context.Context, *connect.Request[v1.ModelManagementServiceGetModelRequest]) (*connect.Response[v1.ModelManagementServiceGetModelResponse], error)
 	ListModels(context.Context, *connect.Request[v1.ModelManagementServiceListModelsRequest]) (*connect.Response[v1.ModelManagementServiceListModelsResponse], error)
 	UpdateModel(context.Context, *connect.Request[v1.ModelManagementServiceUpdateModelRequest]) (*connect.Response[v1.ModelManagementServiceUpdateModelResponse], error)
 	DeleteModel(context.Context, *connect.Request[v1.ModelManagementServiceDeleteModelRequest]) (*connect.Response[v1.ModelManagementServiceDeleteModelResponse], error)
+	ListSupportedModelsForProvider(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedModelsForProviderRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedModelsForProviderResponse], error)
 }
 
 // NewModelManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -293,6 +345,12 @@ func NewModelManagementServiceHandler(svc ModelManagementServiceHandler, opts ..
 		ModelManagementServiceListProvidersProcedure,
 		svc.ListProviders,
 		connect.WithSchema(modelManagementServiceMethods.ByName("ListProviders")),
+		connect.WithHandlerOptions(opts...),
+	)
+	modelManagementServiceListSupportedProvidersHandler := connect.NewUnaryHandler(
+		ModelManagementServiceListSupportedProvidersProcedure,
+		svc.ListSupportedProviders,
+		connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedProviders")),
 		connect.WithHandlerOptions(opts...),
 	)
 	modelManagementServiceCreateOpenRouterCredentialHandler := connect.NewUnaryHandler(
@@ -325,6 +383,12 @@ func NewModelManagementServiceHandler(svc ModelManagementServiceHandler, opts ..
 		connect.WithSchema(modelManagementServiceMethods.ByName("DeleteOpenRouterCredential")),
 		connect.WithHandlerOptions(opts...),
 	)
+	modelManagementServiceListSupportedCredentialTypesHandler := connect.NewUnaryHandler(
+		ModelManagementServiceListSupportedCredentialTypesProcedure,
+		svc.ListSupportedCredentialTypes,
+		connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedCredentialTypes")),
+		connect.WithHandlerOptions(opts...),
+	)
 	modelManagementServiceCreateModelHandler := connect.NewUnaryHandler(
 		ModelManagementServiceCreateModelProcedure,
 		svc.CreateModel,
@@ -355,12 +419,20 @@ func NewModelManagementServiceHandler(svc ModelManagementServiceHandler, opts ..
 		connect.WithSchema(modelManagementServiceMethods.ByName("DeleteModel")),
 		connect.WithHandlerOptions(opts...),
 	)
+	modelManagementServiceListSupportedModelsForProviderHandler := connect.NewUnaryHandler(
+		ModelManagementServiceListSupportedModelsForProviderProcedure,
+		svc.ListSupportedModelsForProvider,
+		connect.WithSchema(modelManagementServiceMethods.ByName("ListSupportedModelsForProvider")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/llmgw.v1.ModelManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ModelManagementServiceGetProviderProcedure:
 			modelManagementServiceGetProviderHandler.ServeHTTP(w, r)
 		case ModelManagementServiceListProvidersProcedure:
 			modelManagementServiceListProvidersHandler.ServeHTTP(w, r)
+		case ModelManagementServiceListSupportedProvidersProcedure:
+			modelManagementServiceListSupportedProvidersHandler.ServeHTTP(w, r)
 		case ModelManagementServiceCreateOpenRouterCredentialProcedure:
 			modelManagementServiceCreateOpenRouterCredentialHandler.ServeHTTP(w, r)
 		case ModelManagementServiceGetOpenRouterCredentialProcedure:
@@ -371,6 +443,8 @@ func NewModelManagementServiceHandler(svc ModelManagementServiceHandler, opts ..
 			modelManagementServiceUpdateOpenRouterCredentialHandler.ServeHTTP(w, r)
 		case ModelManagementServiceDeleteOpenRouterCredentialProcedure:
 			modelManagementServiceDeleteOpenRouterCredentialHandler.ServeHTTP(w, r)
+		case ModelManagementServiceListSupportedCredentialTypesProcedure:
+			modelManagementServiceListSupportedCredentialTypesHandler.ServeHTTP(w, r)
 		case ModelManagementServiceCreateModelProcedure:
 			modelManagementServiceCreateModelHandler.ServeHTTP(w, r)
 		case ModelManagementServiceGetModelProcedure:
@@ -381,6 +455,8 @@ func NewModelManagementServiceHandler(svc ModelManagementServiceHandler, opts ..
 			modelManagementServiceUpdateModelHandler.ServeHTTP(w, r)
 		case ModelManagementServiceDeleteModelProcedure:
 			modelManagementServiceDeleteModelHandler.ServeHTTP(w, r)
+		case ModelManagementServiceListSupportedModelsForProviderProcedure:
+			modelManagementServiceListSupportedModelsForProviderHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -396,6 +472,10 @@ func (UnimplementedModelManagementServiceHandler) GetProvider(context.Context, *
 
 func (UnimplementedModelManagementServiceHandler) ListProviders(context.Context, *connect.Request[v1.ModelManagementServiceListProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListProvidersResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.ListProviders is not implemented"))
+}
+
+func (UnimplementedModelManagementServiceHandler) ListSupportedProviders(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedProvidersRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedProvidersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.ListSupportedProviders is not implemented"))
 }
 
 func (UnimplementedModelManagementServiceHandler) CreateOpenRouterCredential(context.Context, *connect.Request[v1.ModelManagementServiceCreateOpenRouterCredentialRequest]) (*connect.Response[v1.ModelManagementServiceCreateOpenRouterCredentialResponse], error) {
@@ -418,6 +498,10 @@ func (UnimplementedModelManagementServiceHandler) DeleteOpenRouterCredential(con
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.DeleteOpenRouterCredential is not implemented"))
 }
 
+func (UnimplementedModelManagementServiceHandler) ListSupportedCredentialTypes(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedCredentialTypesRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedCredentialTypesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.ListSupportedCredentialTypes is not implemented"))
+}
+
 func (UnimplementedModelManagementServiceHandler) CreateModel(context.Context, *connect.Request[v1.ModelManagementServiceCreateModelRequest]) (*connect.Response[v1.ModelManagementServiceCreateModelResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.CreateModel is not implemented"))
 }
@@ -436,4 +520,8 @@ func (UnimplementedModelManagementServiceHandler) UpdateModel(context.Context, *
 
 func (UnimplementedModelManagementServiceHandler) DeleteModel(context.Context, *connect.Request[v1.ModelManagementServiceDeleteModelRequest]) (*connect.Response[v1.ModelManagementServiceDeleteModelResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.DeleteModel is not implemented"))
+}
+
+func (UnimplementedModelManagementServiceHandler) ListSupportedModelsForProvider(context.Context, *connect.Request[v1.ModelManagementServiceListSupportedModelsForProviderRequest]) (*connect.Response[v1.ModelManagementServiceListSupportedModelsForProviderResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("llmgw.v1.ModelManagementService.ListSupportedModelsForProvider is not implemented"))
 }

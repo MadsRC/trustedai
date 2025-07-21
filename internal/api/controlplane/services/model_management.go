@@ -318,9 +318,6 @@ func (s *ModelManagement) DeleteOpenRouterCredential(
 	return connect.NewResponse(response), nil
 }
 
-// Model Service Methods - These are placeholders since the existing ModelRepository
-// is read-only and doesn't support CRUD operations
-
 // CreateModel creates a new model with automatic inference from hardcoded models
 func (s *ModelManagement) CreateModel(
 	ctx context.Context,
@@ -591,6 +588,109 @@ func (s *ModelManagement) DeleteModel(
 	// Return response
 	response := &llmgwv1.ModelManagementServiceDeleteModelResponse{
 		Success: true,
+	}
+
+	return connect.NewResponse(response), nil
+}
+
+// Supported types service methods
+
+// ListSupportedCredentialTypes returns the credential types supported by the system
+func (s *ModelManagement) ListSupportedCredentialTypes(
+	ctx context.Context,
+	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedCredentialTypesRequest],
+) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedCredentialTypesResponse], error) {
+	s.options.Logger.Debug("[ModelManagementService] ListSupportedCredentialTypes invoked")
+
+	supportedTypes := []*llmgwv1.SupportedCredentialType{
+		{
+			Type:        llmgwv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER,
+			DisplayName: "OpenRouter",
+			Description: "OpenRouter API credentials for accessing various LLM providers through OpenRouter's unified API",
+		},
+	}
+
+	response := &llmgwv1.ModelManagementServiceListSupportedCredentialTypesResponse{
+		CredentialTypes: supportedTypes,
+	}
+
+	return connect.NewResponse(response), nil
+}
+
+// ListSupportedProviders returns the providers supported by the system
+func (s *ModelManagement) ListSupportedProviders(
+	ctx context.Context,
+	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedProvidersRequest],
+) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedProvidersResponse], error) {
+	s.options.Logger.Debug("[ModelManagementService] ListSupportedProviders invoked")
+
+	supportedProviders := []*llmgwv1.Provider{
+		{
+			Id:           models.PROVIDER_ID_OPENROUTER,
+			Name:         "OpenRouter",
+			ProviderType: models.PROVIDER_ID_OPENROUTER,
+			Enabled:      true,
+			CreatedAt:    timestamppb.New(time.Now()),
+			UpdatedAt:    timestamppb.New(time.Now()),
+		},
+	}
+
+	response := &llmgwv1.ModelManagementServiceListSupportedProvidersResponse{
+		Providers: supportedProviders,
+	}
+
+	return connect.NewResponse(response), nil
+}
+
+// ListSupportedModelsForProvider returns the models supported for a specific provider
+func (s *ModelManagement) ListSupportedModelsForProvider(
+	ctx context.Context,
+	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedModelsForProviderRequest],
+) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedModelsForProviderResponse], error) {
+	s.options.Logger.Debug("[ModelManagementService] ListSupportedModelsForProvider invoked", "providerId", req.Msg.GetProviderId())
+
+	var supportedModels []*llmgwv1.Model
+
+	switch req.Msg.GetProviderId() {
+	case llmgwv1.ProviderId_PROVIDER_ID_OPENROUTER:
+		for modelID, gaiModel := range models.OpenRouterModels {
+			protoModel := &llmgwv1.Model{
+				Id:         modelID,
+				Name:       gaiModel.Name,
+				ProviderId: gaiModel.Provider,
+				Metadata:   convertGaiMetadataToProto(gaiModel.Metadata),
+				Enabled:    true,
+				CreatedAt:  timestamppb.New(time.Now()),
+				UpdatedAt:  timestamppb.New(time.Now()),
+			}
+
+			if gaiModel.Pricing.InputTokenPrice > 0 || gaiModel.Pricing.OutputTokenPrice > 0 {
+				protoModel.Pricing = &llmgwv1.ModelPricing{
+					InputTokenPrice:  gaiModel.Pricing.InputTokenPrice,
+					OutputTokenPrice: gaiModel.Pricing.OutputTokenPrice,
+				}
+			}
+
+			protoModel.Capabilities = &llmgwv1.ModelCapabilities{
+				SupportsStreaming: gaiModel.Capabilities.SupportsStreaming,
+				SupportsJson:      gaiModel.Capabilities.SupportsJSON,
+				SupportsTools:     gaiModel.Capabilities.SupportsTools,
+				SupportsVision:    gaiModel.Capabilities.SupportsVision,
+				SupportsReasoning: gaiModel.Capabilities.SupportsReasoning,
+				MaxInputTokens:    int32(gaiModel.Capabilities.MaxInputTokens),
+				MaxOutputTokens:   int32(gaiModel.Capabilities.MaxOutputTokens),
+			}
+
+			supportedModels = append(supportedModels, protoModel)
+		}
+	case llmgwv1.ProviderId_PROVIDER_ID_UNSPECIFIED:
+		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: provider ID must be specified"))
+	default:
+		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: unsupported provider ID"))
+	}
+
+	response := &llmgwv1.ModelManagementServiceListSupportedModelsForProviderResponse{
+		Models: supportedModels,
 	}
 
 	return connect.NewResponse(response), nil

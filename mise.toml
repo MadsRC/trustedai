@@ -11,8 +11,7 @@ golangci-lint = "2.1.6"
 grpcurl = "1.9.3"
 node = "24.2.0"
 "npm:@anthropic-ai/claude-code" = "1.0.43"
-"npm:@bufbuild/protoc-gen-es" = "1.10.1"
-"npm:@connectrpc/protoc-gen-connect-es" = "1.6.1"
+"npm:@bufbuild/protoc-gen-es" = "2.6.1"
 "pipx:reuse" = "latest"
 protoc-gen-connect-go = "1.18.0"
 protoc-gen-go = "1.36.6"
@@ -21,6 +20,7 @@ shellcheck = "0.10.0"
 go = "1.24.4"
 python = "3.12.11"
 "go:github.com/mrjoshuak/godoc-mcp" = "latest"
+"npm:prettier" = "3.6.2"
 
 [task_config]
 includes = ["scripts"]

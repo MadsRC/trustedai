@@ -13,8 +13,4 @@ plugins:
     out: frontend/src/gen
     opt:
       - target=ts
-  - local: protoc-gen-connect-es
-    out: frontend/src/gen
-    opt:
-      - target=ts
       - import_extension=none
