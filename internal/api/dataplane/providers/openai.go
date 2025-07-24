@@ -120,7 +120,7 @@ func (p *OpenAIProvider) handleChatCompletions(w http.ResponseWriter, r *http.Re
 	if err != nil {
 		// Track failed request
 		if p.usageMiddleware != nil {
-			p.usageMiddleware.CreateEventFromGAIResponse(
+			p.usageMiddleware.UpdateEvent(
 				r.Context(),
 				string(req.Model),
 				nil, // No usage data on error
@@ -145,7 +145,7 @@ func (p *OpenAIProvider) handleChatCompletions(w http.ResponseWriter, r *http.Re
 			}
 		}
 
-		p.usageMiddleware.CreateEventFromGAIResponse(
+		p.usageMiddleware.UpdateEvent(
 			r.Context(),
 			string(req.Model),
 			usage,

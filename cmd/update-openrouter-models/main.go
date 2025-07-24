@@ -46,8 +46,8 @@ type OpenRouterResponse struct {
 			MaxCompletionTokens *int `json:"max_completion_tokens"`
 			IsModerated         bool `json:"is_moderated"`
 		} `json:"top_provider"`
-		PerRequestLimits    interface{} `json:"per_request_limits"`
-		SupportedParameters []string    `json:"supported_parameters"`
+		PerRequestLimits    any      `json:"per_request_limits"`
+		SupportedParameters []string `json:"supported_parameters"`
 	} `json:"data"`
 }
 
@@ -104,10 +104,7 @@ func main() {
 		}
 		if maxOutputTokens <= 0 {
 			// Estimate max output tokens (typically 1/4 of input for most models)
-			maxOutputTokens = min(maxInputTokens/4, 16384) // Cap at reasonable limit
-			if maxOutputTokens < 1024 {
-				maxOutputTokens = 1024 // Minimum reasonable output
-			}
+			maxOutputTokens = max(min(maxInputTokens/4, 16384), 1024) // Cap at reasonable limit with minimum
 		}
 
 		models[model.ID] = gai.Model{
@@ -142,7 +139,7 @@ func main() {
 	}()
 
 	// Write header and package declaration
-	fmt.Fprint(file, `// SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+	if _, err := fmt.Fprint(file, `// SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
@@ -155,30 +152,70 @@ import (
 )
 
 var openRouterModelsGenerated = map[string]gai.Model{
-`)
-
-	for id, model := range models {
-		fmt.Fprintf(file, "\t\"%s\": {\n", id)
-		fmt.Fprintf(file, "\t\tID:       \"%s\",\n", model.ID)
-		fmt.Fprintf(file, "\t\tName:     \"%s\",\n", escapeString(model.Name))
-		fmt.Fprintf(file, "\t\tProvider: PROVIDER_ID_OPENROUTER,\n")
-		fmt.Fprintf(file, "\t\tPricing: gai.ModelPricing{\n")
-		fmt.Fprintf(file, "\t\t\tInputTokenPrice:  %.6f,\n", model.Pricing.InputTokenPrice)
-		fmt.Fprintf(file, "\t\t\tOutputTokenPrice: %.6f,\n", model.Pricing.OutputTokenPrice)
-		fmt.Fprintf(file, "\t\t},\n")
-		fmt.Fprintf(file, "\t\tCapabilities: gai.ModelCapabilities{\n")
-		fmt.Fprintf(file, "\t\t\tSupportsStreaming: %t,\n", model.Capabilities.SupportsStreaming)
-		fmt.Fprintf(file, "\t\t\tSupportsJSON:      %t,\n", model.Capabilities.SupportsJSON)
-		fmt.Fprintf(file, "\t\t\tSupportsTools:     %t,\n", model.Capabilities.SupportsTools)
-		fmt.Fprintf(file, "\t\t\tSupportsVision:    %t,\n", model.Capabilities.SupportsVision)
-		fmt.Fprintf(file, "\t\t\tSupportsReasoning: %t,\n", model.Capabilities.SupportsReasoning)
-		fmt.Fprintf(file, "\t\t\tMaxInputTokens:    %d,\n", model.Capabilities.MaxInputTokens)
-		fmt.Fprintf(file, "\t\t\tMaxOutputTokens:   %d,\n", model.Capabilities.MaxOutputTokens)
-		fmt.Fprintf(file, "\t\t},\n")
-		fmt.Fprintf(file, "\t},\n")
+`); err != nil {
+		log.Fatal("Failed to write header:", err)
 	}
 
-	fmt.Fprint(file, "}\n")
+	for id, model := range models {
+		if _, err := fmt.Fprintf(file, "\t\"%s\": {\n", id); err != nil {
+			log.Fatal("Failed to write model entry:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\tID:       \"%s\",\n", model.ID); err != nil {
+			log.Fatal("Failed to write model ID:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\tName:     \"%s\",\n", escapeString(model.Name)); err != nil {
+			log.Fatal("Failed to write model name:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\tProvider: PROVIDER_ID_OPENROUTER,\n"); err != nil {
+			log.Fatal("Failed to write provider:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\tPricing: gai.ModelPricing{\n"); err != nil {
+			log.Fatal("Failed to write pricing struct:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tInputTokenPrice:  %.6f,\n", model.Pricing.InputTokenPrice); err != nil {
+			log.Fatal("Failed to write input token price:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tOutputTokenPrice: %.6f,\n", model.Pricing.OutputTokenPrice); err != nil {
+			log.Fatal("Failed to write output token price:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t},\n"); err != nil {
+			log.Fatal("Failed to write pricing close:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\tCapabilities: gai.ModelCapabilities{\n"); err != nil {
+			log.Fatal("Failed to write capabilities struct:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tSupportsStreaming: %t,\n", model.Capabilities.SupportsStreaming); err != nil {
+			log.Fatal("Failed to write streaming support:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tSupportsJSON:      %t,\n", model.Capabilities.SupportsJSON); err != nil {
+			log.Fatal("Failed to write JSON support:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tSupportsTools:     %t,\n", model.Capabilities.SupportsTools); err != nil {
+			log.Fatal("Failed to write tools support:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tSupportsVision:    %t,\n", model.Capabilities.SupportsVision); err != nil {
+			log.Fatal("Failed to write vision support:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tSupportsReasoning: %t,\n", model.Capabilities.SupportsReasoning); err != nil {
+			log.Fatal("Failed to write reasoning support:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tMaxInputTokens:    %d,\n", model.Capabilities.MaxInputTokens); err != nil {
+			log.Fatal("Failed to write max input tokens:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t\tMaxOutputTokens:   %d,\n", model.Capabilities.MaxOutputTokens); err != nil {
+			log.Fatal("Failed to write max output tokens:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t\t},\n"); err != nil {
+			log.Fatal("Failed to write capabilities close:", err)
+		}
+		if _, err := fmt.Fprintf(file, "\t},\n"); err != nil {
+			log.Fatal("Failed to write model close:", err)
+		}
+	}
+
+	if _, err := fmt.Fprint(file, "}\n"); err != nil {
+		log.Fatal("Failed to write closing brace:", err)
+	}
 
 	log.Printf("Generated openrouter_models.gen.go with %d unique models out of %d total", len(models), len(openRouterResp.Data))
 }

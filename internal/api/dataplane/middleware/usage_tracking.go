@@ -8,6 +8,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"sync"
 	"time"
 
 	"codeberg.org/MadsRC/llmgw"
@@ -26,27 +27,92 @@ const (
 	usageTrackingUserIDKey    contextKey = "usage_tracking_user_id"
 )
 
+// PendingEvent represents an event waiting for provider data
+type PendingEvent struct {
+	Event     *llmgw.UsageEvent
+	CreatedAt time.Time
+	Updated   bool
+}
+
+// UsageTrackingConfig holds configuration for the middleware
+type UsageTrackingConfig struct {
+	PendingEventTimeout time.Duration
+	CleanupInterval     time.Duration
+	MaxPendingEvents    int
+	ChannelBuffer       int
+}
+
+// UsageTrackingOption is a functional option for the middleware
+type UsageTrackingOption func(*UsageTrackingConfig)
+
+// WithPendingEventTimeout sets the timeout for pending events
+func WithPendingEventTimeout(timeout time.Duration) UsageTrackingOption {
+	return func(c *UsageTrackingConfig) {
+		c.PendingEventTimeout = timeout
+	}
+}
+
+// WithCleanupInterval sets the cleanup interval for expired events
+func WithCleanupInterval(interval time.Duration) UsageTrackingOption {
+	return func(c *UsageTrackingConfig) {
+		c.CleanupInterval = interval
+	}
+}
+
+// WithMaxPendingEvents sets the maximum number of pending events
+func WithMaxPendingEvents(max int) UsageTrackingOption {
+	return func(c *UsageTrackingConfig) {
+		c.MaxPendingEvents = max
+	}
+}
+
+// WithChannelBuffer sets the buffer size for the events channel
+func WithChannelBuffer(buffer int) UsageTrackingOption {
+	return func(c *UsageTrackingConfig) {
+		c.ChannelBuffer = buffer
+	}
+}
+
 // UsageTrackingMiddleware captures usage events for all LLM requests
 type UsageTrackingMiddleware struct {
-	usageRepo llmgw.UsageRepository
-	logger    *slog.Logger
-	eventsCh  chan *llmgw.UsageEvent
-	done      chan struct{}
-	metrics   *monitoring.UsageMetrics
+	usageRepo     llmgw.UsageRepository
+	logger        *slog.Logger
+	eventsCh      chan *llmgw.UsageEvent
+	done          chan struct{}
+	metrics       *monitoring.UsageMetrics
+	config        *UsageTrackingConfig
+	pendingEvents sync.Map // map[string]*PendingEvent
+	cleanupTicker *time.Ticker
 }
 
 // NewUsageTrackingMiddleware creates a new usage tracking middleware
-func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Logger, metrics *monitoring.UsageMetrics) *UsageTrackingMiddleware {
-	middleware := &UsageTrackingMiddleware{
-		usageRepo: usageRepo,
-		logger:    logger,
-		eventsCh:  make(chan *llmgw.UsageEvent, 1000), // Buffered channel for non-blocking operation
-		done:      make(chan struct{}),
-		metrics:   metrics,
+func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Logger, metrics *monitoring.UsageMetrics, opts ...UsageTrackingOption) *UsageTrackingMiddleware {
+	// Default configuration
+	config := &UsageTrackingConfig{
+		PendingEventTimeout: 5 * time.Minute,
+		CleanupInterval:     1 * time.Minute,
+		MaxPendingEvents:    10000,
+		ChannelBuffer:       1000,
 	}
 
-	// Start background worker to process events
+	// Apply options
+	for _, opt := range opts {
+		opt(config)
+	}
+
+	middleware := &UsageTrackingMiddleware{
+		usageRepo:     usageRepo,
+		logger:        logger,
+		eventsCh:      make(chan *llmgw.UsageEvent, config.ChannelBuffer),
+		done:          make(chan struct{}),
+		metrics:       metrics,
+		config:        config,
+		cleanupTicker: time.NewTicker(config.CleanupInterval),
+	}
+
+	// Start background workers
 	go middleware.processEvents()
+	go middleware.cleanupExpiredEvents()
 
 	return middleware
 }
@@ -72,6 +138,36 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 		// Generate request ID if not present
 		requestID := uuid.New().String()
 
+		// Create basic usage event (without token data) - will be updated later
+		event := &llmgw.UsageEvent{
+			ID:              uuid.New().String(),
+			RequestID:       requestID,
+			UserID:          userID,
+			ModelID:         "", // Will be set by provider-specific logic if available
+			Status:          "pending",
+			UsageDataSource: "unavailable", // Default, can be updated by providers
+			DataComplete:    false,         // Default, can be updated by providers
+			Timestamp:       time.Now(),
+			DurationMs:      nil, // Will be set after request completes
+		}
+
+		// Store as pending BEFORE calling next handler to avoid race condition
+		pendingEvent := &PendingEvent{
+			Event:     event,
+			CreatedAt: time.Now(),
+			Updated:   false,
+		}
+
+		// Check if we've exceeded max pending events
+		storePending := true
+		if m.countPendingEvents() >= m.config.MaxPendingEvents {
+			m.logger.Warn("Max pending events exceeded, will persist immediately after request", "request_id", requestID)
+			storePending = false
+		} else {
+			// Store as pending before calling handler
+			m.pendingEvents.Store(requestID, pendingEvent)
+		}
+
 		// Store tracking context in request
 		ctx := context.WithValue(r.Context(), usageTrackingStartKey, startTime)
 		ctx = context.WithValue(ctx, usageTrackingRequestIDKey, requestID)
@@ -87,19 +183,6 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 		status := "success"
 		if recorder.statusCode >= 400 {
 			status = "failed"
-		}
-
-		// Create basic usage event (without token data)
-		event := &llmgw.UsageEvent{
-			ID:              uuid.New().String(),
-			RequestID:       requestID,
-			UserID:          userID,
-			ModelID:         "", // Will be set by provider-specific logic if available
-			Status:          status,
-			UsageDataSource: "unavailable", // Default, can be updated by providers
-			DataComplete:    false,         // Default, can be updated by providers
-			Timestamp:       time.Now(),
-			DurationMs:      intPtr(int(duration.Milliseconds())),
 		}
 
 		// Set error information for failed requests
@@ -121,90 +204,177 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 			event.FailureStage = &failureStage
 		}
 
-		// Send event to background processor (non-blocking)
-		select {
-		case m.eventsCh <- event:
-			// Event queued successfully
+		// Handle post-request processing
+		if status == "failed" {
+			// For failed requests, remove from pending (if stored) and persist immediately
+			if storePending {
+				if pendingData, exists := m.pendingEvents.LoadAndDelete(requestID); exists {
+					pending := pendingData.(*PendingEvent)
+					event = pending.Event // Use the pre-created event
+				}
+			}
+
+			// Update event with failure details
+			event.Status = status
+			event.DurationMs = intPtr(int(duration.Milliseconds()))
+
+			select {
+			case m.eventsCh <- event:
+				if m.metrics != nil {
+					m.metrics.RecordEventCaptured(r.Context())
+					m.metrics.UpdateChannelSize(r.Context(), int64(len(m.eventsCh)))
+				}
+			default:
+				m.logger.Warn("Usage tracking channel full, dropping failed event", "request_id", requestID)
+				if m.metrics != nil {
+					m.metrics.RecordEventDropped(r.Context())
+				}
+			}
+		} else if !storePending {
+			// For successful requests when pending storage was skipped (max events exceeded)
+			event.Status = status
+			event.UsageDataSource = "middleware_fallback"
+			event.DurationMs = intPtr(int(duration.Milliseconds()))
+
+			select {
+			case m.eventsCh <- event:
+				if m.metrics != nil {
+					m.metrics.RecordEventCaptured(r.Context())
+				}
+			default:
+				m.logger.Warn("Usage tracking channel full, dropping overflow event", "request_id", requestID)
+				if m.metrics != nil {
+					m.metrics.RecordEventDropped(r.Context())
+				}
+			}
+		} else {
+			// For successful requests with pending storage, update the stored event with duration
+			if pendingData, exists := m.pendingEvents.Load(requestID); exists {
+				pending := pendingData.(*PendingEvent)
+				pending.Event.DurationMs = intPtr(int(duration.Milliseconds()))
+			}
+
 			if m.metrics != nil {
 				m.metrics.RecordEventCaptured(r.Context())
-				m.metrics.UpdateChannelSize(r.Context(), int64(len(m.eventsCh)))
-			}
-		default:
-			// Channel is full, drop event to prevent blocking
-			m.logger.Warn("Usage tracking channel full, dropping event", "request_id", requestID)
-			if m.metrics != nil {
-				m.metrics.RecordEventDropped(r.Context())
 			}
 		}
 	})
 }
 
-// UpdateEvent allows providers to update usage events with token data
-func (m *UsageTrackingMiddleware) UpdateEvent(ctx context.Context, requestID string, update func(*llmgw.UsageEvent)) {
-	// This is a placeholder for provider integration
-	// In a full implementation, you might want to:
-	// 1. Store pending events in a map with requestID as key
-	// 2. Allow providers to update events before they're persisted
-	// 3. Or use a callback mechanism
-
-	// For now, providers can create their own events with complete data
-	m.logger.Debug("Event update requested", "request_id", requestID)
+// countPendingEvents returns the number of pending events
+func (m *UsageTrackingMiddleware) countPendingEvents() int {
+	count := 0
+	m.pendingEvents.Range(func(key, value any) bool {
+		count++
+		return true
+	})
+	return count
 }
 
-// CreateEventFromGAIResponse creates a usage event from GAI response data
-func (m *UsageTrackingMiddleware) CreateEventFromGAIResponse(ctx context.Context, modelID string, usage *interfaces.TokenUsage, status string, duration time.Duration) {
-	// Extract tracking context
+// UpdateEvent allows providers to update pending usage events with token data
+func (m *UsageTrackingMiddleware) UpdateEvent(ctx context.Context, modelID string, usage *interfaces.TokenUsage, status string, duration time.Duration) {
 	requestID, _ := ctx.Value(usageTrackingRequestIDKey).(string)
-	userID, _ := ctx.Value(usageTrackingUserIDKey).(string)
-
 	if requestID == "" {
-		requestID = uuid.New().String()
+		m.logger.Warn("UpdateEvent called without request ID in context")
+		return
 	}
 
-	event := &llmgw.UsageEvent{
-		ID:              uuid.New().String(),
-		RequestID:       requestID,
-		UserID:          userID,
-		ModelID:         modelID,
-		Status:          status,
-		UsageDataSource: "provider_response",
-		DataComplete:    usage != nil,
-		Timestamp:       time.Now(),
-		DurationMs:      intPtr(int(duration.Milliseconds())),
-	}
+	m.logger.Debug("UpdateEvent called", "request_id", requestID, "model_id", modelID, "status", status)
 
-	// Set token usage if available
-	if usage != nil {
-		event.InputTokens = &usage.PromptTokens
-		event.OutputTokens = &usage.CompletionTokens
-	}
+	if pendingEventData, exists := m.pendingEvents.LoadAndDelete(requestID); exists {
+		pending := pendingEventData.(*PendingEvent)
 
-	// Send event to background processor
-	select {
-	case m.eventsCh <- event:
-		// Event queued successfully
-		if m.metrics != nil {
-			m.metrics.RecordEventCaptured(ctx)
-			m.metrics.UpdateChannelSize(ctx, int64(len(m.eventsCh)))
+		// Update event with provider data
+		pending.Event.ModelID = modelID
+		pending.Event.Status = status
+		pending.Event.UsageDataSource = "provider_response"
+		pending.Event.DataComplete = usage != nil
+		pending.Event.DurationMs = intPtr(int(duration.Milliseconds()))
 
-			// Record business metrics
-			if userID != "" {
-				m.metrics.RecordModelUsage(ctx, modelID, userID)
-			}
+		// Set token usage if available
+		if usage != nil {
+			pending.Event.InputTokens = &usage.PromptTokens
+			pending.Event.OutputTokens = &usage.CompletionTokens
+		}
 
-			// Record token usage metrics
-			if usage != nil {
-				if userID != "" {
-					m.metrics.RecordTokenUsage(ctx, int64(usage.PromptTokens), modelID, "input", userID)
-					m.metrics.RecordTokenUsage(ctx, int64(usage.CompletionTokens), modelID, "output", userID)
+		// Send completed event to background processor
+		select {
+		case m.eventsCh <- pending.Event:
+			if m.metrics != nil {
+				m.metrics.UpdateChannelSize(ctx, int64(len(m.eventsCh)))
+
+				// Record business metrics
+				if userID, _ := ctx.Value(usageTrackingUserIDKey).(string); userID != "" {
+					m.metrics.RecordModelUsage(ctx, modelID, userID)
+
+					// Record token usage metrics
+					if usage != nil {
+						m.metrics.RecordTokenUsage(ctx, int64(usage.PromptTokens), modelID, "input", userID)
+						m.metrics.RecordTokenUsage(ctx, int64(usage.CompletionTokens), modelID, "output", userID)
+					}
 				}
 			}
+		default:
+			m.logger.Warn("Usage tracking channel full, dropping updated event", "request_id", requestID)
+			if m.metrics != nil {
+				m.metrics.RecordEventDropped(ctx)
+			}
 		}
-	default:
-		// Channel is full, drop event
-		m.logger.Warn("Usage tracking channel full, dropping GAI event", "request_id", requestID)
-		if m.metrics != nil {
-			m.metrics.RecordEventDropped(ctx)
+
+		m.logger.Debug("Usage event updated and queued", "request_id", requestID, "model_id", modelID, "status", status)
+	} else {
+		m.logger.Warn("UpdateEvent called for non-existent pending event", "request_id", requestID)
+	}
+}
+
+// cleanupExpiredEvents runs periodically to clean up expired pending events
+func (m *UsageTrackingMiddleware) cleanupExpiredEvents() {
+	for {
+		select {
+		case <-m.cleanupTicker.C:
+			cutoff := time.Now().Add(-m.config.PendingEventTimeout)
+			toDelete := []string{}
+
+			m.pendingEvents.Range(func(key, value any) bool {
+				requestID := key.(string)
+				pending := value.(*PendingEvent)
+
+				if pending.CreatedAt.Before(cutoff) && !pending.Updated {
+					toDelete = append(toDelete, requestID)
+				}
+				return true
+			})
+
+			// Process expired events
+			for _, requestID := range toDelete {
+				if pendingData, exists := m.pendingEvents.LoadAndDelete(requestID); exists {
+					pending := pendingData.(*PendingEvent)
+
+					// Finalize as timed out
+					pending.Event.Status = "timeout"
+					pending.Event.UsageDataSource = "middleware_timeout"
+					pending.Event.ErrorType = stringPtr("timeout")
+					pending.Event.FailureStage = stringPtr("during_generation")
+
+					// Send to background processor
+					select {
+					case m.eventsCh <- pending.Event:
+						m.logger.Debug("Expired pending event finalized",
+							"request_id", requestID,
+							"age", time.Since(pending.CreatedAt))
+					default:
+						m.logger.Warn("Failed to queue expired event, dropping", "request_id", requestID)
+					}
+				}
+			}
+
+			if len(toDelete) > 0 {
+				m.logger.Info("Cleaned up expired pending events", "count", len(toDelete))
+			}
+
+		case <-m.done:
+			m.cleanupTicker.Stop()
+			return
 		}
 	}
 }
@@ -280,4 +450,9 @@ func (r *responseRecorder) WriteHeader(statusCode int) {
 // Helper function to create int pointer
 func intPtr(i int) *int {
 	return &i
+}
+
+// Helper function to create string pointer
+func stringPtr(s string) *string {
+	return &s
 }

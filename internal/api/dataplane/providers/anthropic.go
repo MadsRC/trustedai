@@ -206,7 +206,7 @@ func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		// Track failed request
 		if p.usageMiddleware != nil {
-			p.usageMiddleware.CreateEventFromGAIResponse(
+			p.usageMiddleware.UpdateEvent(
 				r.Context(),
 				req.Model,
 				nil, // No usage data on error
@@ -231,7 +231,7 @@ func (p *AnthropicProvider) handleMessages(w http.ResponseWriter, r *http.Reques
 			}
 		}
 
-		p.usageMiddleware.CreateEventFromGAIResponse(
+		p.usageMiddleware.UpdateEvent(
 			r.Context(),
 			req.Model,
 			usage,

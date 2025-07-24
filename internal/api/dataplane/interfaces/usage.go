@@ -11,7 +11,7 @@ import (
 
 // UsageMiddleware interface for tracking usage events
 type UsageMiddleware interface {
-	CreateEventFromGAIResponse(ctx context.Context, modelID string, usage *TokenUsage, status string, duration time.Duration)
+	UpdateEvent(ctx context.Context, modelID string, usage *TokenUsage, status string, duration time.Duration)
 }
 
 // TokenUsage represents token usage data from GAI responses
