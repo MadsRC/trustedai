@@ -58,7 +58,7 @@ func (s *Iam) CreateUser(
 	// Generate ID if not provided
 	userID := req.Msg.GetUser().GetId()
 	if userID == "" {
-		userID = uuid.New().String()
+		userID = func() string { id, _ := uuid.NewV7(); return id.String() }()
 	}
 
 	// Set creation time if not provided
@@ -442,7 +442,7 @@ func (s *Iam) CreateOrganization(
 	// Generate ID if not provided
 	orgID := req.Msg.GetOrganization().GetId()
 	if orgID == "" {
-		orgID = uuid.New().String()
+		orgID = func() string { id, _ := uuid.NewV7(); return id.String() }()
 	}
 
 	// Set creation time if not provided

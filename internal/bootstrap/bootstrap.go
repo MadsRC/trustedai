@@ -125,7 +125,7 @@ func performBootstrap(
 	if existingSystemOrg == nil {
 		logger.Info("Creating system organization...")
 		systemOrg = &llmgw.Organization{
-			ID:          uuid.New().String(),
+			ID:          func() string { id, _ := uuid.NewV7(); return id.String() }(),
 			Name:        SystemOrgName,
 			DisplayName: SystemOrgDisplayName,
 			IsSystem:    true,
@@ -146,7 +146,7 @@ func performBootstrap(
 	// Create system administrator user
 	logger.Info("Creating system administrator...")
 	adminUser := &llmgw.User{
-		ID:             uuid.New().String(),
+		ID:             func() string { id, _ := uuid.NewV7(); return id.String() }(),
 		Email:          DefaultAdminEmail,
 		Name:           DefaultAdminName,
 		OrganizationID: systemOrg.ID,

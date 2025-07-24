@@ -252,7 +252,7 @@ func TestUsageTrackingMiddleware_UpdateEventRaceCondition(t *testing.T) {
 		updateEventCalled = true
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, _ = w.Write([]byte("OK"))
 	})
 
 	// Wrap the handler with the middleware

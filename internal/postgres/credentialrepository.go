@@ -91,7 +91,8 @@ func (r *CredentialRepository) CreateOpenRouterCredential(ctx context.Context, c
 	`
 
 	if cred.ID == uuid.Nil {
-		cred.ID = uuid.New()
+		id, _ := uuid.NewV7()
+		cred.ID = id
 	}
 
 	_, err := r.pool.Exec(ctx, query,

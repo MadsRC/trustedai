@@ -136,11 +136,11 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 		}
 
 		// Generate request ID if not present
-		requestID := uuid.New().String()
+		requestID := func() string { id, _ := uuid.NewV7(); return id.String() }()
 
 		// Create basic usage event (without token data) - will be updated later
 		event := &llmgw.UsageEvent{
-			ID:              uuid.New().String(),
+			ID:              func() string { id, _ := uuid.NewV7(); return id.String() }(),
 			RequestID:       requestID,
 			UserID:          userID,
 			ModelID:         "", // Will be set by provider-specific logic if available

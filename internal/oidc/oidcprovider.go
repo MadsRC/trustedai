@@ -184,7 +184,7 @@ func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User
 
 	// Set organization ID and generate user ID
 	user.OrganizationID = org.ID
-	user.ID = uuid.New().String()
+	user.ID = func() string { id, _ := uuid.NewV7(); return id.String() }()
 
 	// Create new user
 	err = p.options.UserRepo.Create(ctx, user)
@@ -457,7 +457,7 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 
 	// Set organization ID and generate user ID
 	user.OrganizationID = org.ID
-	user.ID = uuid.New().String()
+	user.ID = func() string { id, _ := uuid.NewV7(); return id.String() }()
 
 	// Create new user
 	err = p.options.UserRepo.Create(ctx, user)
