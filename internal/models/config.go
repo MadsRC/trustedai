@@ -45,4 +45,22 @@ var OpenRouterModels = map[string]gai.Model{
 			MaxOutputTokens:   4000,
 		},
 	},
+	"meta-llama/llama-3.1-8b-instruct": {
+		ID:       "meta-llama/llama-3.1-8b-instruct",
+		Name:     "Llama-3.1-8b-instruct",
+		Provider: PROVIDER_ID_OPENROUTER,
+		Pricing: gai.ModelPricing{
+			InputTokenPrice:  0.015,
+			OutputTokenPrice: 0.02,
+		},
+		Capabilities: gai.ModelCapabilities{
+			SupportsStreaming: true,
+			SupportsJSON:      false,
+			SupportsTools:     true,
+			SupportsVision:    false,
+			SupportsReasoning: false,
+			MaxInputTokens:    131000,
+			MaxOutputTokens:   16000,
+		},
+	},
 }

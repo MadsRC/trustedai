@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"time"
 
+	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/gai-org/gai"
 	"github.com/google/uuid"
 )
@@ -178,7 +179,7 @@ type OpenRouterCredential struct {
 type ModelWithCredentials struct {
 	Model          gai.Model
 	CredentialID   uuid.UUID
-	CredentialType string
+	CredentialType llmgwv1.CredentialType
 }
 
 // ModelWithReference represents a model with its model reference for aliasing
@@ -211,8 +212,8 @@ type ModelRepository interface {
 	GetModelByID(ctx context.Context, modelID string) (*gai.Model, error)
 	GetModelByIDWithReference(ctx context.Context, modelID string) (*ModelWithReference, error)
 	GetModelWithCredentials(ctx context.Context, modelID string) (*ModelWithCredentials, error)
-	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error
-	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error
+	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error
+	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error
 	DeleteModel(ctx context.Context, modelID string) error
 }
 

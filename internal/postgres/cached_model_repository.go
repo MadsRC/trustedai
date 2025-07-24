@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"codeberg.org/MadsRC/llmgw"
+	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/MadsRC/llmgw/internal/cache"
 	"codeberg.org/gai-org/gai"
 	"github.com/google/uuid"
@@ -151,7 +152,7 @@ func (r *CachedModelRepository) GetModelWithCredentials(ctx context.Context, mod
 }
 
 // CreateModel creates a new model and invalidates caches
-func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	err := r.underlying.CreateModel(ctx, model, credentialID, credentialType)
 	if err != nil {
 		return err
@@ -176,7 +177,7 @@ func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Mode
 }
 
 // UpdateModel updates an existing model and invalidates caches
-func (r *CachedModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (r *CachedModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	err := r.underlying.UpdateModel(ctx, model, credentialID, credentialType)
 	if err != nil {
 		return err

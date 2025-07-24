@@ -352,7 +352,7 @@ func (s *ModelManagement) CreateModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential ID is required"))
 	}
 
-	if req.Msg.GetModel().GetCredentialType() == "" {
+	if req.Msg.GetModel().GetCredentialType() == llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential type is required"))
 	}
 
@@ -413,8 +413,8 @@ func (s *ModelManagement) GetModel(
 		Id:             modelWithRef.Model.ID,
 		Name:           modelWithRef.Model.Name,
 		ProviderId:     modelWithRef.Model.Provider,
-		CredentialId:   "", // Not available in current model structure
-		CredentialType: "", // Not available in current model structure
+		CredentialId:   "",                                                 // Not available in current model structure
+		CredentialType: llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
 		Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 		Enabled:        true,
 		CreatedAt:      timestamppb.New(time.Now()),
@@ -469,8 +469,8 @@ func (s *ModelManagement) ListModels(
 			Id:             modelWithRef.Model.ID,
 			Name:           modelWithRef.Model.Name,
 			ProviderId:     modelWithRef.Model.Provider,
-			CredentialId:   "", // Not available in current model structure
-			CredentialType: "", // Not available in current model structure
+			CredentialId:   "",                                                 // Not available in current model structure
+			CredentialType: llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
 			Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 			Enabled:        true,
 			CreatedAt:      timestamppb.New(time.Now()),
@@ -535,7 +535,7 @@ func (s *ModelManagement) UpdateModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential ID is required"))
 	}
 
-	if req.Msg.GetModel().GetCredentialType() == "" {
+	if req.Msg.GetModel().GetCredentialType() == llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential type is required"))
 	}
 
@@ -818,7 +818,7 @@ func protoModelToGaiModel(protoModel *llmgwv1.Model) *gai.Model {
 }
 
 // gaiModelToProto converts a gai.Model to a protobuf model
-func gaiModelToProto(gaiModel *gai.Model, credentialID, credentialType string) *llmgwv1.Model {
+func gaiModelToProto(gaiModel *gai.Model, credentialID string, credentialType llmgwv1.CredentialType) *llmgwv1.Model {
 	protoModel := &llmgwv1.Model{
 		Id:             gaiModel.ID,
 		Name:           gaiModel.Name,

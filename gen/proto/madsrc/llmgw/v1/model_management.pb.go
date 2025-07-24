@@ -462,7 +462,7 @@ type Model struct {
 	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	ProviderId     string                 `protobuf:"bytes,3,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"`
 	CredentialId   string                 `protobuf:"bytes,4,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
-	CredentialType string                 `protobuf:"bytes,5,opt,name=credential_type,json=credentialType,proto3" json:"credential_type,omitempty"`
+	CredentialType CredentialType         `protobuf:"varint,5,opt,name=credential_type,json=credentialType,proto3,enum=llmgw.v1.CredentialType" json:"credential_type,omitempty"`
 	Pricing        *ModelPricing          `protobuf:"bytes,6,opt,name=pricing,proto3" json:"pricing,omitempty"`
 	Capabilities   *ModelCapabilities     `protobuf:"bytes,7,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	Metadata       map[string]string      `protobuf:"bytes,8,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Mirrors gai.Model.Metadata
@@ -531,11 +531,11 @@ func (x *Model) GetCredentialId() string {
 	return ""
 }
 
-func (x *Model) GetCredentialType() string {
+func (x *Model) GetCredentialType() CredentialType {
 	if x != nil {
 		return x.CredentialType
 	}
-	return ""
+	return CredentialType_CREDENTIAL_TYPE_UNSPECIFIED
 }
 
 func (x *Model) GetPricing() *ModelPricing {
@@ -1387,7 +1387,7 @@ type ModelManagementServiceListModelsRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	IncludeDisabled bool                   `protobuf:"varint,1,opt,name=include_disabled,json=includeDisabled,proto3" json:"include_disabled,omitempty"`
 	ProviderId      string                 `protobuf:"bytes,2,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"`
-	CredentialType  string                 `protobuf:"bytes,3,opt,name=credential_type,json=credentialType,proto3" json:"credential_type,omitempty"`
+	CredentialType  CredentialType         `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=llmgw.v1.CredentialType" json:"credential_type,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1436,11 +1436,11 @@ func (x *ModelManagementServiceListModelsRequest) GetProviderId() string {
 	return ""
 }
 
-func (x *ModelManagementServiceListModelsRequest) GetCredentialType() string {
+func (x *ModelManagementServiceListModelsRequest) GetCredentialType() CredentialType {
 	if x != nil {
 		return x.CredentialType
 	}
-	return ""
+	return CredentialType_CREDENTIAL_TYPE_UNSPECIFIED
 }
 
 type ModelManagementServiceListModelsResponse struct {
@@ -2033,14 +2033,14 @@ const file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc = "" +
 	"\x0fsupports_vision\x18\x04 \x01(\bR\x0esupportsVision\x12-\n" +
 	"\x12supports_reasoning\x18\x05 \x01(\bR\x11supportsReasoning\x12(\n" +
 	"\x10max_input_tokens\x18\x06 \x01(\x05R\x0emaxInputTokens\x12*\n" +
-	"\x11max_output_tokens\x18\a \x01(\x05R\x0fmaxOutputTokens\"\x95\x04\n" +
+	"\x11max_output_tokens\x18\a \x01(\x05R\x0fmaxOutputTokens\"\xaf\x04\n" +
 	"\x05Model\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1f\n" +
 	"\vprovider_id\x18\x03 \x01(\tR\n" +
 	"providerId\x12#\n" +
-	"\rcredential_id\x18\x04 \x01(\tR\fcredentialId\x12'\n" +
-	"\x0fcredential_type\x18\x05 \x01(\tR\x0ecredentialType\x120\n" +
+	"\rcredential_id\x18\x04 \x01(\tR\fcredentialId\x12A\n" +
+	"\x0fcredential_type\x18\x05 \x01(\x0e2\x18.llmgw.v1.CredentialTypeR\x0ecredentialType\x120\n" +
 	"\apricing\x18\x06 \x01(\v2\x16.llmgw.v1.ModelPricingR\apricing\x12?\n" +
 	"\fcapabilities\x18\a \x01(\v2\x1b.llmgw.v1.ModelCapabilitiesR\fcapabilities\x129\n" +
 	"\bmetadata\x18\b \x03(\v2\x1d.llmgw.v1.Model.MetadataEntryR\bmetadata\x12\x18\n" +
@@ -2100,12 +2100,12 @@ const file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc = "" +
 	"%ModelManagementServiceGetModelRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"O\n" +
 	"&ModelManagementServiceGetModelResponse\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\"\x9e\x01\n" +
+	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\"\xb8\x01\n" +
 	"'ModelManagementServiceListModelsRequest\x12)\n" +
 	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\x12\x1f\n" +
 	"\vprovider_id\x18\x02 \x01(\tR\n" +
-	"providerId\x12'\n" +
-	"\x0fcredential_type\x18\x03 \x01(\tR\x0ecredentialType\"S\n" +
+	"providerId\x12A\n" +
+	"\x0fcredential_type\x18\x03 \x01(\x0e2\x18.llmgw.v1.CredentialTypeR\x0ecredentialType\"S\n" +
 	"(ModelManagementServiceListModelsResponse\x12'\n" +
 	"\x06models\x18\x01 \x03(\v2\x0f.llmgw.v1.ModelR\x06models\"\xbe\x01\n" +
 	"(ModelManagementServiceUpdateModelRequest\x12%\n" +
@@ -2222,65 +2222,67 @@ var file_proto_madsrc_llmgw_v1_model_management_proto_depIdxs = []int32{
 	39, // 1: llmgw.v1.Provider.updated_at:type_name -> google.protobuf.Timestamp
 	39, // 2: llmgw.v1.OpenRouterCredential.created_at:type_name -> google.protobuf.Timestamp
 	39, // 3: llmgw.v1.OpenRouterCredential.updated_at:type_name -> google.protobuf.Timestamp
-	4,  // 4: llmgw.v1.Model.pricing:type_name -> llmgw.v1.ModelPricing
-	5,  // 5: llmgw.v1.Model.capabilities:type_name -> llmgw.v1.ModelCapabilities
-	38, // 6: llmgw.v1.Model.metadata:type_name -> llmgw.v1.Model.MetadataEntry
-	39, // 7: llmgw.v1.Model.created_at:type_name -> google.protobuf.Timestamp
-	39, // 8: llmgw.v1.Model.updated_at:type_name -> google.protobuf.Timestamp
-	2,  // 9: llmgw.v1.ModelManagementServiceGetProviderResponse.provider:type_name -> llmgw.v1.Provider
-	2,  // 10: llmgw.v1.ModelManagementServiceListProvidersResponse.providers:type_name -> llmgw.v1.Provider
-	3,  // 11: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 12: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 13: llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 14: llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse.credentials:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 15: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 16: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	6,  // 17: llmgw.v1.ModelManagementServiceCreateModelRequest.model:type_name -> llmgw.v1.Model
-	6,  // 18: llmgw.v1.ModelManagementServiceCreateModelResponse.model:type_name -> llmgw.v1.Model
-	6,  // 19: llmgw.v1.ModelManagementServiceGetModelResponse.model:type_name -> llmgw.v1.Model
-	6,  // 20: llmgw.v1.ModelManagementServiceListModelsResponse.models:type_name -> llmgw.v1.Model
-	6,  // 21: llmgw.v1.ModelManagementServiceUpdateModelRequest.model:type_name -> llmgw.v1.Model
-	6,  // 22: llmgw.v1.ModelManagementServiceUpdateModelResponse.model:type_name -> llmgw.v1.Model
-	1,  // 23: llmgw.v1.SupportedCredentialType.type:type_name -> llmgw.v1.CredentialType
-	31, // 24: llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse.credential_types:type_name -> llmgw.v1.SupportedCredentialType
-	2,  // 25: llmgw.v1.ModelManagementServiceListSupportedProvidersResponse.providers:type_name -> llmgw.v1.Provider
-	0,  // 26: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest.provider_id:type_name -> llmgw.v1.ProviderId
-	6,  // 27: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse.models:type_name -> llmgw.v1.Model
-	7,  // 28: llmgw.v1.ModelManagementService.GetProvider:input_type -> llmgw.v1.ModelManagementServiceGetProviderRequest
-	9,  // 29: llmgw.v1.ModelManagementService.ListProviders:input_type -> llmgw.v1.ModelManagementServiceListProvidersRequest
-	34, // 30: llmgw.v1.ModelManagementService.ListSupportedProviders:input_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersRequest
-	11, // 31: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
-	13, // 32: llmgw.v1.ModelManagementService.GetOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialRequest
-	15, // 33: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:input_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsRequest
-	17, // 34: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
-	19, // 35: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
-	32, // 36: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:input_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesRequest
-	21, // 37: llmgw.v1.ModelManagementService.CreateModel:input_type -> llmgw.v1.ModelManagementServiceCreateModelRequest
-	23, // 38: llmgw.v1.ModelManagementService.GetModel:input_type -> llmgw.v1.ModelManagementServiceGetModelRequest
-	25, // 39: llmgw.v1.ModelManagementService.ListModels:input_type -> llmgw.v1.ModelManagementServiceListModelsRequest
-	27, // 40: llmgw.v1.ModelManagementService.UpdateModel:input_type -> llmgw.v1.ModelManagementServiceUpdateModelRequest
-	29, // 41: llmgw.v1.ModelManagementService.DeleteModel:input_type -> llmgw.v1.ModelManagementServiceDeleteModelRequest
-	36, // 42: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:input_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest
-	8,  // 43: llmgw.v1.ModelManagementService.GetProvider:output_type -> llmgw.v1.ModelManagementServiceGetProviderResponse
-	10, // 44: llmgw.v1.ModelManagementService.ListProviders:output_type -> llmgw.v1.ModelManagementServiceListProvidersResponse
-	35, // 45: llmgw.v1.ModelManagementService.ListSupportedProviders:output_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersResponse
-	12, // 46: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
-	14, // 47: llmgw.v1.ModelManagementService.GetOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse
-	16, // 48: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:output_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse
-	18, // 49: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
-	20, // 50: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
-	33, // 51: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:output_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse
-	22, // 52: llmgw.v1.ModelManagementService.CreateModel:output_type -> llmgw.v1.ModelManagementServiceCreateModelResponse
-	24, // 53: llmgw.v1.ModelManagementService.GetModel:output_type -> llmgw.v1.ModelManagementServiceGetModelResponse
-	26, // 54: llmgw.v1.ModelManagementService.ListModels:output_type -> llmgw.v1.ModelManagementServiceListModelsResponse
-	28, // 55: llmgw.v1.ModelManagementService.UpdateModel:output_type -> llmgw.v1.ModelManagementServiceUpdateModelResponse
-	30, // 56: llmgw.v1.ModelManagementService.DeleteModel:output_type -> llmgw.v1.ModelManagementServiceDeleteModelResponse
-	37, // 57: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:output_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse
-	43, // [43:58] is the sub-list for method output_type
-	28, // [28:43] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	1,  // 4: llmgw.v1.Model.credential_type:type_name -> llmgw.v1.CredentialType
+	4,  // 5: llmgw.v1.Model.pricing:type_name -> llmgw.v1.ModelPricing
+	5,  // 6: llmgw.v1.Model.capabilities:type_name -> llmgw.v1.ModelCapabilities
+	38, // 7: llmgw.v1.Model.metadata:type_name -> llmgw.v1.Model.MetadataEntry
+	39, // 8: llmgw.v1.Model.created_at:type_name -> google.protobuf.Timestamp
+	39, // 9: llmgw.v1.Model.updated_at:type_name -> google.protobuf.Timestamp
+	2,  // 10: llmgw.v1.ModelManagementServiceGetProviderResponse.provider:type_name -> llmgw.v1.Provider
+	2,  // 11: llmgw.v1.ModelManagementServiceListProvidersResponse.providers:type_name -> llmgw.v1.Provider
+	3,  // 12: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
+	3,  // 13: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
+	3,  // 14: llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
+	3,  // 15: llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse.credentials:type_name -> llmgw.v1.OpenRouterCredential
+	3,  // 16: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
+	3,  // 17: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
+	6,  // 18: llmgw.v1.ModelManagementServiceCreateModelRequest.model:type_name -> llmgw.v1.Model
+	6,  // 19: llmgw.v1.ModelManagementServiceCreateModelResponse.model:type_name -> llmgw.v1.Model
+	6,  // 20: llmgw.v1.ModelManagementServiceGetModelResponse.model:type_name -> llmgw.v1.Model
+	1,  // 21: llmgw.v1.ModelManagementServiceListModelsRequest.credential_type:type_name -> llmgw.v1.CredentialType
+	6,  // 22: llmgw.v1.ModelManagementServiceListModelsResponse.models:type_name -> llmgw.v1.Model
+	6,  // 23: llmgw.v1.ModelManagementServiceUpdateModelRequest.model:type_name -> llmgw.v1.Model
+	6,  // 24: llmgw.v1.ModelManagementServiceUpdateModelResponse.model:type_name -> llmgw.v1.Model
+	1,  // 25: llmgw.v1.SupportedCredentialType.type:type_name -> llmgw.v1.CredentialType
+	31, // 26: llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse.credential_types:type_name -> llmgw.v1.SupportedCredentialType
+	2,  // 27: llmgw.v1.ModelManagementServiceListSupportedProvidersResponse.providers:type_name -> llmgw.v1.Provider
+	0,  // 28: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest.provider_id:type_name -> llmgw.v1.ProviderId
+	6,  // 29: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse.models:type_name -> llmgw.v1.Model
+	7,  // 30: llmgw.v1.ModelManagementService.GetProvider:input_type -> llmgw.v1.ModelManagementServiceGetProviderRequest
+	9,  // 31: llmgw.v1.ModelManagementService.ListProviders:input_type -> llmgw.v1.ModelManagementServiceListProvidersRequest
+	34, // 32: llmgw.v1.ModelManagementService.ListSupportedProviders:input_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersRequest
+	11, // 33: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
+	13, // 34: llmgw.v1.ModelManagementService.GetOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialRequest
+	15, // 35: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:input_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsRequest
+	17, // 36: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
+	19, // 37: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
+	32, // 38: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:input_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesRequest
+	21, // 39: llmgw.v1.ModelManagementService.CreateModel:input_type -> llmgw.v1.ModelManagementServiceCreateModelRequest
+	23, // 40: llmgw.v1.ModelManagementService.GetModel:input_type -> llmgw.v1.ModelManagementServiceGetModelRequest
+	25, // 41: llmgw.v1.ModelManagementService.ListModels:input_type -> llmgw.v1.ModelManagementServiceListModelsRequest
+	27, // 42: llmgw.v1.ModelManagementService.UpdateModel:input_type -> llmgw.v1.ModelManagementServiceUpdateModelRequest
+	29, // 43: llmgw.v1.ModelManagementService.DeleteModel:input_type -> llmgw.v1.ModelManagementServiceDeleteModelRequest
+	36, // 44: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:input_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest
+	8,  // 45: llmgw.v1.ModelManagementService.GetProvider:output_type -> llmgw.v1.ModelManagementServiceGetProviderResponse
+	10, // 46: llmgw.v1.ModelManagementService.ListProviders:output_type -> llmgw.v1.ModelManagementServiceListProvidersResponse
+	35, // 47: llmgw.v1.ModelManagementService.ListSupportedProviders:output_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersResponse
+	12, // 48: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
+	14, // 49: llmgw.v1.ModelManagementService.GetOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse
+	16, // 50: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:output_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse
+	18, // 51: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
+	20, // 52: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
+	33, // 53: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:output_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse
+	22, // 54: llmgw.v1.ModelManagementService.CreateModel:output_type -> llmgw.v1.ModelManagementServiceCreateModelResponse
+	24, // 55: llmgw.v1.ModelManagementService.GetModel:output_type -> llmgw.v1.ModelManagementServiceGetModelResponse
+	26, // 56: llmgw.v1.ModelManagementService.ListModels:output_type -> llmgw.v1.ModelManagementServiceListModelsResponse
+	28, // 57: llmgw.v1.ModelManagementService.UpdateModel:output_type -> llmgw.v1.ModelManagementServiceUpdateModelResponse
+	30, // 58: llmgw.v1.ModelManagementService.DeleteModel:output_type -> llmgw.v1.ModelManagementServiceDeleteModelResponse
+	37, // 59: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:output_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse
+	45, // [45:60] is the sub-list for method output_type
+	30, // [30:45] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_proto_madsrc_llmgw_v1_model_management_proto_init() }

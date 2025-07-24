@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 
 	"codeberg.org/MadsRC/llmgw"
+	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/MadsRC/llmgw/internal/models"
 	"codeberg.org/gai-org/gai"
 	"github.com/google/uuid"
@@ -215,6 +216,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 
 	var modelWithCreds llmgw.ModelWithCredentials
 	var pricingJSON, capabilitiesJSON, metadataJSON []byte
+	var credentialTypeInt int
 
 	err := row.Scan(
 		&modelWithCreds.Model.ID,
@@ -223,12 +225,15 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 		&pricingJSON,
 		&capabilitiesJSON,
 		&modelWithCreds.CredentialID,
-		&modelWithCreds.CredentialType,
+		&credentialTypeInt,
 		&metadataJSON,
 	)
 	if err != nil {
 		return nil, models.ErrModelNotFound
 	}
+
+	// Convert integer credential type to CredentialType
+	modelWithCreds.CredentialType = llmgwv1.CredentialType(credentialTypeInt)
 
 	if err := json.Unmarshal(pricingJSON, &modelWithCreds.Model.Pricing); err != nil {
 		return nil, err
@@ -245,7 +250,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 	return &modelWithCreds, nil
 }
 
-func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	query := `
 		INSERT INTO models (id, name, provider_id, pricing, capabilities, credential_id, credential_type, metadata, enabled)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -273,14 +278,14 @@ func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, cre
 		pricingJSON,
 		capabilitiesJSON,
 		credentialID,
-		credentialType,
+		int(credentialType),
 		metadataJSON,
 		true, // enabled by default
 	)
 	return err
 }
 
-func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	query := `
 		UPDATE models 
 		SET name = $2, provider_id = $3, pricing = $4, capabilities = $5, credential_id = $6, credential_type = $7, metadata = $8
@@ -309,7 +314,7 @@ func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, cre
 		pricingJSON,
 		capabilitiesJSON,
 		credentialID,
-		credentialType,
+		int(credentialType),
 		metadataJSON,
 	)
 	if err != nil {

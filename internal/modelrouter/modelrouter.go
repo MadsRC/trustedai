@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"codeberg.org/MadsRC/llmgw"
+	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/MadsRC/llmgw/internal/models"
 	"codeberg.org/MadsRC/llmgw/internal/postgres"
 	"codeberg.org/gai-org/gai"
@@ -109,7 +110,7 @@ func New(opts ...Option) *ModelRouter {
 
 func (mr *ModelRouter) createProviderClient(ctx context.Context, modelWithCreds *llmgw.ModelWithCredentials) (gai.ProviderClient, error) {
 	switch modelWithCreds.CredentialType {
-	case "openrouter":
+	case llmgwv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER:
 		creds, err := mr.credentialRepo.GetOpenRouterCredential(ctx, modelWithCreds.CredentialID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get OpenRouter credentials: %w", err)
@@ -130,7 +131,7 @@ func (mr *ModelRouter) createProviderClient(ctx context.Context, modelWithCreds 
 
 		return openrouter.New(opts...), nil
 	default:
-		return nil, fmt.Errorf("unsupported credential type: %s", modelWithCreds.CredentialType)
+		return nil, fmt.Errorf("unsupported credential type: %s", modelWithCreds.CredentialType.String())
 	}
 }
 

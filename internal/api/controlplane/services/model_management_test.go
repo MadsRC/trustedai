@@ -316,12 +316,12 @@ func (m *MockModelRepository) GetModelWithCredentials(ctx context.Context, model
 	return args.Get(0).(*llmgw.ModelWithCredentials), args.Error(1)
 }
 
-func (m *MockModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (m *MockModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	args := m.Called(ctx, model, credentialID, credentialType)
 	return args.Error(0)
 }
 
-func (m *MockModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType string) error {
+func (m *MockModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
 	args := m.Called(ctx, model, credentialID, credentialType)
 	return args.Error(0)
 }

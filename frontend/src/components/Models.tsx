@@ -62,7 +62,7 @@ function Models() {
     name: "",
     providerId: "",
     credentialId: "",
-    credentialType: "",
+    credentialType: CredentialType.UNSPECIFIED,
     inputTokenPrice: 0,
     outputTokenPrice: 0,
     supportsStreaming: false,
@@ -102,7 +102,7 @@ function Models() {
       const request = create(ModelManagementServiceListModelsRequestSchema, {
         includeDisabled: true,
         providerId: "",
-        credentialType: "",
+        credentialType: CredentialType.UNSPECIFIED,
       });
       const response = await client.listModels(request);
       setModels(response.models);
@@ -256,7 +256,7 @@ function Models() {
         name: "",
         providerId: "",
         credentialId: "",
-        credentialType: "",
+        credentialType: CredentialType.UNSPECIFIED,
         inputTokenPrice: 0,
         outputTokenPrice: 0,
         supportsStreaming: false,
@@ -353,7 +353,7 @@ function Models() {
       name: "",
       providerId: "",
       credentialId: "",
-      credentialType: "",
+      credentialType: CredentialType.UNSPECIFIED,
       inputTokenPrice: 0,
       outputTokenPrice: 0,
       supportsStreaming: false,
@@ -380,10 +380,8 @@ function Models() {
 
   // Fetch credentials when credential type changes
   useEffect(() => {
-    if (formData.credentialType) {
-      // Convert string to enum value
-      const credTypeEnum = parseInt(formData.credentialType) as CredentialType;
-      fetchCredentials(credTypeEnum);
+    if (formData.credentialType === CredentialType.OPENROUTER) {
+      fetchCredentials(formData.credentialType);
     } else {
       setCredentials([]);
     }
@@ -713,7 +711,9 @@ function Models() {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      credentialType: e.target.value,
+                      credentialType: parseInt(
+                        e.target.value,
+                      ) as CredentialType,
                       credentialId: "",
                     })
                   }
@@ -1162,7 +1162,9 @@ function Models() {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      credentialType: e.target.value,
+                      credentialType: parseInt(
+                        e.target.value,
+                      ) as CredentialType,
                       credentialId: "",
                     })
                   }

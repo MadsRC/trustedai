@@ -86,7 +86,7 @@ message Model {
   string name = 2;
   string provider_id = 3;
   string credential_id = 4;
-  string credential_type = 5;
+  CredentialType credential_type = 5;
   ModelPricing pricing = 6;
   ModelCapabilities capabilities = 7;
   map<string, string> metadata = 8; // Mirrors gai.Model.Metadata
@@ -174,7 +174,7 @@ message ModelManagementServiceGetModelResponse {
 message ModelManagementServiceListModelsRequest {
   bool include_disabled = 1;
   string provider_id = 2;
-  string credential_type = 3;
+  CredentialType credential_type = 3;
 }
 
 message ModelManagementServiceListModelsResponse {
