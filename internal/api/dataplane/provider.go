@@ -9,7 +9,6 @@ import (
 	"log/slog"
 	"net/http"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
 	"codeberg.org/gai-org/gai"
 )
 
@@ -26,14 +25,12 @@ type Provider interface {
 	Name() string
 	SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler)
 	SetLLMClient(client LLMClient)
-	SetUsageMiddleware(middleware interfaces.UsageMiddleware)
 	Shutdown(ctx context.Context) error
 }
 
 type ProviderOptions struct {
-	Logger          *slog.Logger
-	ModelRouter     ModelRouter
-	UsageMiddleware interfaces.UsageMiddleware
+	Logger      *slog.Logger
+	ModelRouter ModelRouter
 }
 
 type ProviderOption interface {
@@ -55,11 +52,5 @@ func WithProviderLogger(logger *slog.Logger) ProviderOption {
 func WithModelRouter(router ModelRouter) ProviderOption {
 	return providerOptionFunc(func(opts *ProviderOptions) {
 		opts.ModelRouter = router
-	})
-}
-
-func WithUsageMiddleware(middleware interfaces.UsageMiddleware) ProviderOption {
-	return providerOptionFunc(func(opts *ProviderOptions) {
-		opts.UsageMiddleware = middleware
 	})
 }

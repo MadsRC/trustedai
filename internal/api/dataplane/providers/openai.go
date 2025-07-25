@@ -15,16 +15,14 @@ import (
 	"time"
 
 	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
 	"codeberg.org/gai-org/gai"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/packages/param"
 )
 
 type OpenAIProvider struct {
-	options         *dataplane.ProviderOptions
-	llmClient       dataplane.LLMClient
-	usageMiddleware interfaces.UsageMiddleware
+	options   *dataplane.ProviderOptions
+	llmClient dataplane.LLMClient
 }
 
 func NewOpenAIProvider(options ...dataplane.ProviderOption) *OpenAIProvider {
@@ -47,10 +45,6 @@ func (p *OpenAIProvider) Name() string {
 
 func (p *OpenAIProvider) SetLLMClient(client dataplane.LLMClient) {
 	p.llmClient = client
-}
-
-func (p *OpenAIProvider) SetUsageMiddleware(middleware interfaces.UsageMiddleware) {
-	p.usageMiddleware = middleware
 }
 
 func (p *OpenAIProvider) SetupRoutes(mux *http.ServeMux, baseAuth func(http.Handler) http.Handler) {
@@ -111,47 +105,11 @@ func (p *OpenAIProvider) handleChatCompletions(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// Track request timing
-	startTime := time.Now()
-
 	gaiResp, err := p.llmClient.Generate(r.Context(), gaiReq)
-	duration := time.Since(startTime)
-
 	if err != nil {
-		// Track failed request
-		if p.usageMiddleware != nil {
-			p.usageMiddleware.UpdateEvent(
-				r.Context(),
-				string(req.Model),
-				nil, // No usage data on error
-				"failed",
-				duration,
-			)
-		}
-
 		p.options.Logger.Error("Failed to generate response", "error", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
-	}
-
-	// Track successful request with token usage
-	if p.usageMiddleware != nil {
-		var usage *interfaces.TokenUsage
-		if gaiResp.Usage != nil {
-			usage = &interfaces.TokenUsage{
-				PromptTokens:     gaiResp.Usage.PromptTokens,
-				CompletionTokens: gaiResp.Usage.CompletionTokens,
-				TotalTokens:      gaiResp.Usage.TotalTokens,
-			}
-		}
-
-		p.usageMiddleware.UpdateEvent(
-			r.Context(),
-			string(req.Model),
-			usage,
-			"success",
-			duration,
-		)
 	}
 
 	// Convert gai response back to OpenAI response format

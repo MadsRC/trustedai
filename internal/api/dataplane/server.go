@@ -146,15 +146,14 @@ func NewDataPlaneServer(options ...DataPlaneOption) (*DataPlaneServer, error) {
 
 	// Set LLMClient on all providers if available
 	if server.LLMClient != nil {
-		for _, provider := range server.providers {
-			provider.SetLLMClient(server.LLMClient)
+		// Wrap LLMClient with usage tracking if middleware is available
+		clientToUse := server.LLMClient
+		if server.usageMiddleware != nil {
+			clientToUse = NewTrackedLLMClient(server.LLMClient, server.usageMiddleware)
 		}
-	}
 
-	// Set UsageMiddleware on all providers if available
-	if server.usageMiddleware != nil {
 		for _, provider := range server.providers {
-			provider.SetUsageMiddleware(server.usageMiddleware)
+			provider.SetLLMClient(clientToUse)
 		}
 	}
 
