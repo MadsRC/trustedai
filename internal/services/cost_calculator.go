@@ -151,15 +151,16 @@ func (c *CostCalculator) processEvent(ctx context.Context, event *llmgw.UsageEve
 }
 
 // calculateCost computes the cost for a usage event based on model pricing
+// Pricing is expected to be per token (e.g., 0.0000001 = $0.0000001 per token)
 func (c *CostCalculator) calculateCost(event llmgw.UsageEvent, pricing gai.ModelPricing) llmgw.CostResult {
 	var inputCost, outputCost float64
 
-	// Calculate input token cost
+	// Calculate input token cost (pricing is per token)
 	if event.InputTokens != nil {
 		inputCost = float64(*event.InputTokens) * pricing.InputTokenPrice
 	}
 
-	// Calculate output token cost
+	// Calculate output token cost (pricing is per token)
 	if event.OutputTokens != nil {
 		outputCost = float64(*event.OutputTokens) * pricing.OutputTokenPrice
 	}

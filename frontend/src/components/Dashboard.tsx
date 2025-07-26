@@ -13,6 +13,7 @@ import Organizations from "./Organizations";
 import Users from "./Users";
 import APIKeys from "./APIKeys";
 import Profile from "./Profile";
+import Analytics from "./Analytics";
 
 function Dashboard() {
   return (
@@ -28,6 +29,7 @@ function Dashboard() {
           <Route path="/organizations" element={<Organizations />} />
           <Route path="/users" element={<Users />} />
           <Route path="/api-keys" element={<APIKeys />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>

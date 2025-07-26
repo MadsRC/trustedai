@@ -50,10 +50,14 @@ func (s *UsageAnalytics) GetUsageSummary(
 	}
 
 	// Try to use billing summaries for efficient queries first
-	billingSummaries, err := s.options.BillingRepository.ListBillingSummariesByUser(ctx, user.ID, 1000, 0)
-	if err != nil {
-		s.options.Logger.Error("Failed to query billing summaries", "error", err, "user_id", user.ID)
-		return nil, connect.NewError(connect.CodeInternal, errors.New("usage analytics service: failed to query billing summaries"))
+	var billingSummaries []*llmgw.BillingSummary
+	if s.options.BillingRepository != nil {
+		var err error
+		billingSummaries, err = s.options.BillingRepository.ListBillingSummariesByUser(ctx, user.ID, 1000, 0)
+		if err != nil {
+			s.options.Logger.Error("Failed to query billing summaries", "error", err, "user_id", user.ID)
+			return nil, connect.NewError(connect.CodeInternal, errors.New("usage analytics service: failed to query billing summaries"))
+		}
 	}
 
 	// Filter summaries by time range and model
@@ -81,6 +85,10 @@ func (s *UsageAnalytics) GetUsageSummary(
 		}
 	} else {
 		// Fall back to querying usage events directly
+		if s.options.UsageRepository == nil {
+			s.options.Logger.Error("Usage repository not configured")
+			return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
+		}
 		events, err := s.options.UsageRepository.ListUsageEventsByPeriod(ctx, user.ID, start, end)
 		if err != nil {
 			s.options.Logger.Error("Failed to query usage events", "error", err, "user_id", user.ID)
@@ -200,6 +208,10 @@ func (s *UsageAnalytics) GetUsageDetails(
 	}
 
 	// Query usage events
+	if s.options.UsageRepository == nil {
+		s.options.Logger.Error("Usage repository not configured")
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
+	}
 	events, err := s.options.UsageRepository.ListUsageEventsByPeriod(ctx, user.ID, start, end)
 	if err != nil {
 		s.options.Logger.Error("Failed to query usage events", "error", err, "user_id", user.ID)
@@ -323,6 +335,10 @@ func (s *UsageAnalytics) GetUsageCosts(
 	}
 
 	// Query usage events to calculate cost breakdown by model
+	if s.options.UsageRepository == nil {
+		s.options.Logger.Error("Usage repository not configured")
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
+	}
 	events, err := s.options.UsageRepository.ListUsageEventsByPeriod(ctx, user.ID, start, end)
 	if err != nil {
 		s.options.Logger.Error("Failed to query usage events", "error", err, "user_id", user.ID)

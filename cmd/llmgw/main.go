@@ -230,6 +230,8 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		controlplane.WithControlPlaneTokenRepository(tokenRepo),
 		controlplane.WithControlPlaneCredentialRepository(credentialRepo),
 		controlplane.WithControlPlaneModelRepository(modelRepo),
+		controlplane.WithControlPlaneUsageRepository(usageRepo),
+		controlplane.WithControlPlaneBillingRepository(billingRepo),
 		controlplane.WithSSOHandler(ssoHandler),
 		controlplane.WithSessionStore(sessionStore),
 		controlplane.WithAuthInterceptor(authInterceptor),

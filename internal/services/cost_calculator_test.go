@@ -94,12 +94,12 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				OutputTokens: intPtr(1),
 			},
 			pricing: gai.ModelPricing{
-				InputTokenPrice:  0.00001, // Very small price
+				InputTokenPrice:  0.00001, // Very small price per token
 				OutputTokenPrice: 0.00001,
 			},
 			expectedResult: llmgw.CostResult{
-				InputCostCents:  0, // Rounds down to 0 cents
-				OutputCostCents: 0, // Rounds down to 0 cents
+				InputCostCents:  0, // 1 * 0.00001 * 100 = 0.001 cents, rounds to 0
+				OutputCostCents: 0, // 1 * 0.00001 * 100 = 0.001 cents, rounds to 0
 				TotalCostCents:  0,
 			},
 		},
@@ -110,13 +110,29 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				OutputTokens: intPtr(50000),
 			},
 			pricing: gai.ModelPricing{
-				InputTokenPrice:  0.03,
-				OutputTokenPrice: 0.06,
+				InputTokenPrice:  0.03, // $0.03 per token
+				OutputTokenPrice: 0.06, // $0.06 per token
 			},
 			expectedResult: llmgw.CostResult{
 				InputCostCents:  300000, // 100000 * 0.03 * 100
 				OutputCostCents: 300000, // 50000 * 0.06 * 100
 				TotalCostCents:  600000,
+			},
+		},
+		{
+			name: "Gemini 2.5 Flash Lite real scenario",
+			event: llmgw.UsageEvent{
+				InputTokens:  intPtr(38),
+				OutputTokens: nil,
+			},
+			pricing: gai.ModelPricing{
+				InputTokenPrice:  0.0000001, // $0.0000001 per token (from OpenRouter API)
+				OutputTokenPrice: 0.0000004, // $0.0000004 per token (from OpenRouter API)
+			},
+			expectedResult: llmgw.CostResult{
+				InputCostCents:  0, // 38 * 0.0000001 * 100 = 0.0038 cents, rounds to 0
+				OutputCostCents: 0, // No output tokens
+				TotalCostCents:  0,
 			},
 		},
 	}

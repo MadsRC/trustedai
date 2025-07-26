@@ -172,10 +172,10 @@ var openRouterModelsGenerated = map[string]gai.Model{
 		if _, err := fmt.Fprintf(file, "\t\tPricing: gai.ModelPricing{\n"); err != nil {
 			log.Fatal("Failed to write pricing struct:", err)
 		}
-		if _, err := fmt.Fprintf(file, "\t\t\tInputTokenPrice:  %.6f,\n", model.Pricing.InputTokenPrice); err != nil {
+		if _, err := fmt.Fprintf(file, "\t\t\tInputTokenPrice:  %g,\n", model.Pricing.InputTokenPrice); err != nil {
 			log.Fatal("Failed to write input token price:", err)
 		}
-		if _, err := fmt.Fprintf(file, "\t\t\tOutputTokenPrice: %.6f,\n", model.Pricing.OutputTokenPrice); err != nil {
+		if _, err := fmt.Fprintf(file, "\t\t\tOutputTokenPrice: %g,\n", model.Pricing.OutputTokenPrice); err != nil {
 			log.Fatal("Failed to write output token price:", err)
 		}
 		if _, err := fmt.Fprintf(file, "\t\t},\n"); err != nil {
@@ -230,8 +230,8 @@ func parsePrice(priceStr string) float64 {
 		return 0.0
 	}
 
-	// Convert from per token tokens to per million token
-	return price * 1000000.0
+	// Store price as-is (per million tokens from OpenRouter API)
+	return price
 }
 
 func contains(slice []string, item string) bool {
