@@ -72,7 +72,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 	totalRequests := int32(0)
 	totalInputTokens := int64(0)
 	totalOutputTokens := int64(0)
-	totalCostCents := int64(0)
+	totalCostCents := float64(0)
 	modelUsageMap := make(map[string]*llmgwv1.ModelUsage)
 
 	// If we have billing summaries, use them for aggregation
@@ -128,7 +128,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 			} else {
 				inputTokens := int64(0)
 				outputTokens := int64(0)
-				costCents := int64(0)
+				costCents := float64(0)
 				if event.InputTokens != nil {
 					inputTokens = int64(*event.InputTokens)
 				}
@@ -347,7 +347,7 @@ func (s *UsageAnalytics) GetUsageCosts(
 
 	// Calculate cost breakdown by model
 	costBreakdownMap := make(map[string]*llmgwv1.CostBreakdown)
-	totalCostCents := int64(0)
+	totalCostCents := float64(0)
 
 	for _, event := range events {
 		// Filter by model if specified
@@ -360,9 +360,9 @@ func (s *UsageAnalytics) GetUsageCosts(
 			continue
 		}
 
-		inputCost := int64(0)
-		outputCost := int64(0)
-		eventTotalCost := int64(0)
+		inputCost := float64(0)
+		outputCost := float64(0)
+		eventTotalCost := float64(0)
 
 		if event.InputCostCents != nil {
 			inputCost = *event.InputCostCents

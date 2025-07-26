@@ -27,9 +27,9 @@ type UsageEvent struct {
 	DataComplete    bool      `json:"dataComplete"`
 	Timestamp       time.Time `json:"timestamp"`
 	DurationMs      *int      `json:"durationMs,omitempty"`
-	InputCostCents  *int64    `json:"inputCostCents,omitempty"`
-	OutputCostCents *int64    `json:"outputCostCents,omitempty"`
-	TotalCostCents  *int64    `json:"totalCostCents,omitempty"`
+	InputCostCents  *float64  `json:"inputCostCents,omitempty"`
+	OutputCostCents *float64  `json:"outputCostCents,omitempty"`
+	TotalCostCents  *float64  `json:"totalCostCents,omitempty"`
 }
 
 // BillingSummary represents pre-aggregated billing data for a user and period
@@ -41,15 +41,15 @@ type BillingSummary struct {
 	TotalRequests     int       `json:"totalRequests"`
 	TotalInputTokens  int64     `json:"totalInputTokens"`
 	TotalOutputTokens int64     `json:"totalOutputTokens"`
-	TotalCostCents    int64     `json:"totalCostCents"`
+	TotalCostCents    float64   `json:"totalCostCents"`
 	CreatedAt         time.Time `json:"createdAt"`
 }
 
 // CostResult represents the result of a cost calculation
 type CostResult struct {
-	InputCostCents  int64 `json:"inputCostCents"`
-	OutputCostCents int64 `json:"outputCostCents"`
-	TotalCostCents  int64 `json:"totalCostCents"`
+	InputCostCents  float64 `json:"inputCostCents"`
+	OutputCostCents float64 `json:"outputCostCents"`
+	TotalCostCents  float64 `json:"totalCostCents"`
 }
 
 // UsageRepository defines persistence operations for usage events

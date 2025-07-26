@@ -452,7 +452,7 @@ function Models() {
   };
 
   const formatPrice = (price: number) => {
-    return `$${price.toFixed(6)}`;
+    return `$${(price * 1000000).toFixed(2)}`;
   };
 
   if (loading) {
@@ -566,11 +566,13 @@ function Models() {
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
                           <DollarSign className="w-3 h-3 mr-1" />
-                          In: {formatPrice(model.pricing.inputTokenPrice)}
+                          In: {formatPrice(model.pricing.inputTokenPrice)}/1M
+                          tokens
                         </span>
                         <span className="flex items-center">
                           <DollarSign className="w-3 h-3 mr-1" />
-                          Out: {formatPrice(model.pricing.outputTokenPrice)}
+                          Out: {formatPrice(model.pricing.outputTokenPrice)}/1M
+                          tokens
                         </span>
                       </div>
                     )}
@@ -879,7 +881,7 @@ function Models() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Input Token Price
+                  Input Token Price (per token)
                 </label>
                 <input
                   type="number"
@@ -897,7 +899,7 @@ function Models() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Output Token Price
+                  Output Token Price (per token)
                 </label>
                 <input
                   type="number"
@@ -1257,7 +1259,7 @@ function Models() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Input Token Price
+                  Input Token Price (per token)
                 </label>
                 <input
                   type="number"
@@ -1275,7 +1277,7 @@ function Models() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Output Token Price
+                  Output Token Price (per token)
                 </label>
                 <input
                   type="number"

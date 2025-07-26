@@ -165,9 +165,9 @@ func (c *CostCalculator) calculateCost(event llmgw.UsageEvent, pricing gai.Model
 		outputCost = float64(*event.OutputTokens) * pricing.OutputTokenPrice
 	}
 
-	// Convert to cents and return
-	inputCostCents := int64(inputCost * 100)
-	outputCostCents := int64(outputCost * 100)
+	// Convert to fractional cents and return
+	inputCostCents := inputCost * 100
+	outputCostCents := outputCost * 100
 	totalCostCents := inputCostCents + outputCostCents
 
 	return llmgw.CostResult{

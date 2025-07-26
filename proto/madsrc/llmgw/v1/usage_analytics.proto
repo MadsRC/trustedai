@@ -32,7 +32,7 @@ message UsageSummary {
   int32 total_requests = 1;
   int64 total_input_tokens = 2;
   int64 total_output_tokens = 3;
-  int64 total_cost_cents = 4;
+  double total_cost_cents = 4;
   repeated ModelUsage models = 5;
 }
 
@@ -41,7 +41,7 @@ message ModelUsage {
   int32 requests = 2;
   int64 input_tokens = 3;
   int64 output_tokens = 4;
-  int64 cost_cents = 5;
+  double cost_cents = 5;
 }
 
 message UsageEvent {
@@ -61,9 +61,9 @@ message UsageEvent {
   bool data_complete = 14;
   google.protobuf.Timestamp timestamp = 15;
   optional int32 duration_ms = 16;
-  optional int64 input_cost_cents = 17;
-  optional int64 output_cost_cents = 18;
-  optional int64 total_cost_cents = 19;
+  optional double input_cost_cents = 17;
+  optional double output_cost_cents = 18;
+  optional double total_cost_cents = 19;
 }
 
 message UserUsageSummary {
@@ -111,14 +111,14 @@ message UsageAnalyticsServiceGetUsageCostsRequest {
 message UsageAnalyticsServiceGetUsageCostsResponse {
   UsagePeriod period = 1;
   repeated CostBreakdown cost_breakdown = 2;
-  int64 total_cost_cents = 3;
+  double total_cost_cents = 3;
 }
 
 message CostBreakdown {
   string model_id = 1;
-  int64 input_cost_cents = 2;
-  int64 output_cost_cents = 3;
-  int64 total_cost_cents = 4;
+  double input_cost_cents = 2;
+  double output_cost_cents = 3;
+  double total_cost_cents = 4;
   int32 requests = 5;
 }
 

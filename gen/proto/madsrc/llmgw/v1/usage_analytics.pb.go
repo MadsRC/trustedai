@@ -84,7 +84,7 @@ type UsageSummary struct {
 	TotalRequests     int32                  `protobuf:"varint,1,opt,name=total_requests,json=totalRequests,proto3" json:"total_requests,omitempty"`
 	TotalInputTokens  int64                  `protobuf:"varint,2,opt,name=total_input_tokens,json=totalInputTokens,proto3" json:"total_input_tokens,omitempty"`
 	TotalOutputTokens int64                  `protobuf:"varint,3,opt,name=total_output_tokens,json=totalOutputTokens,proto3" json:"total_output_tokens,omitempty"`
-	TotalCostCents    int64                  `protobuf:"varint,4,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
+	TotalCostCents    float64                `protobuf:"fixed64,4,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
 	Models            []*ModelUsage          `protobuf:"bytes,5,rep,name=models,proto3" json:"models,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -141,7 +141,7 @@ func (x *UsageSummary) GetTotalOutputTokens() int64 {
 	return 0
 }
 
-func (x *UsageSummary) GetTotalCostCents() int64 {
+func (x *UsageSummary) GetTotalCostCents() float64 {
 	if x != nil {
 		return x.TotalCostCents
 	}
@@ -161,7 +161,7 @@ type ModelUsage struct {
 	Requests      int32                  `protobuf:"varint,2,opt,name=requests,proto3" json:"requests,omitempty"`
 	InputTokens   int64                  `protobuf:"varint,3,opt,name=input_tokens,json=inputTokens,proto3" json:"input_tokens,omitempty"`
 	OutputTokens  int64                  `protobuf:"varint,4,opt,name=output_tokens,json=outputTokens,proto3" json:"output_tokens,omitempty"`
-	CostCents     int64                  `protobuf:"varint,5,opt,name=cost_cents,json=costCents,proto3" json:"cost_cents,omitempty"`
+	CostCents     float64                `protobuf:"fixed64,5,opt,name=cost_cents,json=costCents,proto3" json:"cost_cents,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -224,7 +224,7 @@ func (x *ModelUsage) GetOutputTokens() int64 {
 	return 0
 }
 
-func (x *ModelUsage) GetCostCents() int64 {
+func (x *ModelUsage) GetCostCents() float64 {
 	if x != nil {
 		return x.CostCents
 	}
@@ -249,9 +249,9 @@ type UsageEvent struct {
 	DataComplete    bool                   `protobuf:"varint,14,opt,name=data_complete,json=dataComplete,proto3" json:"data_complete,omitempty"`
 	Timestamp       *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	DurationMs      *int32                 `protobuf:"varint,16,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
-	InputCostCents  *int64                 `protobuf:"varint,17,opt,name=input_cost_cents,json=inputCostCents,proto3,oneof" json:"input_cost_cents,omitempty"`
-	OutputCostCents *int64                 `protobuf:"varint,18,opt,name=output_cost_cents,json=outputCostCents,proto3,oneof" json:"output_cost_cents,omitempty"`
-	TotalCostCents  *int64                 `protobuf:"varint,19,opt,name=total_cost_cents,json=totalCostCents,proto3,oneof" json:"total_cost_cents,omitempty"`
+	InputCostCents  *float64               `protobuf:"fixed64,17,opt,name=input_cost_cents,json=inputCostCents,proto3,oneof" json:"input_cost_cents,omitempty"`
+	OutputCostCents *float64               `protobuf:"fixed64,18,opt,name=output_cost_cents,json=outputCostCents,proto3,oneof" json:"output_cost_cents,omitempty"`
+	TotalCostCents  *float64               `protobuf:"fixed64,19,opt,name=total_cost_cents,json=totalCostCents,proto3,oneof" json:"total_cost_cents,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -398,21 +398,21 @@ func (x *UsageEvent) GetDurationMs() int32 {
 	return 0
 }
 
-func (x *UsageEvent) GetInputCostCents() int64 {
+func (x *UsageEvent) GetInputCostCents() float64 {
 	if x != nil && x.InputCostCents != nil {
 		return *x.InputCostCents
 	}
 	return 0
 }
 
-func (x *UsageEvent) GetOutputCostCents() int64 {
+func (x *UsageEvent) GetOutputCostCents() float64 {
 	if x != nil && x.OutputCostCents != nil {
 		return *x.OutputCostCents
 	}
 	return 0
 }
 
-func (x *UsageEvent) GetTotalCostCents() int64 {
+func (x *UsageEvent) GetTotalCostCents() float64 {
 	if x != nil && x.TotalCostCents != nil {
 		return *x.TotalCostCents
 	}
@@ -810,7 +810,7 @@ type UsageAnalyticsServiceGetUsageCostsResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Period         *UsagePeriod           `protobuf:"bytes,1,opt,name=period,proto3" json:"period,omitempty"`
 	CostBreakdown  []*CostBreakdown       `protobuf:"bytes,2,rep,name=cost_breakdown,json=costBreakdown,proto3" json:"cost_breakdown,omitempty"`
-	TotalCostCents int64                  `protobuf:"varint,3,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
+	TotalCostCents float64                `protobuf:"fixed64,3,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -859,7 +859,7 @@ func (x *UsageAnalyticsServiceGetUsageCostsResponse) GetCostBreakdown() []*CostB
 	return nil
 }
 
-func (x *UsageAnalyticsServiceGetUsageCostsResponse) GetTotalCostCents() int64 {
+func (x *UsageAnalyticsServiceGetUsageCostsResponse) GetTotalCostCents() float64 {
 	if x != nil {
 		return x.TotalCostCents
 	}
@@ -869,9 +869,9 @@ func (x *UsageAnalyticsServiceGetUsageCostsResponse) GetTotalCostCents() int64 {
 type CostBreakdown struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ModelId         string                 `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3" json:"model_id,omitempty"`
-	InputCostCents  int64                  `protobuf:"varint,2,opt,name=input_cost_cents,json=inputCostCents,proto3" json:"input_cost_cents,omitempty"`
-	OutputCostCents int64                  `protobuf:"varint,3,opt,name=output_cost_cents,json=outputCostCents,proto3" json:"output_cost_cents,omitempty"`
-	TotalCostCents  int64                  `protobuf:"varint,4,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
+	InputCostCents  float64                `protobuf:"fixed64,2,opt,name=input_cost_cents,json=inputCostCents,proto3" json:"input_cost_cents,omitempty"`
+	OutputCostCents float64                `protobuf:"fixed64,3,opt,name=output_cost_cents,json=outputCostCents,proto3" json:"output_cost_cents,omitempty"`
+	TotalCostCents  float64                `protobuf:"fixed64,4,opt,name=total_cost_cents,json=totalCostCents,proto3" json:"total_cost_cents,omitempty"`
 	Requests        int32                  `protobuf:"varint,5,opt,name=requests,proto3" json:"requests,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -914,21 +914,21 @@ func (x *CostBreakdown) GetModelId() string {
 	return ""
 }
 
-func (x *CostBreakdown) GetInputCostCents() int64 {
+func (x *CostBreakdown) GetInputCostCents() float64 {
 	if x != nil {
 		return x.InputCostCents
 	}
 	return 0
 }
 
-func (x *CostBreakdown) GetOutputCostCents() int64 {
+func (x *CostBreakdown) GetOutputCostCents() float64 {
 	if x != nil {
 		return x.OutputCostCents
 	}
 	return 0
 }
 
-func (x *CostBreakdown) GetTotalCostCents() int64 {
+func (x *CostBreakdown) GetTotalCostCents() float64 {
 	if x != nil {
 		return x.TotalCostCents
 	}
@@ -1349,7 +1349,7 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\x0etotal_requests\x18\x01 \x01(\x05R\rtotalRequests\x12,\n" +
 	"\x12total_input_tokens\x18\x02 \x01(\x03R\x10totalInputTokens\x12.\n" +
 	"\x13total_output_tokens\x18\x03 \x01(\x03R\x11totalOutputTokens\x12(\n" +
-	"\x10total_cost_cents\x18\x04 \x01(\x03R\x0etotalCostCents\x12,\n" +
+	"\x10total_cost_cents\x18\x04 \x01(\x01R\x0etotalCostCents\x12,\n" +
 	"\x06models\x18\x05 \x03(\v2\x14.llmgw.v1.ModelUsageR\x06models\"\xaa\x01\n" +
 	"\n" +
 	"ModelUsage\x12\x19\n" +
@@ -1358,7 +1358,7 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\finput_tokens\x18\x03 \x01(\x03R\vinputTokens\x12#\n" +
 	"\routput_tokens\x18\x04 \x01(\x03R\foutputTokens\x12\x1d\n" +
 	"\n" +
-	"cost_cents\x18\x05 \x01(\x03R\tcostCents\"\xb8\a\n" +
+	"cost_cents\x18\x05 \x01(\x01R\tcostCents\"\xb8\a\n" +
 	"\n" +
 	"UsageEvent\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
@@ -1381,9 +1381,9 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\ttimestamp\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12$\n" +
 	"\vduration_ms\x18\x10 \x01(\x05H\aR\n" +
 	"durationMs\x88\x01\x01\x12-\n" +
-	"\x10input_cost_cents\x18\x11 \x01(\x03H\bR\x0einputCostCents\x88\x01\x01\x12/\n" +
-	"\x11output_cost_cents\x18\x12 \x01(\x03H\tR\x0foutputCostCents\x88\x01\x01\x12-\n" +
-	"\x10total_cost_cents\x18\x13 \x01(\x03H\n" +
+	"\x10input_cost_cents\x18\x11 \x01(\x01H\bR\x0einputCostCents\x88\x01\x01\x12/\n" +
+	"\x11output_cost_cents\x18\x12 \x01(\x01H\tR\x0foutputCostCents\x88\x01\x01\x12-\n" +
+	"\x10total_cost_cents\x18\x13 \x01(\x01H\n" +
 	"R\x0etotalCostCents\x88\x01\x01B\x0f\n" +
 	"\r_input_tokensB\x10\n" +
 	"\x0e_output_tokensB\x10\n" +
@@ -1431,12 +1431,12 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"*UsageAnalyticsServiceGetUsageCostsResponse\x12-\n" +
 	"\x06period\x18\x01 \x01(\v2\x15.llmgw.v1.UsagePeriodR\x06period\x12>\n" +
 	"\x0ecost_breakdown\x18\x02 \x03(\v2\x17.llmgw.v1.CostBreakdownR\rcostBreakdown\x12(\n" +
-	"\x10total_cost_cents\x18\x03 \x01(\x03R\x0etotalCostCents\"\xc6\x01\n" +
+	"\x10total_cost_cents\x18\x03 \x01(\x01R\x0etotalCostCents\"\xc6\x01\n" +
 	"\rCostBreakdown\x12\x19\n" +
 	"\bmodel_id\x18\x01 \x01(\tR\amodelId\x12(\n" +
-	"\x10input_cost_cents\x18\x02 \x01(\x03R\x0einputCostCents\x12*\n" +
-	"\x11output_cost_cents\x18\x03 \x01(\x03R\x0foutputCostCents\x12(\n" +
-	"\x10total_cost_cents\x18\x04 \x01(\x03R\x0etotalCostCents\x12\x1a\n" +
+	"\x10input_cost_cents\x18\x02 \x01(\x01R\x0einputCostCents\x12*\n" +
+	"\x11output_cost_cents\x18\x03 \x01(\x01R\x0foutputCostCents\x12(\n" +
+	"\x10total_cost_cents\x18\x04 \x01(\x01R\x0etotalCostCents\x12\x1a\n" +
 	"\brequests\x18\x05 \x01(\x05R\brequests\"\x87\x02\n" +
 	"7UsageAnalyticsServiceGetOrganizationUsageSummaryRequest\x12'\n" +
 	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x12\x16\n" +
