@@ -742,7 +742,8 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "tJJtLCazP5JoR5LHWhii9Am8QXdLUVGI",
       "redirectUris": [
-        "http://localhost:9999/sso/oidc/testorg/callback"
+        "http://localhost:9999/sso/oidc/testorg/callback",
+        "http://localhost:5173/sso/oidc/testorg/callback"
       ],
       "webOrigins": [
         "*"

@@ -740,7 +740,8 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "F9RVr1gvjNfi5mct6hij4rrwbrFH4jPI",
       "redirectUris": [
-        "http://localhost:9999/sso/oidc/system/callback"
+        "http://localhost:9999/sso/oidc/system/callback",
+        "http://localhost:5173/sso/oidc/system/callback"
       ],
       "webOrigins": [
         "*"
