@@ -57,7 +57,7 @@ function Analytics() {
   const [timeRange, setTimeRange] = useState<TimeRange>("month");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [isRefreshingEvents, setIsRefreshingEvents] = useState(false);
-  const eventsIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const eventsIntervalRef = useRef<number | null>(null);
   const { token } = useAuth();
 
   const client = useMemo(() => {
@@ -123,7 +123,7 @@ function Analytics() {
       );
 
       const response = await client.getUsageSummary(request);
-      setSummary(response.summary);
+      setSummary(response.summary || null);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to fetch usage summary",

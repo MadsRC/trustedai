@@ -98,9 +98,9 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				OutputTokenPrice: 0.00001,
 			},
 			expectedResult: llmgw.CostResult{
-				InputCostCents:  0, // 1 * 0.00001 * 100 = 0.001 cents, rounds to 0
-				OutputCostCents: 0, // 1 * 0.00001 * 100 = 0.001 cents, rounds to 0
-				TotalCostCents:  0,
+				InputCostCents:  0.001, // 1 * 0.00001 * 100 = 0.001 cents
+				OutputCostCents: 0.001, // 1 * 0.00001 * 100 = 0.001 cents
+				TotalCostCents:  0.002,
 			},
 		},
 		{
@@ -130,9 +130,9 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				OutputTokenPrice: 0.0000004, // $0.0000004 per token (from OpenRouter API)
 			},
 			expectedResult: llmgw.CostResult{
-				InputCostCents:  0, // 38 * 0.0000001 * 100 = 0.0038 cents, rounds to 0
-				OutputCostCents: 0, // No output tokens
-				TotalCostCents:  0,
+				InputCostCents:  0.00038, // 38 * 0.0000001 * 100 = 0.00038 cents
+				OutputCostCents: 0,       // No output tokens
+				TotalCostCents:  0.00038,
 			},
 		},
 	}

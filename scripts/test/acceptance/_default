@@ -3,4 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run end-to-end tests for the project"
 
+# Run Go acceptance tests
 go test -count=1 --tags=acceptance "$@" ./cmd/aigent/...
+
+# Run frontend acceptance tests
+cd frontend && npm run test:acceptance

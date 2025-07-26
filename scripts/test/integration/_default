@@ -12,3 +12,6 @@ fi
 # The ./... pattern ensures tests are run in all subdirectories
 # -count=1 disables test caching for this run
 go test -count=1 -tags=integration "$@" ./...
+
+# Run frontend integration tests
+cd frontend && npm run test:integration

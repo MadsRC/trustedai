@@ -4,4 +4,8 @@
 #MISE description="Run unit tests for the project"
 #MISE depends=["build:react"]
 
+# Run Go unit tests
 go test -count=1 "$@" ./...
+
+# Run frontend unit tests
+cd frontend && npm run test:unit
