@@ -24,6 +24,7 @@ import {
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { useAuth } from "../hooks/useAuth";
+import { formatCost, formatNumber } from "../utils/formatters";
 
 type TimeRange = "day" | "week" | "month";
 
@@ -206,16 +207,6 @@ function Analytics() {
       }
     };
   }, [fetchUsageDetails]);
-
-  const formatCost = (costCents: number | bigint) => {
-    const cost = typeof costCents === "bigint" ? Number(costCents) : costCents;
-    return `$${(cost / 100).toFixed(2)}`;
-  };
-
-  const formatNumber = (num: number | bigint) => {
-    const n = typeof num === "bigint" ? Number(num) : num;
-    return n.toLocaleString();
-  };
 
   if (loading && !summary) {
     return (
