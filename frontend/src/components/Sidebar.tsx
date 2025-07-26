@@ -51,11 +51,7 @@ function Sidebar() {
 
   return (
     <div className="w-64 bg-gray-800 text-white flex flex-col">
-      <div className="p-4">
-        <h2 className="text-xl font-bold">Admin Panel</h2>
-      </div>
-
-      <nav className="mt-8 flex-1">
+      <nav className="mt-4 flex-1">
         {menuSections.map((section, sectionIndex) => (
           <div key={section.title} className={sectionIndex > 0 ? "mt-6" : ""}>
             <div className="px-4 py-2">

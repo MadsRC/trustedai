@@ -10,8 +10,7 @@ function TopPanel() {
   return (
     <div className="bg-gray-900 text-white px-6 py-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
-        <h1 className="text-xl font-bold">Admin Dashboard</h1>
-        <span className="text-sm text-gray-300">v1.0.0</span>
+        <h1 className="text-xl font-bold">TrustedAI</h1>
       </div>
 
       <div className="flex items-center space-x-4">

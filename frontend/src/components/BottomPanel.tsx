@@ -12,7 +12,7 @@ function BottomPanel() {
 
       <div className="flex items-center space-x-6">
         <span>Last updated: {new Date().toLocaleTimeString()}</span>
-        <span>© 2025 Admin Dashboard</span>
+        <span>© 2025 TrustedAI</span>
       </div>
     </div>
   );
