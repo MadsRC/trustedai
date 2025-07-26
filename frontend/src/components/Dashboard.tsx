@@ -14,6 +14,7 @@ import Users from "./Users";
 import APIKeys from "./APIKeys";
 import Profile from "./Profile";
 import Analytics from "./Analytics";
+import Settings from "./Settings";
 
 function Dashboard() {
   return (
@@ -31,6 +32,7 @@ function Dashboard() {
           <Route path="/api-keys" element={<APIKeys />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
 

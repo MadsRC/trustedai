@@ -405,8 +405,8 @@ function Credentials() {
 
       {/* Create Credential Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl border p-6 max-w-lg w-full mx-4">
             <h2 className="text-lg font-medium text-gray-900 mb-4">
               Add OpenRouter Credential
             </h2>
@@ -516,8 +516,8 @@ function Credentials() {
 
       {/* Edit Credential Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl border p-6 max-w-lg w-full mx-4">
             <h2 className="text-lg font-medium text-gray-900 mb-4">
               Edit OpenRouter Credential
             </h2>

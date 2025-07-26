@@ -264,8 +264,17 @@ function Users() {
           </div>
           <button
             onClick={handleCreateUser}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+            className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+              selectedOrganization === "all"
+                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
             disabled={selectedOrganization === "all"}
+            title={
+              selectedOrganization === "all"
+                ? "Please select an organization first"
+                : "Create a new user"
+            }
           >
             <Plus size={16} />
             <span>Create User</span>
@@ -308,8 +317,8 @@ function Users() {
 
         {/* Create User Modal */}
         {showCreateUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl border p-6 max-w-md w-full mx-4">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
                 Create User
               </h2>
@@ -407,8 +416,8 @@ function Users() {
 
         {/* Edit User Modal */}
         {showEditUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl border p-6 max-w-md w-full mx-4">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
                 Edit User
               </h2>

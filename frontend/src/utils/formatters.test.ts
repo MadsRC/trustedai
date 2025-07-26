@@ -23,8 +23,12 @@ describe("formatCost", () => {
       expect(formatCost(0.25)).toBe("$0.0025");
     });
 
-    it("should format 0.123456 cents as $0.001235 (trimming trailing zeros)", () => {
-      expect(formatCost(0.123456)).toBe("$0.001235");
+    it("should format 0.123456 cents as $0.00123456 (preserving precision)", () => {
+      expect(formatCost(0.123456)).toBe("$0.00123456");
+    });
+
+    it("should format 0.00118 cents as $0.0000118 (the reported issue)", () => {
+      expect(formatCost(0.00118)).toBe("$0.0000118");
     });
 
     it("should handle bigint values for small costs", () => {

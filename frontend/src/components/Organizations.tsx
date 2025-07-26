@@ -10,6 +10,8 @@ import {
   IAMService,
   type Organization,
   IAMServiceListOrganizationsRequestSchema,
+  IAMServiceCreateOrganizationRequestSchema,
+  OrganizationSchema,
 } from "../gen/proto/madsrc/llmgw/v1/iam_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -20,9 +22,15 @@ function Organizations() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingCreate, setLoadingCreate] = useState(false);
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
   const [isSSOModalOpen, setIsSSOModalOpen] = useState(false);
+  const [showCreateOrganization, setShowCreateOrganization] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    displayName: "",
+  });
   const { token } = useAuth();
 
   const client = useMemo(() => {
@@ -100,6 +108,41 @@ function Organizations() {
     setSelectedOrganization(null);
   };
 
+  const handleCreateOrganization = () => {
+    setFormData({ name: "", displayName: "" });
+    setShowCreateOrganization(true);
+  };
+
+  const createOrganization = async () => {
+    try {
+      setLoadingCreate(true);
+      setError(null);
+
+      const organizationToCreate = create(OrganizationSchema, {
+        name: formData.name,
+        displayName: formData.displayName,
+      });
+
+      const request = create(IAMServiceCreateOrganizationRequestSchema, {
+        organization: organizationToCreate,
+      });
+
+      const response = await client.createOrganization(request);
+
+      if (response.organization) {
+        setOrganizations((prev) => [...prev, response.organization!]);
+        setShowCreateOrganization(false);
+        setFormData({ name: "", displayName: "" });
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to create organization",
+      );
+    } finally {
+      setLoadingCreate(false);
+    }
+  };
+
   return (
     <div className="flex-1 p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -112,7 +155,10 @@ function Organizations() {
               Manage organizations and their access to your platform
             </p>
           </div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2">
+          <button
+            onClick={handleCreateOrganization}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          >
             <Plus size={16} />
             <span>Create Organization</span>
           </button>
@@ -224,13 +270,72 @@ function Organizations() {
             <p className="text-gray-500 mb-4">
               No organizations have been created yet.
             </p>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 mx-auto">
+            <button
+              onClick={handleCreateOrganization}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 mx-auto"
+            >
               <Plus size={16} />
               <span>Create Your First Organization</span>
             </button>
           </div>
         )}
       </div>
+
+      {/* Create Organization Modal */}
+      {showCreateOrganization && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl border p-6 max-w-md w-full mx-4">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Create Organization
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter organization name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Display Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.displayName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, displayName: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter display name"
+                />
+              </div>
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  onClick={() => setShowCreateOrganization(false)}
+                  className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={createOrganization}
+                  disabled={!formData.name || loadingCreate}
+                  className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loadingCreate ? "Creating..." : "Create Organization"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectedOrganization && (
         <SSOConfigModal
