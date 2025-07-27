@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-module codeberg.org/MadsRC/llmgw
+module github.com/MadsRC/trustedai
 
 go 1.24.4
 

@@ -6,7 +6,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { Key, Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { ModelManagementService } from "../gen/proto/madsrc/llmgw/v1/model_management_pb";
+import { ModelManagementService } from "../gen/proto/madsrc/trustedai/v1/model_management_pb";
 import {
   type OpenRouterCredential,
   ModelManagementServiceListOpenRouterCredentialsRequestSchema,
@@ -14,7 +14,7 @@ import {
   ModelManagementServiceUpdateOpenRouterCredentialRequestSchema,
   ModelManagementServiceDeleteOpenRouterCredentialRequestSchema,
   OpenRouterCredentialSchema,
-} from "../gen/proto/madsrc/llmgw/v1/model_management_pb";
+} from "../gen/proto/madsrc/trustedai/v1/model_management_pb";
 import { create } from "@bufbuild/protobuf";
 import { useAuth } from "../hooks/useAuth";
 

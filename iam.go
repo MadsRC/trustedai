@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-package llmgw
+package trustedai
 
 import (
 	"context"
@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"time"
 
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
 	"codeberg.org/gai-org/gai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
 	"github.com/google/uuid"
 )
 
@@ -179,7 +179,7 @@ type OpenRouterCredential struct {
 type ModelWithCredentials struct {
 	Model          gai.Model
 	CredentialID   uuid.UUID
-	CredentialType llmgwv1.CredentialType
+	CredentialType trustedaiv1.CredentialType
 }
 
 // ModelWithReference represents a model with its model reference for aliasing
@@ -212,8 +212,8 @@ type ModelRepository interface {
 	GetModelByID(ctx context.Context, modelID string) (*gai.Model, error)
 	GetModelByIDWithReference(ctx context.Context, modelID string) (*ModelWithReference, error)
 	GetModelWithCredentials(ctx context.Context, modelID string) (*ModelWithCredentials, error)
-	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error
-	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error
+	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error
+	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error
 	DeleteModel(ctx context.Context, modelID string) error
 }
 

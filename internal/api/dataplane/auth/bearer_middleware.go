@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"codeberg.org/MadsRC/llmgw"
-	sharedauth "codeberg.org/MadsRC/llmgw/internal/api/auth"
+	"github.com/MadsRC/trustedai"
+	sharedauth "github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 // BearerMiddleware provides Bearer token authentication for HTTP handlers
@@ -81,12 +81,12 @@ func extractBearerToken(r *http.Request) string {
 type userContextKey struct{}
 
 // UserFromContext extracts the user from the context
-func UserFromContext(ctx context.Context) *llmgw.User {
-	user, _ := ctx.Value(userContextKey{}).(*llmgw.User)
+func UserFromContext(ctx context.Context) *trustedai.User {
+	user, _ := ctx.Value(userContextKey{}).(*trustedai.User)
 	return user
 }
 
 // UserFromHTTPContext extracts the authenticated user from an HTTP request context
-func UserFromHTTPContext(r *http.Request) *llmgw.User {
+func UserFromHTTPContext(r *http.Request) *trustedai.User {
 	return UserFromContext(r.Context())
 }

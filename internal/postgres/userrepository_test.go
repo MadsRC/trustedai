@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/pashagolub/pgxmock/v4"
@@ -25,7 +25,7 @@ func TestUserRepository_Create(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		user := &llmgw.User{
+		user := &trustedai.User{
 			ID:             "user-123",
 			Email:          "test@example.com",
 			Name:           "Test User",
@@ -79,8 +79,8 @@ func TestUserRepository_Create(t *testing.T) {
 
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
-		err = repo.Create(context.Background(), &llmgw.User{})
-		assert.ErrorIs(t, err, llmgw.ErrDuplicateEntry)
+		err = repo.Create(context.Background(), &trustedai.User{})
+		assert.ErrorIs(t, err, trustedai.ErrDuplicateEntry)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -105,7 +105,7 @@ func TestUserRepository_Create(t *testing.T) {
 
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
-		err = repo.Create(context.Background(), &llmgw.User{})
+		err = repo.Create(context.Background(), &trustedai.User{})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "database connection failed")
 		assert.NoError(t, mock.ExpectationsWereMet())
@@ -119,7 +119,7 @@ func TestUserRepository_Get(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		expectedUser := &llmgw.User{
+		expectedUser := &trustedai.User{
 			ID:             "user-123",
 			Email:          "test@example.com",
 			Name:           "Test User",
@@ -171,7 +171,7 @@ func TestUserRepository_Get(t *testing.T) {
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
 		_, err = repo.Get(context.Background(), "missing")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -200,7 +200,7 @@ func TestUserRepository_GetByEmail(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		expectedUser := &llmgw.User{
+		expectedUser := &trustedai.User{
 			ID:             "user-123",
 			Email:          "test@example.com",
 			Name:           "Test User",
@@ -252,7 +252,7 @@ func TestUserRepository_GetByEmail(t *testing.T) {
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
 		_, err = repo.GetByEmail(context.Background(), "missing@example.com")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -281,7 +281,7 @@ func TestUserRepository_GetByExternalID(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		expectedUser := &llmgw.User{
+		expectedUser := &trustedai.User{
 			ID:             "user-123",
 			Email:          "test@example.com",
 			Name:           "Test User",
@@ -333,7 +333,7 @@ func TestUserRepository_GetByExternalID(t *testing.T) {
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
 		_, err = repo.GetByExternalID(context.Background(), "github", "missing")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -362,7 +362,7 @@ func TestUserRepository_ListByOrganization(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		user1 := &llmgw.User{
+		user1 := &trustedai.User{
 			ID:             "user-1",
 			Email:          "user1@example.com",
 			Name:           "User One",
@@ -374,7 +374,7 @@ func TestUserRepository_ListByOrganization(t *testing.T) {
 			LastLogin:      now,
 		}
 
-		user2 := &llmgw.User{
+		user2 := &trustedai.User{
 			ID:             "user-2",
 			Email:          "user2@example.com",
 			Name:           "User Two",
@@ -509,7 +509,7 @@ func TestUserRepository_Update(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		user := &llmgw.User{
+		user := &trustedai.User{
 			ID:             "user-123",
 			Email:          "new@example.com",
 			Name:           "Updated Name",
@@ -545,7 +545,7 @@ func TestUserRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		user := &llmgw.User{
+		user := &trustedai.User{
 			ID: "non-existent",
 		}
 
@@ -565,7 +565,7 @@ func TestUserRepository_Update(t *testing.T) {
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
 		err = repo.Update(context.Background(), user)
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -574,7 +574,7 @@ func TestUserRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		user := &llmgw.User{
+		user := &trustedai.User{
 			ID: "user-123",
 		}
 
@@ -629,7 +629,7 @@ func TestUserRepository_Delete(t *testing.T) {
 		repo, err := NewUserRepository(WithUserRepositoryDb(mock))
 		require.NoError(t, err)
 		err = repo.Delete(context.Background(), "non-existent")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 

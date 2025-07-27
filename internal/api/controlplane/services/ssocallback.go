@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 )
 
 func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,7 @@ func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Handle OIDC organization-based routes
-	var provider llmgw.SsoProvider
+	var provider trustedai.SsoProvider
 	var ctx = r.Context()
 
 	if pathSegments[0] == "oidc" {
@@ -46,7 +46,7 @@ func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 			return
 		}
-		ctx = context.WithValue(ctx, llmgw.OrganizationContextKey, orgName)
+		ctx = context.WithValue(ctx, trustedai.OrganizationContextKey, orgName)
 		s.options.Logger.Debug("Set organization in context", "orgName", orgName, "contextKey", "organization")
 
 		// Adjust path segments to handle the rest of the routing
@@ -91,7 +91,7 @@ func (s *SsoCallback) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *SsoCallback) handleAuthInit(w http.ResponseWriter, r *http.Request, provider llmgw.SsoProvider) {
+func (s *SsoCallback) handleAuthInit(w http.ResponseWriter, r *http.Request, provider trustedai.SsoProvider) {
 	state := generateSecureState()
 
 	// Set the state as a cookie with HttpOnly flag
@@ -116,7 +116,7 @@ func (s *SsoCallback) handleAuthInit(w http.ResponseWriter, r *http.Request, pro
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 }
 
-func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, provider llmgw.SsoProvider) {
+func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, provider trustedai.SsoProvider) {
 	// Verify the state parameter to prevent CSRF attacks
 	stateCookie, err := r.Cookie("oauth_state")
 	if err != nil {
@@ -199,7 +199,7 @@ func (s *SsoCallback) handleCallback(w http.ResponseWriter, r *http.Request, pro
 }
 
 // handleDeviceStart initiates the device authorization flow
-func (s *SsoCallback) handleDeviceStart(w http.ResponseWriter, r *http.Request, provider llmgw.SsoProvider) {
+func (s *SsoCallback) handleDeviceStart(w http.ResponseWriter, r *http.Request, provider trustedai.SsoProvider) {
 	response, err := provider.StartDeviceAuth(r.Context())
 	if err != nil {
 		s.options.Logger.Error("Failed to start device auth", "error", err)
@@ -212,7 +212,7 @@ func (s *SsoCallback) handleDeviceStart(w http.ResponseWriter, r *http.Request, 
 }
 
 // handleDevicePoll checks the status of a device authorization
-func (s *SsoCallback) handleDevicePoll(w http.ResponseWriter, r *http.Request, provider llmgw.SsoProvider) {
+func (s *SsoCallback) handleDevicePoll(w http.ResponseWriter, r *http.Request, provider trustedai.SsoProvider) {
 	var request struct {
 		DeviceCode string `json:"device_code"`
 	}

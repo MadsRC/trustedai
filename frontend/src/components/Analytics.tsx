@@ -20,7 +20,7 @@ import {
   UsageAnalyticsServiceGetUsageSummaryRequestSchema,
   UsageAnalyticsServiceGetUsageDetailsRequestSchema,
   UsageAnalyticsServiceGetUsageCostsRequestSchema,
-} from "../gen/proto/madsrc/llmgw/v1/usage_analytics_pb";
+} from "../gen/proto/madsrc/trustedai/v1/usage_analytics_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { useAuth } from "../hooks/useAuth";

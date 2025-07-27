@@ -6,9 +6,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/madsrc/llmgw/v1/model_management.proto
+// source: proto/madsrc/trustedai/v1/model_management.proto
 
-package llmgwv1
+package trustedaiv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -57,11 +57,11 @@ func (x ProviderId) String() string {
 }
 
 func (ProviderId) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes[0].Descriptor()
+	return file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes[0].Descriptor()
 }
 
 func (ProviderId) Type() protoreflect.EnumType {
-	return &file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes[0]
+	return &file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes[0]
 }
 
 func (x ProviderId) Number() protoreflect.EnumNumber {
@@ -70,7 +70,7 @@ func (x ProviderId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ProviderId.Descriptor instead.
 func (ProviderId) EnumDescriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{0}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{0}
 }
 
 type CredentialType int32
@@ -103,11 +103,11 @@ func (x CredentialType) String() string {
 }
 
 func (CredentialType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes[1].Descriptor()
+	return file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes[1].Descriptor()
 }
 
 func (CredentialType) Type() protoreflect.EnumType {
-	return &file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes[1]
+	return &file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes[1]
 }
 
 func (x CredentialType) Number() protoreflect.EnumNumber {
@@ -116,7 +116,7 @@ func (x CredentialType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CredentialType.Descriptor instead.
 func (CredentialType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{1}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{1}
 }
 
 // Core entity messages
@@ -134,7 +134,7 @@ type Provider struct {
 
 func (x *Provider) Reset() {
 	*x = Provider{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +146,7 @@ func (x *Provider) String() string {
 func (*Provider) ProtoMessage() {}
 
 func (x *Provider) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +159,7 @@ func (x *Provider) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Provider.ProtoReflect.Descriptor instead.
 func (*Provider) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{0}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Provider) GetId() string {
@@ -221,7 +221,7 @@ type OpenRouterCredential struct {
 
 func (x *OpenRouterCredential) Reset() {
 	*x = OpenRouterCredential{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -233,7 +233,7 @@ func (x *OpenRouterCredential) String() string {
 func (*OpenRouterCredential) ProtoMessage() {}
 
 func (x *OpenRouterCredential) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -246,7 +246,7 @@ func (x *OpenRouterCredential) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpenRouterCredential.ProtoReflect.Descriptor instead.
 func (*OpenRouterCredential) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{1}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *OpenRouterCredential) GetId() string {
@@ -322,7 +322,7 @@ type ModelPricing struct {
 
 func (x *ModelPricing) Reset() {
 	*x = ModelPricing{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -334,7 +334,7 @@ func (x *ModelPricing) String() string {
 func (*ModelPricing) ProtoMessage() {}
 
 func (x *ModelPricing) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -347,7 +347,7 @@ func (x *ModelPricing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelPricing.ProtoReflect.Descriptor instead.
 func (*ModelPricing) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{2}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ModelPricing) GetInputTokenPrice() float64 {
@@ -379,7 +379,7 @@ type ModelCapabilities struct {
 
 func (x *ModelCapabilities) Reset() {
 	*x = ModelCapabilities{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -391,7 +391,7 @@ func (x *ModelCapabilities) String() string {
 func (*ModelCapabilities) ProtoMessage() {}
 
 func (x *ModelCapabilities) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +404,7 @@ func (x *ModelCapabilities) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelCapabilities.ProtoReflect.Descriptor instead.
 func (*ModelCapabilities) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{3}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ModelCapabilities) GetSupportsStreaming() bool {
@@ -462,7 +462,7 @@ type Model struct {
 	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	ProviderId     string                 `protobuf:"bytes,3,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"`
 	CredentialId   string                 `protobuf:"bytes,4,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
-	CredentialType CredentialType         `protobuf:"varint,5,opt,name=credential_type,json=credentialType,proto3,enum=llmgw.v1.CredentialType" json:"credential_type,omitempty"`
+	CredentialType CredentialType         `protobuf:"varint,5,opt,name=credential_type,json=credentialType,proto3,enum=trustedai.v1.CredentialType" json:"credential_type,omitempty"`
 	Pricing        *ModelPricing          `protobuf:"bytes,6,opt,name=pricing,proto3" json:"pricing,omitempty"`
 	Capabilities   *ModelCapabilities     `protobuf:"bytes,7,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	Metadata       map[string]string      `protobuf:"bytes,8,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Mirrors gai.Model.Metadata
@@ -475,7 +475,7 @@ type Model struct {
 
 func (x *Model) Reset() {
 	*x = Model{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -487,7 +487,7 @@ func (x *Model) String() string {
 func (*Model) ProtoMessage() {}
 
 func (x *Model) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,7 +500,7 @@ func (x *Model) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Model.ProtoReflect.Descriptor instead.
 func (*Model) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{4}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Model) GetId() string {
@@ -590,7 +590,7 @@ type ModelManagementServiceGetProviderRequest struct {
 
 func (x *ModelManagementServiceGetProviderRequest) Reset() {
 	*x = ModelManagementServiceGetProviderRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -602,7 +602,7 @@ func (x *ModelManagementServiceGetProviderRequest) String() string {
 func (*ModelManagementServiceGetProviderRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -615,7 +615,7 @@ func (x *ModelManagementServiceGetProviderRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ModelManagementServiceGetProviderRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetProviderRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{5}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ModelManagementServiceGetProviderRequest) GetId() string {
@@ -634,7 +634,7 @@ type ModelManagementServiceGetProviderResponse struct {
 
 func (x *ModelManagementServiceGetProviderResponse) Reset() {
 	*x = ModelManagementServiceGetProviderResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -646,7 +646,7 @@ func (x *ModelManagementServiceGetProviderResponse) String() string {
 func (*ModelManagementServiceGetProviderResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetProviderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -659,7 +659,7 @@ func (x *ModelManagementServiceGetProviderResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use ModelManagementServiceGetProviderResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetProviderResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{6}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ModelManagementServiceGetProviderResponse) GetProvider() *Provider {
@@ -678,7 +678,7 @@ type ModelManagementServiceListProvidersRequest struct {
 
 func (x *ModelManagementServiceListProvidersRequest) Reset() {
 	*x = ModelManagementServiceListProvidersRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -690,7 +690,7 @@ func (x *ModelManagementServiceListProvidersRequest) String() string {
 func (*ModelManagementServiceListProvidersRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListProvidersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -703,7 +703,7 @@ func (x *ModelManagementServiceListProvidersRequest) ProtoReflect() protoreflect
 
 // Deprecated: Use ModelManagementServiceListProvidersRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListProvidersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{7}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ModelManagementServiceListProvidersRequest) GetIncludeDisabled() bool {
@@ -722,7 +722,7 @@ type ModelManagementServiceListProvidersResponse struct {
 
 func (x *ModelManagementServiceListProvidersResponse) Reset() {
 	*x = ModelManagementServiceListProvidersResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -734,7 +734,7 @@ func (x *ModelManagementServiceListProvidersResponse) String() string {
 func (*ModelManagementServiceListProvidersResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListProvidersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -747,7 +747,7 @@ func (x *ModelManagementServiceListProvidersResponse) ProtoReflect() protoreflec
 
 // Deprecated: Use ModelManagementServiceListProvidersResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListProvidersResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{8}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ModelManagementServiceListProvidersResponse) GetProviders() []*Provider {
@@ -767,7 +767,7 @@ type ModelManagementServiceCreateOpenRouterCredentialRequest struct {
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialRequest) Reset() {
 	*x = ModelManagementServiceCreateOpenRouterCredentialRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -779,7 +779,7 @@ func (x *ModelManagementServiceCreateOpenRouterCredentialRequest) String() strin
 func (*ModelManagementServiceCreateOpenRouterCredentialRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -792,7 +792,7 @@ func (x *ModelManagementServiceCreateOpenRouterCredentialRequest) ProtoReflect()
 
 // Deprecated: Use ModelManagementServiceCreateOpenRouterCredentialRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceCreateOpenRouterCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{9}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialRequest) GetCredential() *OpenRouterCredential {
@@ -811,7 +811,7 @@ type ModelManagementServiceCreateOpenRouterCredentialResponse struct {
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialResponse) Reset() {
 	*x = ModelManagementServiceCreateOpenRouterCredentialResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -823,7 +823,7 @@ func (x *ModelManagementServiceCreateOpenRouterCredentialResponse) String() stri
 func (*ModelManagementServiceCreateOpenRouterCredentialResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -836,7 +836,7 @@ func (x *ModelManagementServiceCreateOpenRouterCredentialResponse) ProtoReflect(
 
 // Deprecated: Use ModelManagementServiceCreateOpenRouterCredentialResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceCreateOpenRouterCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{10}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ModelManagementServiceCreateOpenRouterCredentialResponse) GetCredential() *OpenRouterCredential {
@@ -855,7 +855,7 @@ type ModelManagementServiceGetOpenRouterCredentialRequest struct {
 
 func (x *ModelManagementServiceGetOpenRouterCredentialRequest) Reset() {
 	*x = ModelManagementServiceGetOpenRouterCredentialRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -867,7 +867,7 @@ func (x *ModelManagementServiceGetOpenRouterCredentialRequest) String() string {
 func (*ModelManagementServiceGetOpenRouterCredentialRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetOpenRouterCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -880,7 +880,7 @@ func (x *ModelManagementServiceGetOpenRouterCredentialRequest) ProtoReflect() pr
 
 // Deprecated: Use ModelManagementServiceGetOpenRouterCredentialRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetOpenRouterCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{11}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ModelManagementServiceGetOpenRouterCredentialRequest) GetId() string {
@@ -899,7 +899,7 @@ type ModelManagementServiceGetOpenRouterCredentialResponse struct {
 
 func (x *ModelManagementServiceGetOpenRouterCredentialResponse) Reset() {
 	*x = ModelManagementServiceGetOpenRouterCredentialResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -911,7 +911,7 @@ func (x *ModelManagementServiceGetOpenRouterCredentialResponse) String() string 
 func (*ModelManagementServiceGetOpenRouterCredentialResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetOpenRouterCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -924,7 +924,7 @@ func (x *ModelManagementServiceGetOpenRouterCredentialResponse) ProtoReflect() p
 
 // Deprecated: Use ModelManagementServiceGetOpenRouterCredentialResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetOpenRouterCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{12}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ModelManagementServiceGetOpenRouterCredentialResponse) GetCredential() *OpenRouterCredential {
@@ -943,7 +943,7 @@ type ModelManagementServiceListOpenRouterCredentialsRequest struct {
 
 func (x *ModelManagementServiceListOpenRouterCredentialsRequest) Reset() {
 	*x = ModelManagementServiceListOpenRouterCredentialsRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -955,7 +955,7 @@ func (x *ModelManagementServiceListOpenRouterCredentialsRequest) String() string
 func (*ModelManagementServiceListOpenRouterCredentialsRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListOpenRouterCredentialsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -968,7 +968,7 @@ func (x *ModelManagementServiceListOpenRouterCredentialsRequest) ProtoReflect() 
 
 // Deprecated: Use ModelManagementServiceListOpenRouterCredentialsRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListOpenRouterCredentialsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{13}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ModelManagementServiceListOpenRouterCredentialsRequest) GetIncludeDisabled() bool {
@@ -987,7 +987,7 @@ type ModelManagementServiceListOpenRouterCredentialsResponse struct {
 
 func (x *ModelManagementServiceListOpenRouterCredentialsResponse) Reset() {
 	*x = ModelManagementServiceListOpenRouterCredentialsResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -999,7 +999,7 @@ func (x *ModelManagementServiceListOpenRouterCredentialsResponse) String() strin
 func (*ModelManagementServiceListOpenRouterCredentialsResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListOpenRouterCredentialsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1012,7 +1012,7 @@ func (x *ModelManagementServiceListOpenRouterCredentialsResponse) ProtoReflect()
 
 // Deprecated: Use ModelManagementServiceListOpenRouterCredentialsResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListOpenRouterCredentialsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{14}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ModelManagementServiceListOpenRouterCredentialsResponse) GetCredentials() []*OpenRouterCredential {
@@ -1032,7 +1032,7 @@ type ModelManagementServiceUpdateOpenRouterCredentialRequest struct {
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialRequest) Reset() {
 	*x = ModelManagementServiceUpdateOpenRouterCredentialRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1044,7 +1044,7 @@ func (x *ModelManagementServiceUpdateOpenRouterCredentialRequest) String() strin
 func (*ModelManagementServiceUpdateOpenRouterCredentialRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1057,7 +1057,7 @@ func (x *ModelManagementServiceUpdateOpenRouterCredentialRequest) ProtoReflect()
 
 // Deprecated: Use ModelManagementServiceUpdateOpenRouterCredentialRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceUpdateOpenRouterCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{15}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialRequest) GetCredential() *OpenRouterCredential {
@@ -1083,7 +1083,7 @@ type ModelManagementServiceUpdateOpenRouterCredentialResponse struct {
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialResponse) Reset() {
 	*x = ModelManagementServiceUpdateOpenRouterCredentialResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1095,7 +1095,7 @@ func (x *ModelManagementServiceUpdateOpenRouterCredentialResponse) String() stri
 func (*ModelManagementServiceUpdateOpenRouterCredentialResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1108,7 +1108,7 @@ func (x *ModelManagementServiceUpdateOpenRouterCredentialResponse) ProtoReflect(
 
 // Deprecated: Use ModelManagementServiceUpdateOpenRouterCredentialResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceUpdateOpenRouterCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{16}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ModelManagementServiceUpdateOpenRouterCredentialResponse) GetCredential() *OpenRouterCredential {
@@ -1127,7 +1127,7 @@ type ModelManagementServiceDeleteOpenRouterCredentialRequest struct {
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialRequest) Reset() {
 	*x = ModelManagementServiceDeleteOpenRouterCredentialRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1139,7 +1139,7 @@ func (x *ModelManagementServiceDeleteOpenRouterCredentialRequest) String() strin
 func (*ModelManagementServiceDeleteOpenRouterCredentialRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +1152,7 @@ func (x *ModelManagementServiceDeleteOpenRouterCredentialRequest) ProtoReflect()
 
 // Deprecated: Use ModelManagementServiceDeleteOpenRouterCredentialRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceDeleteOpenRouterCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{17}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialRequest) GetId() string {
@@ -1171,7 +1171,7 @@ type ModelManagementServiceDeleteOpenRouterCredentialResponse struct {
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialResponse) Reset() {
 	*x = ModelManagementServiceDeleteOpenRouterCredentialResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[18]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1183,7 +1183,7 @@ func (x *ModelManagementServiceDeleteOpenRouterCredentialResponse) String() stri
 func (*ModelManagementServiceDeleteOpenRouterCredentialResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[18]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1196,7 +1196,7 @@ func (x *ModelManagementServiceDeleteOpenRouterCredentialResponse) ProtoReflect(
 
 // Deprecated: Use ModelManagementServiceDeleteOpenRouterCredentialResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceDeleteOpenRouterCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{18}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ModelManagementServiceDeleteOpenRouterCredentialResponse) GetSuccess() bool {
@@ -1216,7 +1216,7 @@ type ModelManagementServiceCreateModelRequest struct {
 
 func (x *ModelManagementServiceCreateModelRequest) Reset() {
 	*x = ModelManagementServiceCreateModelRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[19]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1228,7 +1228,7 @@ func (x *ModelManagementServiceCreateModelRequest) String() string {
 func (*ModelManagementServiceCreateModelRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceCreateModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[19]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1241,7 +1241,7 @@ func (x *ModelManagementServiceCreateModelRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ModelManagementServiceCreateModelRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceCreateModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{19}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ModelManagementServiceCreateModelRequest) GetModel() *Model {
@@ -1260,7 +1260,7 @@ type ModelManagementServiceCreateModelResponse struct {
 
 func (x *ModelManagementServiceCreateModelResponse) Reset() {
 	*x = ModelManagementServiceCreateModelResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[20]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1272,7 +1272,7 @@ func (x *ModelManagementServiceCreateModelResponse) String() string {
 func (*ModelManagementServiceCreateModelResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceCreateModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[20]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1285,7 +1285,7 @@ func (x *ModelManagementServiceCreateModelResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use ModelManagementServiceCreateModelResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceCreateModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{20}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *ModelManagementServiceCreateModelResponse) GetModel() *Model {
@@ -1304,7 +1304,7 @@ type ModelManagementServiceGetModelRequest struct {
 
 func (x *ModelManagementServiceGetModelRequest) Reset() {
 	*x = ModelManagementServiceGetModelRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[21]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1316,7 +1316,7 @@ func (x *ModelManagementServiceGetModelRequest) String() string {
 func (*ModelManagementServiceGetModelRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[21]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1329,7 +1329,7 @@ func (x *ModelManagementServiceGetModelRequest) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use ModelManagementServiceGetModelRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{21}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ModelManagementServiceGetModelRequest) GetId() string {
@@ -1348,7 +1348,7 @@ type ModelManagementServiceGetModelResponse struct {
 
 func (x *ModelManagementServiceGetModelResponse) Reset() {
 	*x = ModelManagementServiceGetModelResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[22]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1360,7 +1360,7 @@ func (x *ModelManagementServiceGetModelResponse) String() string {
 func (*ModelManagementServiceGetModelResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceGetModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[22]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1373,7 +1373,7 @@ func (x *ModelManagementServiceGetModelResponse) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use ModelManagementServiceGetModelResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceGetModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{22}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ModelManagementServiceGetModelResponse) GetModel() *Model {
@@ -1387,14 +1387,14 @@ type ModelManagementServiceListModelsRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	IncludeDisabled bool                   `protobuf:"varint,1,opt,name=include_disabled,json=includeDisabled,proto3" json:"include_disabled,omitempty"`
 	ProviderId      string                 `protobuf:"bytes,2,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"`
-	CredentialType  CredentialType         `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=llmgw.v1.CredentialType" json:"credential_type,omitempty"`
+	CredentialType  CredentialType         `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=trustedai.v1.CredentialType" json:"credential_type,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ModelManagementServiceListModelsRequest) Reset() {
 	*x = ModelManagementServiceListModelsRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[23]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1406,7 +1406,7 @@ func (x *ModelManagementServiceListModelsRequest) String() string {
 func (*ModelManagementServiceListModelsRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[23]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1419,7 +1419,7 @@ func (x *ModelManagementServiceListModelsRequest) ProtoReflect() protoreflect.Me
 
 // Deprecated: Use ModelManagementServiceListModelsRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListModelsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{23}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ModelManagementServiceListModelsRequest) GetIncludeDisabled() bool {
@@ -1452,7 +1452,7 @@ type ModelManagementServiceListModelsResponse struct {
 
 func (x *ModelManagementServiceListModelsResponse) Reset() {
 	*x = ModelManagementServiceListModelsResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[24]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1464,7 +1464,7 @@ func (x *ModelManagementServiceListModelsResponse) String() string {
 func (*ModelManagementServiceListModelsResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListModelsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[24]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1477,7 +1477,7 @@ func (x *ModelManagementServiceListModelsResponse) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ModelManagementServiceListModelsResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListModelsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{24}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ModelManagementServiceListModelsResponse) GetModels() []*Model {
@@ -1499,7 +1499,7 @@ type ModelManagementServiceUpdateModelRequest struct {
 
 func (x *ModelManagementServiceUpdateModelRequest) Reset() {
 	*x = ModelManagementServiceUpdateModelRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[25]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1511,7 +1511,7 @@ func (x *ModelManagementServiceUpdateModelRequest) String() string {
 func (*ModelManagementServiceUpdateModelRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceUpdateModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[25]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1524,7 +1524,7 @@ func (x *ModelManagementServiceUpdateModelRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ModelManagementServiceUpdateModelRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceUpdateModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{25}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *ModelManagementServiceUpdateModelRequest) GetModel() *Model {
@@ -1564,7 +1564,7 @@ type ModelManagementServiceUpdateModelResponse struct {
 
 func (x *ModelManagementServiceUpdateModelResponse) Reset() {
 	*x = ModelManagementServiceUpdateModelResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[26]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1576,7 +1576,7 @@ func (x *ModelManagementServiceUpdateModelResponse) String() string {
 func (*ModelManagementServiceUpdateModelResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceUpdateModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[26]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1589,7 +1589,7 @@ func (x *ModelManagementServiceUpdateModelResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use ModelManagementServiceUpdateModelResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceUpdateModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{26}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ModelManagementServiceUpdateModelResponse) GetModel() *Model {
@@ -1608,7 +1608,7 @@ type ModelManagementServiceDeleteModelRequest struct {
 
 func (x *ModelManagementServiceDeleteModelRequest) Reset() {
 	*x = ModelManagementServiceDeleteModelRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[27]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1620,7 +1620,7 @@ func (x *ModelManagementServiceDeleteModelRequest) String() string {
 func (*ModelManagementServiceDeleteModelRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceDeleteModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[27]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1633,7 +1633,7 @@ func (x *ModelManagementServiceDeleteModelRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ModelManagementServiceDeleteModelRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceDeleteModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{27}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ModelManagementServiceDeleteModelRequest) GetId() string {
@@ -1652,7 +1652,7 @@ type ModelManagementServiceDeleteModelResponse struct {
 
 func (x *ModelManagementServiceDeleteModelResponse) Reset() {
 	*x = ModelManagementServiceDeleteModelResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[28]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1664,7 +1664,7 @@ func (x *ModelManagementServiceDeleteModelResponse) String() string {
 func (*ModelManagementServiceDeleteModelResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceDeleteModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[28]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1677,7 +1677,7 @@ func (x *ModelManagementServiceDeleteModelResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use ModelManagementServiceDeleteModelResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceDeleteModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{28}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ModelManagementServiceDeleteModelResponse) GetSuccess() bool {
@@ -1690,7 +1690,7 @@ func (x *ModelManagementServiceDeleteModelResponse) GetSuccess() bool {
 // Supported credential type message
 type SupportedCredentialType struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          CredentialType         `protobuf:"varint,1,opt,name=type,proto3,enum=llmgw.v1.CredentialType" json:"type,omitempty"`
+	Type          CredentialType         `protobuf:"varint,1,opt,name=type,proto3,enum=trustedai.v1.CredentialType" json:"type,omitempty"`
 	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1699,7 +1699,7 @@ type SupportedCredentialType struct {
 
 func (x *SupportedCredentialType) Reset() {
 	*x = SupportedCredentialType{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[29]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1711,7 +1711,7 @@ func (x *SupportedCredentialType) String() string {
 func (*SupportedCredentialType) ProtoMessage() {}
 
 func (x *SupportedCredentialType) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[29]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1724,7 +1724,7 @@ func (x *SupportedCredentialType) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SupportedCredentialType.ProtoReflect.Descriptor instead.
 func (*SupportedCredentialType) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{29}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *SupportedCredentialType) GetType() CredentialType {
@@ -1757,7 +1757,7 @@ type ModelManagementServiceListSupportedCredentialTypesRequest struct {
 
 func (x *ModelManagementServiceListSupportedCredentialTypesRequest) Reset() {
 	*x = ModelManagementServiceListSupportedCredentialTypesRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[30]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1769,7 +1769,7 @@ func (x *ModelManagementServiceListSupportedCredentialTypesRequest) String() str
 func (*ModelManagementServiceListSupportedCredentialTypesRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedCredentialTypesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[30]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1782,7 +1782,7 @@ func (x *ModelManagementServiceListSupportedCredentialTypesRequest) ProtoReflect
 
 // Deprecated: Use ModelManagementServiceListSupportedCredentialTypesRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedCredentialTypesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{30}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{30}
 }
 
 type ModelManagementServiceListSupportedCredentialTypesResponse struct {
@@ -1794,7 +1794,7 @@ type ModelManagementServiceListSupportedCredentialTypesResponse struct {
 
 func (x *ModelManagementServiceListSupportedCredentialTypesResponse) Reset() {
 	*x = ModelManagementServiceListSupportedCredentialTypesResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[31]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1806,7 +1806,7 @@ func (x *ModelManagementServiceListSupportedCredentialTypesResponse) String() st
 func (*ModelManagementServiceListSupportedCredentialTypesResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedCredentialTypesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[31]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1819,7 +1819,7 @@ func (x *ModelManagementServiceListSupportedCredentialTypesResponse) ProtoReflec
 
 // Deprecated: Use ModelManagementServiceListSupportedCredentialTypesResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedCredentialTypesResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{31}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ModelManagementServiceListSupportedCredentialTypesResponse) GetCredentialTypes() []*SupportedCredentialType {
@@ -1837,7 +1837,7 @@ type ModelManagementServiceListSupportedProvidersRequest struct {
 
 func (x *ModelManagementServiceListSupportedProvidersRequest) Reset() {
 	*x = ModelManagementServiceListSupportedProvidersRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[32]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1849,7 +1849,7 @@ func (x *ModelManagementServiceListSupportedProvidersRequest) String() string {
 func (*ModelManagementServiceListSupportedProvidersRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedProvidersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[32]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1862,7 +1862,7 @@ func (x *ModelManagementServiceListSupportedProvidersRequest) ProtoReflect() pro
 
 // Deprecated: Use ModelManagementServiceListSupportedProvidersRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedProvidersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{32}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{32}
 }
 
 type ModelManagementServiceListSupportedProvidersResponse struct {
@@ -1874,7 +1874,7 @@ type ModelManagementServiceListSupportedProvidersResponse struct {
 
 func (x *ModelManagementServiceListSupportedProvidersResponse) Reset() {
 	*x = ModelManagementServiceListSupportedProvidersResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[33]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1886,7 +1886,7 @@ func (x *ModelManagementServiceListSupportedProvidersResponse) String() string {
 func (*ModelManagementServiceListSupportedProvidersResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedProvidersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[33]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1899,7 +1899,7 @@ func (x *ModelManagementServiceListSupportedProvidersResponse) ProtoReflect() pr
 
 // Deprecated: Use ModelManagementServiceListSupportedProvidersResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedProvidersResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{33}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ModelManagementServiceListSupportedProvidersResponse) GetProviders() []*Provider {
@@ -1911,14 +1911,14 @@ func (x *ModelManagementServiceListSupportedProvidersResponse) GetProviders() []
 
 type ModelManagementServiceListSupportedModelsForProviderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProviderId    ProviderId             `protobuf:"varint,1,opt,name=provider_id,json=providerId,proto3,enum=llmgw.v1.ProviderId" json:"provider_id,omitempty"`
+	ProviderId    ProviderId             `protobuf:"varint,1,opt,name=provider_id,json=providerId,proto3,enum=trustedai.v1.ProviderId" json:"provider_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ModelManagementServiceListSupportedModelsForProviderRequest) Reset() {
 	*x = ModelManagementServiceListSupportedModelsForProviderRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[34]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1930,7 +1930,7 @@ func (x *ModelManagementServiceListSupportedModelsForProviderRequest) String() s
 func (*ModelManagementServiceListSupportedModelsForProviderRequest) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedModelsForProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[34]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1943,7 +1943,7 @@ func (x *ModelManagementServiceListSupportedModelsForProviderRequest) ProtoRefle
 
 // Deprecated: Use ModelManagementServiceListSupportedModelsForProviderRequest.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedModelsForProviderRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{34}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ModelManagementServiceListSupportedModelsForProviderRequest) GetProviderId() ProviderId {
@@ -1962,7 +1962,7 @@ type ModelManagementServiceListSupportedModelsForProviderResponse struct {
 
 func (x *ModelManagementServiceListSupportedModelsForProviderResponse) Reset() {
 	*x = ModelManagementServiceListSupportedModelsForProviderResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[35]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1974,7 +1974,7 @@ func (x *ModelManagementServiceListSupportedModelsForProviderResponse) String() 
 func (*ModelManagementServiceListSupportedModelsForProviderResponse) ProtoMessage() {}
 
 func (x *ModelManagementServiceListSupportedModelsForProviderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes[35]
+	mi := &file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1987,7 +1987,7 @@ func (x *ModelManagementServiceListSupportedModelsForProviderResponse) ProtoRefl
 
 // Deprecated: Use ModelManagementServiceListSupportedModelsForProviderResponse.ProtoReflect.Descriptor instead.
 func (*ModelManagementServiceListSupportedModelsForProviderResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP(), []int{35}
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ModelManagementServiceListSupportedModelsForProviderResponse) GetModels() []*Model {
@@ -1997,11 +1997,11 @@ func (x *ModelManagementServiceListSupportedModelsForProviderResponse) GetModels
 	return nil
 }
 
-var File_proto_madsrc_llmgw_v1_model_management_proto protoreflect.FileDescriptor
+var File_proto_madsrc_trustedai_v1_model_management_proto protoreflect.FileDescriptor
 
-const file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc = "" +
+const file_proto_madsrc_trustedai_v1_model_management_proto_rawDesc = "" +
 	"\n" +
-	",proto/madsrc/llmgw/v1/model_management.proto\x12\bllmgw.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe3\x01\n" +
+	"0proto/madsrc/trustedai/v1/model_management.proto\x12\ftrustedai.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe3\x01\n" +
 	"\bProvider\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12#\n" +
@@ -2033,17 +2033,17 @@ const file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc = "" +
 	"\x0fsupports_vision\x18\x04 \x01(\bR\x0esupportsVision\x12-\n" +
 	"\x12supports_reasoning\x18\x05 \x01(\bR\x11supportsReasoning\x12(\n" +
 	"\x10max_input_tokens\x18\x06 \x01(\x05R\x0emaxInputTokens\x12*\n" +
-	"\x11max_output_tokens\x18\a \x01(\x05R\x0fmaxOutputTokens\"\xaf\x04\n" +
+	"\x11max_output_tokens\x18\a \x01(\x05R\x0fmaxOutputTokens\"\xbf\x04\n" +
 	"\x05Model\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1f\n" +
 	"\vprovider_id\x18\x03 \x01(\tR\n" +
 	"providerId\x12#\n" +
-	"\rcredential_id\x18\x04 \x01(\tR\fcredentialId\x12A\n" +
-	"\x0fcredential_type\x18\x05 \x01(\x0e2\x18.llmgw.v1.CredentialTypeR\x0ecredentialType\x120\n" +
-	"\apricing\x18\x06 \x01(\v2\x16.llmgw.v1.ModelPricingR\apricing\x12?\n" +
-	"\fcapabilities\x18\a \x01(\v2\x1b.llmgw.v1.ModelCapabilitiesR\fcapabilities\x129\n" +
-	"\bmetadata\x18\b \x03(\v2\x1d.llmgw.v1.Model.MetadataEntryR\bmetadata\x12\x18\n" +
+	"\rcredential_id\x18\x04 \x01(\tR\fcredentialId\x12E\n" +
+	"\x0fcredential_type\x18\x05 \x01(\x0e2\x1c.trustedai.v1.CredentialTypeR\x0ecredentialType\x124\n" +
+	"\apricing\x18\x06 \x01(\v2\x1a.trustedai.v1.ModelPricingR\apricing\x12C\n" +
+	"\fcapabilities\x18\a \x01(\v2\x1f.trustedai.v1.ModelCapabilitiesR\fcapabilities\x12=\n" +
+	"\bmetadata\x18\b \x03(\v2!.trustedai.v1.Model.MetadataEntryR\bmetadata\x12\x18\n" +
 	"\aenabled\x18\t \x01(\bR\aenabled\x129\n" +
 	"\n" +
 	"created_at\x18\n" +
@@ -2054,230 +2054,230 @@ const file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\":\n" +
 	"(ModelManagementServiceGetProviderRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"[\n" +
-	")ModelManagementServiceGetProviderResponse\x12.\n" +
-	"\bprovider\x18\x01 \x01(\v2\x12.llmgw.v1.ProviderR\bprovider\"W\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"_\n" +
+	")ModelManagementServiceGetProviderResponse\x122\n" +
+	"\bprovider\x18\x01 \x01(\v2\x16.trustedai.v1.ProviderR\bprovider\"W\n" +
 	"*ModelManagementServiceListProvidersRequest\x12)\n" +
-	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\"_\n" +
-	"+ModelManagementServiceListProvidersResponse\x120\n" +
-	"\tproviders\x18\x01 \x03(\v2\x12.llmgw.v1.ProviderR\tproviders\"y\n" +
-	"7ModelManagementServiceCreateOpenRouterCredentialRequest\x12>\n" +
+	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\"c\n" +
+	"+ModelManagementServiceListProvidersResponse\x124\n" +
+	"\tproviders\x18\x01 \x03(\v2\x16.trustedai.v1.ProviderR\tproviders\"}\n" +
+	"7ModelManagementServiceCreateOpenRouterCredentialRequest\x12B\n" +
 	"\n" +
-	"credential\x18\x01 \x01(\v2\x1e.llmgw.v1.OpenRouterCredentialR\n" +
-	"credential\"z\n" +
-	"8ModelManagementServiceCreateOpenRouterCredentialResponse\x12>\n" +
+	"credential\x18\x01 \x01(\v2\".trustedai.v1.OpenRouterCredentialR\n" +
+	"credential\"~\n" +
+	"8ModelManagementServiceCreateOpenRouterCredentialResponse\x12B\n" +
 	"\n" +
-	"credential\x18\x01 \x01(\v2\x1e.llmgw.v1.OpenRouterCredentialR\n" +
+	"credential\x18\x01 \x01(\v2\".trustedai.v1.OpenRouterCredentialR\n" +
 	"credential\"F\n" +
 	"4ModelManagementServiceGetOpenRouterCredentialRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"w\n" +
-	"5ModelManagementServiceGetOpenRouterCredentialResponse\x12>\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"{\n" +
+	"5ModelManagementServiceGetOpenRouterCredentialResponse\x12B\n" +
 	"\n" +
-	"credential\x18\x01 \x01(\v2\x1e.llmgw.v1.OpenRouterCredentialR\n" +
+	"credential\x18\x01 \x01(\v2\".trustedai.v1.OpenRouterCredentialR\n" +
 	"credential\"c\n" +
 	"6ModelManagementServiceListOpenRouterCredentialsRequest\x12)\n" +
-	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\"{\n" +
-	"7ModelManagementServiceListOpenRouterCredentialsResponse\x12@\n" +
-	"\vcredentials\x18\x01 \x03(\v2\x1e.llmgw.v1.OpenRouterCredentialR\vcredentials\"\x9a\x01\n" +
-	"7ModelManagementServiceUpdateOpenRouterCredentialRequest\x12>\n" +
+	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\"\x7f\n" +
+	"7ModelManagementServiceListOpenRouterCredentialsResponse\x12D\n" +
+	"\vcredentials\x18\x01 \x03(\v2\".trustedai.v1.OpenRouterCredentialR\vcredentials\"\x9e\x01\n" +
+	"7ModelManagementServiceUpdateOpenRouterCredentialRequest\x12B\n" +
 	"\n" +
-	"credential\x18\x01 \x01(\v2\x1e.llmgw.v1.OpenRouterCredentialR\n" +
+	"credential\x18\x01 \x01(\v2\".trustedai.v1.OpenRouterCredentialR\n" +
 	"credential\x12\x1f\n" +
 	"\vhas_enabled\x18\x02 \x01(\bR\n" +
-	"hasEnabled\"z\n" +
-	"8ModelManagementServiceUpdateOpenRouterCredentialResponse\x12>\n" +
+	"hasEnabled\"~\n" +
+	"8ModelManagementServiceUpdateOpenRouterCredentialResponse\x12B\n" +
 	"\n" +
-	"credential\x18\x01 \x01(\v2\x1e.llmgw.v1.OpenRouterCredentialR\n" +
+	"credential\x18\x01 \x01(\v2\".trustedai.v1.OpenRouterCredentialR\n" +
 	"credential\"I\n" +
 	"7ModelManagementServiceDeleteOpenRouterCredentialRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"T\n" +
 	"8ModelManagementServiceDeleteOpenRouterCredentialResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"Q\n" +
-	"(ModelManagementServiceCreateModelRequest\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\"R\n" +
-	")ModelManagementServiceCreateModelResponse\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\"7\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"U\n" +
+	"(ModelManagementServiceCreateModelRequest\x12)\n" +
+	"\x05model\x18\x01 \x01(\v2\x13.trustedai.v1.ModelR\x05model\"V\n" +
+	")ModelManagementServiceCreateModelResponse\x12)\n" +
+	"\x05model\x18\x01 \x01(\v2\x13.trustedai.v1.ModelR\x05model\"7\n" +
 	"%ModelManagementServiceGetModelRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"O\n" +
-	"&ModelManagementServiceGetModelResponse\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\"\xb8\x01\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"S\n" +
+	"&ModelManagementServiceGetModelResponse\x12)\n" +
+	"\x05model\x18\x01 \x01(\v2\x13.trustedai.v1.ModelR\x05model\"\xbc\x01\n" +
 	"'ModelManagementServiceListModelsRequest\x12)\n" +
 	"\x10include_disabled\x18\x01 \x01(\bR\x0fincludeDisabled\x12\x1f\n" +
 	"\vprovider_id\x18\x02 \x01(\tR\n" +
-	"providerId\x12A\n" +
-	"\x0fcredential_type\x18\x03 \x01(\x0e2\x18.llmgw.v1.CredentialTypeR\x0ecredentialType\"S\n" +
-	"(ModelManagementServiceListModelsResponse\x12'\n" +
-	"\x06models\x18\x01 \x03(\v2\x0f.llmgw.v1.ModelR\x06models\"\xbe\x01\n" +
-	"(ModelManagementServiceUpdateModelRequest\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\x12\x1f\n" +
+	"providerId\x12E\n" +
+	"\x0fcredential_type\x18\x03 \x01(\x0e2\x1c.trustedai.v1.CredentialTypeR\x0ecredentialType\"W\n" +
+	"(ModelManagementServiceListModelsResponse\x12+\n" +
+	"\x06models\x18\x01 \x03(\v2\x13.trustedai.v1.ModelR\x06models\"\xc2\x01\n" +
+	"(ModelManagementServiceUpdateModelRequest\x12)\n" +
+	"\x05model\x18\x01 \x01(\v2\x13.trustedai.v1.ModelR\x05model\x12\x1f\n" +
 	"\vhas_enabled\x18\x02 \x01(\bR\n" +
 	"hasEnabled\x12\x1f\n" +
 	"\vhas_pricing\x18\x03 \x01(\bR\n" +
 	"hasPricing\x12)\n" +
-	"\x10has_capabilities\x18\x04 \x01(\bR\x0fhasCapabilities\"R\n" +
-	")ModelManagementServiceUpdateModelResponse\x12%\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.llmgw.v1.ModelR\x05model\":\n" +
+	"\x10has_capabilities\x18\x04 \x01(\bR\x0fhasCapabilities\"V\n" +
+	")ModelManagementServiceUpdateModelResponse\x12)\n" +
+	"\x05model\x18\x01 \x01(\v2\x13.trustedai.v1.ModelR\x05model\":\n" +
 	"(ModelManagementServiceDeleteModelRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"E\n" +
 	")ModelManagementServiceDeleteModelResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x8c\x01\n" +
-	"\x17SupportedCredentialType\x12,\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x18.llmgw.v1.CredentialTypeR\x04type\x12!\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x90\x01\n" +
+	"\x17SupportedCredentialType\x120\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x1c.trustedai.v1.CredentialTypeR\x04type\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\";\n" +
-	"9ModelManagementServiceListSupportedCredentialTypesRequest\"\x8a\x01\n" +
-	":ModelManagementServiceListSupportedCredentialTypesResponse\x12L\n" +
-	"\x10credential_types\x18\x01 \x03(\v2!.llmgw.v1.SupportedCredentialTypeR\x0fcredentialTypes\"5\n" +
-	"3ModelManagementServiceListSupportedProvidersRequest\"h\n" +
-	"4ModelManagementServiceListSupportedProvidersResponse\x120\n" +
-	"\tproviders\x18\x01 \x03(\v2\x12.llmgw.v1.ProviderR\tproviders\"t\n" +
-	";ModelManagementServiceListSupportedModelsForProviderRequest\x125\n" +
-	"\vprovider_id\x18\x01 \x01(\x0e2\x14.llmgw.v1.ProviderIdR\n" +
-	"providerId\"g\n" +
-	"<ModelManagementServiceListSupportedModelsForProviderResponse\x12'\n" +
-	"\x06models\x18\x01 \x03(\v2\x0f.llmgw.v1.ModelR\x06models*E\n" +
+	"9ModelManagementServiceListSupportedCredentialTypesRequest\"\x8e\x01\n" +
+	":ModelManagementServiceListSupportedCredentialTypesResponse\x12P\n" +
+	"\x10credential_types\x18\x01 \x03(\v2%.trustedai.v1.SupportedCredentialTypeR\x0fcredentialTypes\"5\n" +
+	"3ModelManagementServiceListSupportedProvidersRequest\"l\n" +
+	"4ModelManagementServiceListSupportedProvidersResponse\x124\n" +
+	"\tproviders\x18\x01 \x03(\v2\x16.trustedai.v1.ProviderR\tproviders\"x\n" +
+	";ModelManagementServiceListSupportedModelsForProviderRequest\x129\n" +
+	"\vprovider_id\x18\x01 \x01(\x0e2\x18.trustedai.v1.ProviderIdR\n" +
+	"providerId\"k\n" +
+	"<ModelManagementServiceListSupportedModelsForProviderResponse\x12+\n" +
+	"\x06models\x18\x01 \x03(\v2\x13.trustedai.v1.ModelR\x06models*E\n" +
 	"\n" +
 	"ProviderId\x12\x1b\n" +
 	"\x17PROVIDER_ID_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16PROVIDER_ID_OPENROUTER\x10\x01*Q\n" +
 	"\x0eCredentialType\x12\x1f\n" +
 	"\x1bCREDENTIAL_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aCREDENTIAL_TYPE_OPENROUTER\x10\x012\x84\x11\n" +
-	"\x16ModelManagementService\x12v\n" +
-	"\vGetProvider\x122.llmgw.v1.ModelManagementServiceGetProviderRequest\x1a3.llmgw.v1.ModelManagementServiceGetProviderResponse\x12|\n" +
-	"\rListProviders\x124.llmgw.v1.ModelManagementServiceListProvidersRequest\x1a5.llmgw.v1.ModelManagementServiceListProvidersResponse\x12\x97\x01\n" +
-	"\x16ListSupportedProviders\x12=.llmgw.v1.ModelManagementServiceListSupportedProvidersRequest\x1a>.llmgw.v1.ModelManagementServiceListSupportedProvidersResponse\x12\xa3\x01\n" +
-	"\x1aCreateOpenRouterCredential\x12A.llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest\x1aB.llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse\x12\x9a\x01\n" +
-	"\x17GetOpenRouterCredential\x12>.llmgw.v1.ModelManagementServiceGetOpenRouterCredentialRequest\x1a?.llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse\x12\xa0\x01\n" +
-	"\x19ListOpenRouterCredentials\x12@.llmgw.v1.ModelManagementServiceListOpenRouterCredentialsRequest\x1aA.llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse\x12\xa3\x01\n" +
-	"\x1aUpdateOpenRouterCredential\x12A.llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest\x1aB.llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse\x12\xa3\x01\n" +
-	"\x1aDeleteOpenRouterCredential\x12A.llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest\x1aB.llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse\x12\xa9\x01\n" +
-	"\x1cListSupportedCredentialTypes\x12C.llmgw.v1.ModelManagementServiceListSupportedCredentialTypesRequest\x1aD.llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse\x12v\n" +
-	"\vCreateModel\x122.llmgw.v1.ModelManagementServiceCreateModelRequest\x1a3.llmgw.v1.ModelManagementServiceCreateModelResponse\x12m\n" +
-	"\bGetModel\x12/.llmgw.v1.ModelManagementServiceGetModelRequest\x1a0.llmgw.v1.ModelManagementServiceGetModelResponse\x12s\n" +
+	"\x1aCREDENTIAL_TYPE_OPENROUTER\x10\x012\xfd\x11\n" +
+	"\x16ModelManagementService\x12~\n" +
+	"\vGetProvider\x126.trustedai.v1.ModelManagementServiceGetProviderRequest\x1a7.trustedai.v1.ModelManagementServiceGetProviderResponse\x12\x84\x01\n" +
+	"\rListProviders\x128.trustedai.v1.ModelManagementServiceListProvidersRequest\x1a9.trustedai.v1.ModelManagementServiceListProvidersResponse\x12\x9f\x01\n" +
+	"\x16ListSupportedProviders\x12A.trustedai.v1.ModelManagementServiceListSupportedProvidersRequest\x1aB.trustedai.v1.ModelManagementServiceListSupportedProvidersResponse\x12\xab\x01\n" +
+	"\x1aCreateOpenRouterCredential\x12E.trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialRequest\x1aF.trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialResponse\x12\xa2\x01\n" +
+	"\x17GetOpenRouterCredential\x12B.trustedai.v1.ModelManagementServiceGetOpenRouterCredentialRequest\x1aC.trustedai.v1.ModelManagementServiceGetOpenRouterCredentialResponse\x12\xa8\x01\n" +
+	"\x19ListOpenRouterCredentials\x12D.trustedai.v1.ModelManagementServiceListOpenRouterCredentialsRequest\x1aE.trustedai.v1.ModelManagementServiceListOpenRouterCredentialsResponse\x12\xab\x01\n" +
+	"\x1aUpdateOpenRouterCredential\x12E.trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest\x1aF.trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse\x12\xab\x01\n" +
+	"\x1aDeleteOpenRouterCredential\x12E.trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest\x1aF.trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse\x12\xb1\x01\n" +
+	"\x1cListSupportedCredentialTypes\x12G.trustedai.v1.ModelManagementServiceListSupportedCredentialTypesRequest\x1aH.trustedai.v1.ModelManagementServiceListSupportedCredentialTypesResponse\x12~\n" +
+	"\vCreateModel\x126.trustedai.v1.ModelManagementServiceCreateModelRequest\x1a7.trustedai.v1.ModelManagementServiceCreateModelResponse\x12u\n" +
+	"\bGetModel\x123.trustedai.v1.ModelManagementServiceGetModelRequest\x1a4.trustedai.v1.ModelManagementServiceGetModelResponse\x12{\n" +
 	"\n" +
-	"ListModels\x121.llmgw.v1.ModelManagementServiceListModelsRequest\x1a2.llmgw.v1.ModelManagementServiceListModelsResponse\x12v\n" +
-	"\vUpdateModel\x122.llmgw.v1.ModelManagementServiceUpdateModelRequest\x1a3.llmgw.v1.ModelManagementServiceUpdateModelResponse\x12v\n" +
-	"\vDeleteModel\x122.llmgw.v1.ModelManagementServiceDeleteModelRequest\x1a3.llmgw.v1.ModelManagementServiceDeleteModelResponse\x12\xaf\x01\n" +
-	"\x1eListSupportedModelsForProvider\x12E.llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest\x1aF.llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponseB=Z;codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1b\x06proto3"
+	"ListModels\x125.trustedai.v1.ModelManagementServiceListModelsRequest\x1a6.trustedai.v1.ModelManagementServiceListModelsResponse\x12~\n" +
+	"\vUpdateModel\x126.trustedai.v1.ModelManagementServiceUpdateModelRequest\x1a7.trustedai.v1.ModelManagementServiceUpdateModelResponse\x12~\n" +
+	"\vDeleteModel\x126.trustedai.v1.ModelManagementServiceDeleteModelRequest\x1a7.trustedai.v1.ModelManagementServiceDeleteModelResponse\x12\xb7\x01\n" +
+	"\x1eListSupportedModelsForProvider\x12I.trustedai.v1.ModelManagementServiceListSupportedModelsForProviderRequest\x1aJ.trustedai.v1.ModelManagementServiceListSupportedModelsForProviderResponseBGZEgithub.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1;trustedaiv1b\x06proto3"
 
 var (
-	file_proto_madsrc_llmgw_v1_model_management_proto_rawDescOnce sync.Once
-	file_proto_madsrc_llmgw_v1_model_management_proto_rawDescData []byte
+	file_proto_madsrc_trustedai_v1_model_management_proto_rawDescOnce sync.Once
+	file_proto_madsrc_trustedai_v1_model_management_proto_rawDescData []byte
 )
 
-func file_proto_madsrc_llmgw_v1_model_management_proto_rawDescGZIP() []byte {
-	file_proto_madsrc_llmgw_v1_model_management_proto_rawDescOnce.Do(func() {
-		file_proto_madsrc_llmgw_v1_model_management_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc)))
+func file_proto_madsrc_trustedai_v1_model_management_proto_rawDescGZIP() []byte {
+	file_proto_madsrc_trustedai_v1_model_management_proto_rawDescOnce.Do(func() {
+		file_proto_madsrc_trustedai_v1_model_management_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_model_management_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_model_management_proto_rawDesc)))
 	})
-	return file_proto_madsrc_llmgw_v1_model_management_proto_rawDescData
+	return file_proto_madsrc_trustedai_v1_model_management_proto_rawDescData
 }
 
-var file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
-var file_proto_madsrc_llmgw_v1_model_management_proto_goTypes = []any{
-	(ProviderId)(0),              // 0: llmgw.v1.ProviderId
-	(CredentialType)(0),          // 1: llmgw.v1.CredentialType
-	(*Provider)(nil),             // 2: llmgw.v1.Provider
-	(*OpenRouterCredential)(nil), // 3: llmgw.v1.OpenRouterCredential
-	(*ModelPricing)(nil),         // 4: llmgw.v1.ModelPricing
-	(*ModelCapabilities)(nil),    // 5: llmgw.v1.ModelCapabilities
-	(*Model)(nil),                // 6: llmgw.v1.Model
-	(*ModelManagementServiceGetProviderRequest)(nil),                     // 7: llmgw.v1.ModelManagementServiceGetProviderRequest
-	(*ModelManagementServiceGetProviderResponse)(nil),                    // 8: llmgw.v1.ModelManagementServiceGetProviderResponse
-	(*ModelManagementServiceListProvidersRequest)(nil),                   // 9: llmgw.v1.ModelManagementServiceListProvidersRequest
-	(*ModelManagementServiceListProvidersResponse)(nil),                  // 10: llmgw.v1.ModelManagementServiceListProvidersResponse
-	(*ModelManagementServiceCreateOpenRouterCredentialRequest)(nil),      // 11: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
-	(*ModelManagementServiceCreateOpenRouterCredentialResponse)(nil),     // 12: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
-	(*ModelManagementServiceGetOpenRouterCredentialRequest)(nil),         // 13: llmgw.v1.ModelManagementServiceGetOpenRouterCredentialRequest
-	(*ModelManagementServiceGetOpenRouterCredentialResponse)(nil),        // 14: llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse
-	(*ModelManagementServiceListOpenRouterCredentialsRequest)(nil),       // 15: llmgw.v1.ModelManagementServiceListOpenRouterCredentialsRequest
-	(*ModelManagementServiceListOpenRouterCredentialsResponse)(nil),      // 16: llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse
-	(*ModelManagementServiceUpdateOpenRouterCredentialRequest)(nil),      // 17: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
-	(*ModelManagementServiceUpdateOpenRouterCredentialResponse)(nil),     // 18: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
-	(*ModelManagementServiceDeleteOpenRouterCredentialRequest)(nil),      // 19: llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
-	(*ModelManagementServiceDeleteOpenRouterCredentialResponse)(nil),     // 20: llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
-	(*ModelManagementServiceCreateModelRequest)(nil),                     // 21: llmgw.v1.ModelManagementServiceCreateModelRequest
-	(*ModelManagementServiceCreateModelResponse)(nil),                    // 22: llmgw.v1.ModelManagementServiceCreateModelResponse
-	(*ModelManagementServiceGetModelRequest)(nil),                        // 23: llmgw.v1.ModelManagementServiceGetModelRequest
-	(*ModelManagementServiceGetModelResponse)(nil),                       // 24: llmgw.v1.ModelManagementServiceGetModelResponse
-	(*ModelManagementServiceListModelsRequest)(nil),                      // 25: llmgw.v1.ModelManagementServiceListModelsRequest
-	(*ModelManagementServiceListModelsResponse)(nil),                     // 26: llmgw.v1.ModelManagementServiceListModelsResponse
-	(*ModelManagementServiceUpdateModelRequest)(nil),                     // 27: llmgw.v1.ModelManagementServiceUpdateModelRequest
-	(*ModelManagementServiceUpdateModelResponse)(nil),                    // 28: llmgw.v1.ModelManagementServiceUpdateModelResponse
-	(*ModelManagementServiceDeleteModelRequest)(nil),                     // 29: llmgw.v1.ModelManagementServiceDeleteModelRequest
-	(*ModelManagementServiceDeleteModelResponse)(nil),                    // 30: llmgw.v1.ModelManagementServiceDeleteModelResponse
-	(*SupportedCredentialType)(nil),                                      // 31: llmgw.v1.SupportedCredentialType
-	(*ModelManagementServiceListSupportedCredentialTypesRequest)(nil),    // 32: llmgw.v1.ModelManagementServiceListSupportedCredentialTypesRequest
-	(*ModelManagementServiceListSupportedCredentialTypesResponse)(nil),   // 33: llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse
-	(*ModelManagementServiceListSupportedProvidersRequest)(nil),          // 34: llmgw.v1.ModelManagementServiceListSupportedProvidersRequest
-	(*ModelManagementServiceListSupportedProvidersResponse)(nil),         // 35: llmgw.v1.ModelManagementServiceListSupportedProvidersResponse
-	(*ModelManagementServiceListSupportedModelsForProviderRequest)(nil),  // 36: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest
-	(*ModelManagementServiceListSupportedModelsForProviderResponse)(nil), // 37: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse
-	nil,                           // 38: llmgw.v1.Model.MetadataEntry
+var file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
+var file_proto_madsrc_trustedai_v1_model_management_proto_goTypes = []any{
+	(ProviderId)(0),              // 0: trustedai.v1.ProviderId
+	(CredentialType)(0),          // 1: trustedai.v1.CredentialType
+	(*Provider)(nil),             // 2: trustedai.v1.Provider
+	(*OpenRouterCredential)(nil), // 3: trustedai.v1.OpenRouterCredential
+	(*ModelPricing)(nil),         // 4: trustedai.v1.ModelPricing
+	(*ModelCapabilities)(nil),    // 5: trustedai.v1.ModelCapabilities
+	(*Model)(nil),                // 6: trustedai.v1.Model
+	(*ModelManagementServiceGetProviderRequest)(nil),                     // 7: trustedai.v1.ModelManagementServiceGetProviderRequest
+	(*ModelManagementServiceGetProviderResponse)(nil),                    // 8: trustedai.v1.ModelManagementServiceGetProviderResponse
+	(*ModelManagementServiceListProvidersRequest)(nil),                   // 9: trustedai.v1.ModelManagementServiceListProvidersRequest
+	(*ModelManagementServiceListProvidersResponse)(nil),                  // 10: trustedai.v1.ModelManagementServiceListProvidersResponse
+	(*ModelManagementServiceCreateOpenRouterCredentialRequest)(nil),      // 11: trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
+	(*ModelManagementServiceCreateOpenRouterCredentialResponse)(nil),     // 12: trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
+	(*ModelManagementServiceGetOpenRouterCredentialRequest)(nil),         // 13: trustedai.v1.ModelManagementServiceGetOpenRouterCredentialRequest
+	(*ModelManagementServiceGetOpenRouterCredentialResponse)(nil),        // 14: trustedai.v1.ModelManagementServiceGetOpenRouterCredentialResponse
+	(*ModelManagementServiceListOpenRouterCredentialsRequest)(nil),       // 15: trustedai.v1.ModelManagementServiceListOpenRouterCredentialsRequest
+	(*ModelManagementServiceListOpenRouterCredentialsResponse)(nil),      // 16: trustedai.v1.ModelManagementServiceListOpenRouterCredentialsResponse
+	(*ModelManagementServiceUpdateOpenRouterCredentialRequest)(nil),      // 17: trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
+	(*ModelManagementServiceUpdateOpenRouterCredentialResponse)(nil),     // 18: trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
+	(*ModelManagementServiceDeleteOpenRouterCredentialRequest)(nil),      // 19: trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
+	(*ModelManagementServiceDeleteOpenRouterCredentialResponse)(nil),     // 20: trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
+	(*ModelManagementServiceCreateModelRequest)(nil),                     // 21: trustedai.v1.ModelManagementServiceCreateModelRequest
+	(*ModelManagementServiceCreateModelResponse)(nil),                    // 22: trustedai.v1.ModelManagementServiceCreateModelResponse
+	(*ModelManagementServiceGetModelRequest)(nil),                        // 23: trustedai.v1.ModelManagementServiceGetModelRequest
+	(*ModelManagementServiceGetModelResponse)(nil),                       // 24: trustedai.v1.ModelManagementServiceGetModelResponse
+	(*ModelManagementServiceListModelsRequest)(nil),                      // 25: trustedai.v1.ModelManagementServiceListModelsRequest
+	(*ModelManagementServiceListModelsResponse)(nil),                     // 26: trustedai.v1.ModelManagementServiceListModelsResponse
+	(*ModelManagementServiceUpdateModelRequest)(nil),                     // 27: trustedai.v1.ModelManagementServiceUpdateModelRequest
+	(*ModelManagementServiceUpdateModelResponse)(nil),                    // 28: trustedai.v1.ModelManagementServiceUpdateModelResponse
+	(*ModelManagementServiceDeleteModelRequest)(nil),                     // 29: trustedai.v1.ModelManagementServiceDeleteModelRequest
+	(*ModelManagementServiceDeleteModelResponse)(nil),                    // 30: trustedai.v1.ModelManagementServiceDeleteModelResponse
+	(*SupportedCredentialType)(nil),                                      // 31: trustedai.v1.SupportedCredentialType
+	(*ModelManagementServiceListSupportedCredentialTypesRequest)(nil),    // 32: trustedai.v1.ModelManagementServiceListSupportedCredentialTypesRequest
+	(*ModelManagementServiceListSupportedCredentialTypesResponse)(nil),   // 33: trustedai.v1.ModelManagementServiceListSupportedCredentialTypesResponse
+	(*ModelManagementServiceListSupportedProvidersRequest)(nil),          // 34: trustedai.v1.ModelManagementServiceListSupportedProvidersRequest
+	(*ModelManagementServiceListSupportedProvidersResponse)(nil),         // 35: trustedai.v1.ModelManagementServiceListSupportedProvidersResponse
+	(*ModelManagementServiceListSupportedModelsForProviderRequest)(nil),  // 36: trustedai.v1.ModelManagementServiceListSupportedModelsForProviderRequest
+	(*ModelManagementServiceListSupportedModelsForProviderResponse)(nil), // 37: trustedai.v1.ModelManagementServiceListSupportedModelsForProviderResponse
+	nil,                           // 38: trustedai.v1.Model.MetadataEntry
 	(*timestamppb.Timestamp)(nil), // 39: google.protobuf.Timestamp
 }
-var file_proto_madsrc_llmgw_v1_model_management_proto_depIdxs = []int32{
-	39, // 0: llmgw.v1.Provider.created_at:type_name -> google.protobuf.Timestamp
-	39, // 1: llmgw.v1.Provider.updated_at:type_name -> google.protobuf.Timestamp
-	39, // 2: llmgw.v1.OpenRouterCredential.created_at:type_name -> google.protobuf.Timestamp
-	39, // 3: llmgw.v1.OpenRouterCredential.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 4: llmgw.v1.Model.credential_type:type_name -> llmgw.v1.CredentialType
-	4,  // 5: llmgw.v1.Model.pricing:type_name -> llmgw.v1.ModelPricing
-	5,  // 6: llmgw.v1.Model.capabilities:type_name -> llmgw.v1.ModelCapabilities
-	38, // 7: llmgw.v1.Model.metadata:type_name -> llmgw.v1.Model.MetadataEntry
-	39, // 8: llmgw.v1.Model.created_at:type_name -> google.protobuf.Timestamp
-	39, // 9: llmgw.v1.Model.updated_at:type_name -> google.protobuf.Timestamp
-	2,  // 10: llmgw.v1.ModelManagementServiceGetProviderResponse.provider:type_name -> llmgw.v1.Provider
-	2,  // 11: llmgw.v1.ModelManagementServiceListProvidersResponse.providers:type_name -> llmgw.v1.Provider
-	3,  // 12: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 13: llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 14: llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 15: llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse.credentials:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 16: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest.credential:type_name -> llmgw.v1.OpenRouterCredential
-	3,  // 17: llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse.credential:type_name -> llmgw.v1.OpenRouterCredential
-	6,  // 18: llmgw.v1.ModelManagementServiceCreateModelRequest.model:type_name -> llmgw.v1.Model
-	6,  // 19: llmgw.v1.ModelManagementServiceCreateModelResponse.model:type_name -> llmgw.v1.Model
-	6,  // 20: llmgw.v1.ModelManagementServiceGetModelResponse.model:type_name -> llmgw.v1.Model
-	1,  // 21: llmgw.v1.ModelManagementServiceListModelsRequest.credential_type:type_name -> llmgw.v1.CredentialType
-	6,  // 22: llmgw.v1.ModelManagementServiceListModelsResponse.models:type_name -> llmgw.v1.Model
-	6,  // 23: llmgw.v1.ModelManagementServiceUpdateModelRequest.model:type_name -> llmgw.v1.Model
-	6,  // 24: llmgw.v1.ModelManagementServiceUpdateModelResponse.model:type_name -> llmgw.v1.Model
-	1,  // 25: llmgw.v1.SupportedCredentialType.type:type_name -> llmgw.v1.CredentialType
-	31, // 26: llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse.credential_types:type_name -> llmgw.v1.SupportedCredentialType
-	2,  // 27: llmgw.v1.ModelManagementServiceListSupportedProvidersResponse.providers:type_name -> llmgw.v1.Provider
-	0,  // 28: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest.provider_id:type_name -> llmgw.v1.ProviderId
-	6,  // 29: llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse.models:type_name -> llmgw.v1.Model
-	7,  // 30: llmgw.v1.ModelManagementService.GetProvider:input_type -> llmgw.v1.ModelManagementServiceGetProviderRequest
-	9,  // 31: llmgw.v1.ModelManagementService.ListProviders:input_type -> llmgw.v1.ModelManagementServiceListProvidersRequest
-	34, // 32: llmgw.v1.ModelManagementService.ListSupportedProviders:input_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersRequest
-	11, // 33: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
-	13, // 34: llmgw.v1.ModelManagementService.GetOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialRequest
-	15, // 35: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:input_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsRequest
-	17, // 36: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
-	19, // 37: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:input_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
-	32, // 38: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:input_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesRequest
-	21, // 39: llmgw.v1.ModelManagementService.CreateModel:input_type -> llmgw.v1.ModelManagementServiceCreateModelRequest
-	23, // 40: llmgw.v1.ModelManagementService.GetModel:input_type -> llmgw.v1.ModelManagementServiceGetModelRequest
-	25, // 41: llmgw.v1.ModelManagementService.ListModels:input_type -> llmgw.v1.ModelManagementServiceListModelsRequest
-	27, // 42: llmgw.v1.ModelManagementService.UpdateModel:input_type -> llmgw.v1.ModelManagementServiceUpdateModelRequest
-	29, // 43: llmgw.v1.ModelManagementService.DeleteModel:input_type -> llmgw.v1.ModelManagementServiceDeleteModelRequest
-	36, // 44: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:input_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderRequest
-	8,  // 45: llmgw.v1.ModelManagementService.GetProvider:output_type -> llmgw.v1.ModelManagementServiceGetProviderResponse
-	10, // 46: llmgw.v1.ModelManagementService.ListProviders:output_type -> llmgw.v1.ModelManagementServiceListProvidersResponse
-	35, // 47: llmgw.v1.ModelManagementService.ListSupportedProviders:output_type -> llmgw.v1.ModelManagementServiceListSupportedProvidersResponse
-	12, // 48: llmgw.v1.ModelManagementService.CreateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
-	14, // 49: llmgw.v1.ModelManagementService.GetOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceGetOpenRouterCredentialResponse
-	16, // 50: llmgw.v1.ModelManagementService.ListOpenRouterCredentials:output_type -> llmgw.v1.ModelManagementServiceListOpenRouterCredentialsResponse
-	18, // 51: llmgw.v1.ModelManagementService.UpdateOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
-	20, // 52: llmgw.v1.ModelManagementService.DeleteOpenRouterCredential:output_type -> llmgw.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
-	33, // 53: llmgw.v1.ModelManagementService.ListSupportedCredentialTypes:output_type -> llmgw.v1.ModelManagementServiceListSupportedCredentialTypesResponse
-	22, // 54: llmgw.v1.ModelManagementService.CreateModel:output_type -> llmgw.v1.ModelManagementServiceCreateModelResponse
-	24, // 55: llmgw.v1.ModelManagementService.GetModel:output_type -> llmgw.v1.ModelManagementServiceGetModelResponse
-	26, // 56: llmgw.v1.ModelManagementService.ListModels:output_type -> llmgw.v1.ModelManagementServiceListModelsResponse
-	28, // 57: llmgw.v1.ModelManagementService.UpdateModel:output_type -> llmgw.v1.ModelManagementServiceUpdateModelResponse
-	30, // 58: llmgw.v1.ModelManagementService.DeleteModel:output_type -> llmgw.v1.ModelManagementServiceDeleteModelResponse
-	37, // 59: llmgw.v1.ModelManagementService.ListSupportedModelsForProvider:output_type -> llmgw.v1.ModelManagementServiceListSupportedModelsForProviderResponse
+var file_proto_madsrc_trustedai_v1_model_management_proto_depIdxs = []int32{
+	39, // 0: trustedai.v1.Provider.created_at:type_name -> google.protobuf.Timestamp
+	39, // 1: trustedai.v1.Provider.updated_at:type_name -> google.protobuf.Timestamp
+	39, // 2: trustedai.v1.OpenRouterCredential.created_at:type_name -> google.protobuf.Timestamp
+	39, // 3: trustedai.v1.OpenRouterCredential.updated_at:type_name -> google.protobuf.Timestamp
+	1,  // 4: trustedai.v1.Model.credential_type:type_name -> trustedai.v1.CredentialType
+	4,  // 5: trustedai.v1.Model.pricing:type_name -> trustedai.v1.ModelPricing
+	5,  // 6: trustedai.v1.Model.capabilities:type_name -> trustedai.v1.ModelCapabilities
+	38, // 7: trustedai.v1.Model.metadata:type_name -> trustedai.v1.Model.MetadataEntry
+	39, // 8: trustedai.v1.Model.created_at:type_name -> google.protobuf.Timestamp
+	39, // 9: trustedai.v1.Model.updated_at:type_name -> google.protobuf.Timestamp
+	2,  // 10: trustedai.v1.ModelManagementServiceGetProviderResponse.provider:type_name -> trustedai.v1.Provider
+	2,  // 11: trustedai.v1.ModelManagementServiceListProvidersResponse.providers:type_name -> trustedai.v1.Provider
+	3,  // 12: trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialRequest.credential:type_name -> trustedai.v1.OpenRouterCredential
+	3,  // 13: trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialResponse.credential:type_name -> trustedai.v1.OpenRouterCredential
+	3,  // 14: trustedai.v1.ModelManagementServiceGetOpenRouterCredentialResponse.credential:type_name -> trustedai.v1.OpenRouterCredential
+	3,  // 15: trustedai.v1.ModelManagementServiceListOpenRouterCredentialsResponse.credentials:type_name -> trustedai.v1.OpenRouterCredential
+	3,  // 16: trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest.credential:type_name -> trustedai.v1.OpenRouterCredential
+	3,  // 17: trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse.credential:type_name -> trustedai.v1.OpenRouterCredential
+	6,  // 18: trustedai.v1.ModelManagementServiceCreateModelRequest.model:type_name -> trustedai.v1.Model
+	6,  // 19: trustedai.v1.ModelManagementServiceCreateModelResponse.model:type_name -> trustedai.v1.Model
+	6,  // 20: trustedai.v1.ModelManagementServiceGetModelResponse.model:type_name -> trustedai.v1.Model
+	1,  // 21: trustedai.v1.ModelManagementServiceListModelsRequest.credential_type:type_name -> trustedai.v1.CredentialType
+	6,  // 22: trustedai.v1.ModelManagementServiceListModelsResponse.models:type_name -> trustedai.v1.Model
+	6,  // 23: trustedai.v1.ModelManagementServiceUpdateModelRequest.model:type_name -> trustedai.v1.Model
+	6,  // 24: trustedai.v1.ModelManagementServiceUpdateModelResponse.model:type_name -> trustedai.v1.Model
+	1,  // 25: trustedai.v1.SupportedCredentialType.type:type_name -> trustedai.v1.CredentialType
+	31, // 26: trustedai.v1.ModelManagementServiceListSupportedCredentialTypesResponse.credential_types:type_name -> trustedai.v1.SupportedCredentialType
+	2,  // 27: trustedai.v1.ModelManagementServiceListSupportedProvidersResponse.providers:type_name -> trustedai.v1.Provider
+	0,  // 28: trustedai.v1.ModelManagementServiceListSupportedModelsForProviderRequest.provider_id:type_name -> trustedai.v1.ProviderId
+	6,  // 29: trustedai.v1.ModelManagementServiceListSupportedModelsForProviderResponse.models:type_name -> trustedai.v1.Model
+	7,  // 30: trustedai.v1.ModelManagementService.GetProvider:input_type -> trustedai.v1.ModelManagementServiceGetProviderRequest
+	9,  // 31: trustedai.v1.ModelManagementService.ListProviders:input_type -> trustedai.v1.ModelManagementServiceListProvidersRequest
+	34, // 32: trustedai.v1.ModelManagementService.ListSupportedProviders:input_type -> trustedai.v1.ModelManagementServiceListSupportedProvidersRequest
+	11, // 33: trustedai.v1.ModelManagementService.CreateOpenRouterCredential:input_type -> trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialRequest
+	13, // 34: trustedai.v1.ModelManagementService.GetOpenRouterCredential:input_type -> trustedai.v1.ModelManagementServiceGetOpenRouterCredentialRequest
+	15, // 35: trustedai.v1.ModelManagementService.ListOpenRouterCredentials:input_type -> trustedai.v1.ModelManagementServiceListOpenRouterCredentialsRequest
+	17, // 36: trustedai.v1.ModelManagementService.UpdateOpenRouterCredential:input_type -> trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialRequest
+	19, // 37: trustedai.v1.ModelManagementService.DeleteOpenRouterCredential:input_type -> trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialRequest
+	32, // 38: trustedai.v1.ModelManagementService.ListSupportedCredentialTypes:input_type -> trustedai.v1.ModelManagementServiceListSupportedCredentialTypesRequest
+	21, // 39: trustedai.v1.ModelManagementService.CreateModel:input_type -> trustedai.v1.ModelManagementServiceCreateModelRequest
+	23, // 40: trustedai.v1.ModelManagementService.GetModel:input_type -> trustedai.v1.ModelManagementServiceGetModelRequest
+	25, // 41: trustedai.v1.ModelManagementService.ListModels:input_type -> trustedai.v1.ModelManagementServiceListModelsRequest
+	27, // 42: trustedai.v1.ModelManagementService.UpdateModel:input_type -> trustedai.v1.ModelManagementServiceUpdateModelRequest
+	29, // 43: trustedai.v1.ModelManagementService.DeleteModel:input_type -> trustedai.v1.ModelManagementServiceDeleteModelRequest
+	36, // 44: trustedai.v1.ModelManagementService.ListSupportedModelsForProvider:input_type -> trustedai.v1.ModelManagementServiceListSupportedModelsForProviderRequest
+	8,  // 45: trustedai.v1.ModelManagementService.GetProvider:output_type -> trustedai.v1.ModelManagementServiceGetProviderResponse
+	10, // 46: trustedai.v1.ModelManagementService.ListProviders:output_type -> trustedai.v1.ModelManagementServiceListProvidersResponse
+	35, // 47: trustedai.v1.ModelManagementService.ListSupportedProviders:output_type -> trustedai.v1.ModelManagementServiceListSupportedProvidersResponse
+	12, // 48: trustedai.v1.ModelManagementService.CreateOpenRouterCredential:output_type -> trustedai.v1.ModelManagementServiceCreateOpenRouterCredentialResponse
+	14, // 49: trustedai.v1.ModelManagementService.GetOpenRouterCredential:output_type -> trustedai.v1.ModelManagementServiceGetOpenRouterCredentialResponse
+	16, // 50: trustedai.v1.ModelManagementService.ListOpenRouterCredentials:output_type -> trustedai.v1.ModelManagementServiceListOpenRouterCredentialsResponse
+	18, // 51: trustedai.v1.ModelManagementService.UpdateOpenRouterCredential:output_type -> trustedai.v1.ModelManagementServiceUpdateOpenRouterCredentialResponse
+	20, // 52: trustedai.v1.ModelManagementService.DeleteOpenRouterCredential:output_type -> trustedai.v1.ModelManagementServiceDeleteOpenRouterCredentialResponse
+	33, // 53: trustedai.v1.ModelManagementService.ListSupportedCredentialTypes:output_type -> trustedai.v1.ModelManagementServiceListSupportedCredentialTypesResponse
+	22, // 54: trustedai.v1.ModelManagementService.CreateModel:output_type -> trustedai.v1.ModelManagementServiceCreateModelResponse
+	24, // 55: trustedai.v1.ModelManagementService.GetModel:output_type -> trustedai.v1.ModelManagementServiceGetModelResponse
+	26, // 56: trustedai.v1.ModelManagementService.ListModels:output_type -> trustedai.v1.ModelManagementServiceListModelsResponse
+	28, // 57: trustedai.v1.ModelManagementService.UpdateModel:output_type -> trustedai.v1.ModelManagementServiceUpdateModelResponse
+	30, // 58: trustedai.v1.ModelManagementService.DeleteModel:output_type -> trustedai.v1.ModelManagementServiceDeleteModelResponse
+	37, // 59: trustedai.v1.ModelManagementService.ListSupportedModelsForProvider:output_type -> trustedai.v1.ModelManagementServiceListSupportedModelsForProviderResponse
 	45, // [45:60] is the sub-list for method output_type
 	30, // [30:45] is the sub-list for method input_type
 	30, // [30:30] is the sub-list for extension type_name
@@ -2285,27 +2285,27 @@ var file_proto_madsrc_llmgw_v1_model_management_proto_depIdxs = []int32{
 	0,  // [0:30] is the sub-list for field type_name
 }
 
-func init() { file_proto_madsrc_llmgw_v1_model_management_proto_init() }
-func file_proto_madsrc_llmgw_v1_model_management_proto_init() {
-	if File_proto_madsrc_llmgw_v1_model_management_proto != nil {
+func init() { file_proto_madsrc_trustedai_v1_model_management_proto_init() }
+func file_proto_madsrc_trustedai_v1_model_management_proto_init() {
+	if File_proto_madsrc_trustedai_v1_model_management_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_model_management_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_model_management_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_model_management_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_madsrc_llmgw_v1_model_management_proto_goTypes,
-		DependencyIndexes: file_proto_madsrc_llmgw_v1_model_management_proto_depIdxs,
-		EnumInfos:         file_proto_madsrc_llmgw_v1_model_management_proto_enumTypes,
-		MessageInfos:      file_proto_madsrc_llmgw_v1_model_management_proto_msgTypes,
+		GoTypes:           file_proto_madsrc_trustedai_v1_model_management_proto_goTypes,
+		DependencyIndexes: file_proto_madsrc_trustedai_v1_model_management_proto_depIdxs,
+		EnumInfos:         file_proto_madsrc_trustedai_v1_model_management_proto_enumTypes,
+		MessageInfos:      file_proto_madsrc_trustedai_v1_model_management_proto_msgTypes,
 	}.Build()
-	File_proto_madsrc_llmgw_v1_model_management_proto = out.File
-	file_proto_madsrc_llmgw_v1_model_management_proto_goTypes = nil
-	file_proto_madsrc_llmgw_v1_model_management_proto_depIdxs = nil
+	File_proto_madsrc_trustedai_v1_model_management_proto = out.File
+	file_proto_madsrc_trustedai_v1_model_management_proto_goTypes = nil
+	file_proto_madsrc_trustedai_v1_model_management_proto_depIdxs = nil
 }

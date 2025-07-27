@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -21,90 +21,90 @@ type MockUsageRepository struct {
 	mock.Mock
 }
 
-func (m *MockUsageRepository) CreateUsageEvent(ctx context.Context, event *llmgw.UsageEvent) error {
+func (m *MockUsageRepository) CreateUsageEvent(ctx context.Context, event *trustedai.UsageEvent) error {
 	args := m.Called(ctx, event)
 	return args.Error(0)
 }
 
-func (m *MockUsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) GetUsageEvent(ctx context.Context, id string) (*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).(*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, userID, limit, offset)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, limit)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost llmgw.CostResult) error {
+func (m *MockUsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost trustedai.CostResult) error {
 	args := m.Called(ctx, eventID, cost)
 	return args.Error(0)
 }
 
-func (m *MockUsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, userID, start, end)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
 type MockBillingRepository struct {
 	mock.Mock
 }
 
-func (m *MockBillingRepository) CreateBillingSummary(ctx context.Context, summary *llmgw.BillingSummary) error {
+func (m *MockBillingRepository) CreateBillingSummary(ctx context.Context, summary *trustedai.BillingSummary) error {
 	args := m.Called(ctx, summary)
 	return args.Error(0)
 }
 
-func (m *MockBillingRepository) GetBillingSummary(ctx context.Context, id string) (*llmgw.BillingSummary, error) {
+func (m *MockBillingRepository) GetBillingSummary(ctx context.Context, id string) (*trustedai.BillingSummary, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.BillingSummary), args.Error(1)
+	return args.Get(0).(*trustedai.BillingSummary), args.Error(1)
 }
 
-func (m *MockBillingRepository) ListBillingSummariesByUser(ctx context.Context, userID string, limit, offset int) ([]*llmgw.BillingSummary, error) {
+func (m *MockBillingRepository) ListBillingSummariesByUser(ctx context.Context, userID string, limit, offset int) ([]*trustedai.BillingSummary, error) {
 	args := m.Called(ctx, userID, limit, offset)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.BillingSummary), args.Error(1)
+	return args.Get(0).([]*trustedai.BillingSummary), args.Error(1)
 }
 
-func (m *MockBillingRepository) ListBillingSummariesByPeriod(ctx context.Context, start, end time.Time) ([]*llmgw.BillingSummary, error) {
+func (m *MockBillingRepository) ListBillingSummariesByPeriod(ctx context.Context, start, end time.Time) ([]*trustedai.BillingSummary, error) {
 	args := m.Called(ctx, start, end)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.BillingSummary), args.Error(1)
+	return args.Get(0).([]*trustedai.BillingSummary), args.Error(1)
 }
 
-func (m *MockBillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, userID string, start, end time.Time) (*llmgw.BillingSummary, error) {
+func (m *MockBillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, userID string, start, end time.Time) (*trustedai.BillingSummary, error) {
 	args := m.Called(ctx, userID, start, end)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.BillingSummary), args.Error(1)
+	return args.Get(0).(*trustedai.BillingSummary), args.Error(1)
 }
 
-func (m *MockBillingRepository) UpdateBillingSummary(ctx context.Context, summary *llmgw.BillingSummary) error {
+func (m *MockBillingRepository) UpdateBillingSummary(ctx context.Context, summary *trustedai.BillingSummary) error {
 	args := m.Called(ctx, summary)
 	return args.Error(0)
 }

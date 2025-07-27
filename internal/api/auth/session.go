@@ -12,13 +12,13 @@ import (
 	"sync"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 )
 
 // Session represents a user session
 type Session struct {
 	ID        string
-	User      *llmgw.User
+	User      *trustedai.User
 	CreatedAt time.Time
 	ExpiresAt time.Time
 }
@@ -26,7 +26,7 @@ type Session struct {
 // SessionStore defines the interface for session storage
 type SessionStore interface {
 	// Create creates a new session for the given user
-	Create(user *llmgw.User) (*Session, error)
+	Create(user *trustedai.User) (*Session, error)
 
 	// Get retrieves a session by ID
 	Get(ctx context.Context, id string) (*Session, error)
@@ -64,7 +64,7 @@ func NewMemorySessionStore() *MemorySessionStore {
 }
 
 // Create creates a new session for the given user
-func (s *MemorySessionStore) Create(user *llmgw.User) (*Session, error) {
+func (s *MemorySessionStore) Create(user *trustedai.User) (*Session, error) {
 	// Generate a random session ID
 	b := make([]byte, 32)
 	_, err := rand.Read(b)

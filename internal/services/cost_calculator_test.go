@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,13 +19,13 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		event          llmgw.UsageEvent
+		event          trustedai.UsageEvent
 		pricing        gai.ModelPricing
-		expectedResult llmgw.CostResult
+		expectedResult trustedai.CostResult
 	}{
 		{
 			name: "Basic cost calculation",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(1000),
 				OutputTokens: intPtr(500),
 			},
@@ -33,7 +33,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.001, // $0.001 per token
 				OutputTokenPrice: 0.002, // $0.002 per token
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  100, // 1000 * 0.001 * 100
 				OutputCostCents: 100, // 500 * 0.002 * 100
 				TotalCostCents:  200, // 100 + 100
@@ -41,7 +41,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "Free model pricing",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(1000),
 				OutputTokens: intPtr(500),
 			},
@@ -49,7 +49,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.0,
 				OutputTokenPrice: 0.0,
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  0,
 				OutputCostCents: 0,
 				TotalCostCents:  0,
@@ -57,7 +57,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "Missing input tokens",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  nil,
 				OutputTokens: intPtr(500),
 			},
@@ -65,7 +65,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.001,
 				OutputTokenPrice: 0.002,
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  0,   // No input tokens
 				OutputCostCents: 100, // 500 * 0.002 * 100
 				TotalCostCents:  100,
@@ -73,7 +73,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "Missing output tokens",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(1000),
 				OutputTokens: nil,
 			},
@@ -81,7 +81,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.001,
 				OutputTokenPrice: 0.002,
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  100, // 1000 * 0.001 * 100
 				OutputCostCents: 0,   // No output tokens
 				TotalCostCents:  100,
@@ -89,7 +89,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "High precision pricing",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(1),
 				OutputTokens: intPtr(1),
 			},
@@ -97,7 +97,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.00001, // Very small price per token
 				OutputTokenPrice: 0.00001,
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  0.001, // 1 * 0.00001 * 100 = 0.001 cents
 				OutputCostCents: 0.001, // 1 * 0.00001 * 100 = 0.001 cents
 				TotalCostCents:  0.002,
@@ -105,7 +105,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "Large token counts",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(100000),
 				OutputTokens: intPtr(50000),
 			},
@@ -113,7 +113,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.03, // $0.03 per token
 				OutputTokenPrice: 0.06, // $0.06 per token
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  300000, // 100000 * 0.03 * 100
 				OutputCostCents: 300000, // 50000 * 0.06 * 100
 				TotalCostCents:  600000,
@@ -121,7 +121,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 		},
 		{
 			name: "Gemini 2.5 Flash Lite real scenario",
-			event: llmgw.UsageEvent{
+			event: trustedai.UsageEvent{
 				InputTokens:  intPtr(38),
 				OutputTokens: nil,
 			},
@@ -129,7 +129,7 @@ func TestCostCalculator_calculateCost(t *testing.T) {
 				InputTokenPrice:  0.0000001, // $0.0000001 per token (from OpenRouter API)
 				OutputTokenPrice: 0.0000004, // $0.0000004 per token (from OpenRouter API)
 			},
-			expectedResult: llmgw.CostResult{
+			expectedResult: trustedai.CostResult{
 				InputCostCents:  0.00038, // 38 * 0.0000001 * 100 = 0.00038 cents
 				OutputCostCents: 0,       // No output tokens
 				TotalCostCents:  0.00038,

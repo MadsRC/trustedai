@@ -6,9 +6,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/madsrc/llmgw/v1/usage_analytics.proto
+// source: proto/madsrc/trustedai/v1/usage_analytics.proto
 
-package llmgwv1
+package trustedaiv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -37,7 +37,7 @@ type UsagePeriod struct {
 
 func (x *UsagePeriod) Reset() {
 	*x = UsagePeriod{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -49,7 +49,7 @@ func (x *UsagePeriod) String() string {
 func (*UsagePeriod) ProtoMessage() {}
 
 func (x *UsagePeriod) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *UsagePeriod) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UsagePeriod.ProtoReflect.Descriptor instead.
 func (*UsagePeriod) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{0}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *UsagePeriod) GetStart() *timestamppb.Timestamp {
@@ -92,7 +92,7 @@ type UsageSummary struct {
 
 func (x *UsageSummary) Reset() {
 	*x = UsageSummary{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -104,7 +104,7 @@ func (x *UsageSummary) String() string {
 func (*UsageSummary) ProtoMessage() {}
 
 func (x *UsageSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -117,7 +117,7 @@ func (x *UsageSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UsageSummary.ProtoReflect.Descriptor instead.
 func (*UsageSummary) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{1}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UsageSummary) GetTotalRequests() int32 {
@@ -168,7 +168,7 @@ type ModelUsage struct {
 
 func (x *ModelUsage) Reset() {
 	*x = ModelUsage{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -180,7 +180,7 @@ func (x *ModelUsage) String() string {
 func (*ModelUsage) ProtoMessage() {}
 
 func (x *ModelUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -193,7 +193,7 @@ func (x *ModelUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelUsage.ProtoReflect.Descriptor instead.
 func (*ModelUsage) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{2}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ModelUsage) GetModelId() string {
@@ -258,7 +258,7 @@ type UsageEvent struct {
 
 func (x *UsageEvent) Reset() {
 	*x = UsageEvent{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +270,7 @@ func (x *UsageEvent) String() string {
 func (*UsageEvent) ProtoMessage() {}
 
 func (x *UsageEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +283,7 @@ func (x *UsageEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UsageEvent.ProtoReflect.Descriptor instead.
 func (*UsageEvent) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{3}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UsageEvent) GetId() string {
@@ -431,7 +431,7 @@ type UserUsageSummary struct {
 
 func (x *UserUsageSummary) Reset() {
 	*x = UserUsageSummary{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -443,7 +443,7 @@ func (x *UserUsageSummary) String() string {
 func (*UserUsageSummary) ProtoMessage() {}
 
 func (x *UserUsageSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -456,7 +456,7 @@ func (x *UserUsageSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserUsageSummary.ProtoReflect.Descriptor instead.
 func (*UserUsageSummary) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{4}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UserUsageSummary) GetUserId() string {
@@ -500,7 +500,7 @@ type UsageAnalyticsServiceGetUsageSummaryRequest struct {
 
 func (x *UsageAnalyticsServiceGetUsageSummaryRequest) Reset() {
 	*x = UsageAnalyticsServiceGetUsageSummaryRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -512,7 +512,7 @@ func (x *UsageAnalyticsServiceGetUsageSummaryRequest) String() string {
 func (*UsageAnalyticsServiceGetUsageSummaryRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageSummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -525,7 +525,7 @@ func (x *UsageAnalyticsServiceGetUsageSummaryRequest) ProtoReflect() protoreflec
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageSummaryRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageSummaryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{5}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UsageAnalyticsServiceGetUsageSummaryRequest) GetPeriod() string {
@@ -566,7 +566,7 @@ type UsageAnalyticsServiceGetUsageSummaryResponse struct {
 
 func (x *UsageAnalyticsServiceGetUsageSummaryResponse) Reset() {
 	*x = UsageAnalyticsServiceGetUsageSummaryResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -578,7 +578,7 @@ func (x *UsageAnalyticsServiceGetUsageSummaryResponse) String() string {
 func (*UsageAnalyticsServiceGetUsageSummaryResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageSummaryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -591,7 +591,7 @@ func (x *UsageAnalyticsServiceGetUsageSummaryResponse) ProtoReflect() protorefle
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageSummaryResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageSummaryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{6}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UsageAnalyticsServiceGetUsageSummaryResponse) GetPeriod() *UsagePeriod {
@@ -622,7 +622,7 @@ type UsageAnalyticsServiceGetUsageDetailsRequest struct {
 
 func (x *UsageAnalyticsServiceGetUsageDetailsRequest) Reset() {
 	*x = UsageAnalyticsServiceGetUsageDetailsRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -634,7 +634,7 @@ func (x *UsageAnalyticsServiceGetUsageDetailsRequest) String() string {
 func (*UsageAnalyticsServiceGetUsageDetailsRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageDetailsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -647,7 +647,7 @@ func (x *UsageAnalyticsServiceGetUsageDetailsRequest) ProtoReflect() protoreflec
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageDetailsRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageDetailsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{7}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UsageAnalyticsServiceGetUsageDetailsRequest) GetStart() *timestamppb.Timestamp {
@@ -695,7 +695,7 @@ type UsageAnalyticsServiceGetUsageDetailsResponse struct {
 
 func (x *UsageAnalyticsServiceGetUsageDetailsResponse) Reset() {
 	*x = UsageAnalyticsServiceGetUsageDetailsResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -707,7 +707,7 @@ func (x *UsageAnalyticsServiceGetUsageDetailsResponse) String() string {
 func (*UsageAnalyticsServiceGetUsageDetailsResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageDetailsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -720,7 +720,7 @@ func (x *UsageAnalyticsServiceGetUsageDetailsResponse) ProtoReflect() protorefle
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageDetailsResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageDetailsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{8}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UsageAnalyticsServiceGetUsageDetailsResponse) GetEvents() []*UsageEvent {
@@ -750,7 +750,7 @@ type UsageAnalyticsServiceGetUsageCostsRequest struct {
 
 func (x *UsageAnalyticsServiceGetUsageCostsRequest) Reset() {
 	*x = UsageAnalyticsServiceGetUsageCostsRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -762,7 +762,7 @@ func (x *UsageAnalyticsServiceGetUsageCostsRequest) String() string {
 func (*UsageAnalyticsServiceGetUsageCostsRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageCostsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -775,7 +775,7 @@ func (x *UsageAnalyticsServiceGetUsageCostsRequest) ProtoReflect() protoreflect.
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageCostsRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageCostsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{9}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *UsageAnalyticsServiceGetUsageCostsRequest) GetPeriod() string {
@@ -817,7 +817,7 @@ type UsageAnalyticsServiceGetUsageCostsResponse struct {
 
 func (x *UsageAnalyticsServiceGetUsageCostsResponse) Reset() {
 	*x = UsageAnalyticsServiceGetUsageCostsResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -829,7 +829,7 @@ func (x *UsageAnalyticsServiceGetUsageCostsResponse) String() string {
 func (*UsageAnalyticsServiceGetUsageCostsResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetUsageCostsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -842,7 +842,7 @@ func (x *UsageAnalyticsServiceGetUsageCostsResponse) ProtoReflect() protoreflect
 
 // Deprecated: Use UsageAnalyticsServiceGetUsageCostsResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetUsageCostsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{10}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UsageAnalyticsServiceGetUsageCostsResponse) GetPeriod() *UsagePeriod {
@@ -879,7 +879,7 @@ type CostBreakdown struct {
 
 func (x *CostBreakdown) Reset() {
 	*x = CostBreakdown{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -891,7 +891,7 @@ func (x *CostBreakdown) String() string {
 func (*CostBreakdown) ProtoMessage() {}
 
 func (x *CostBreakdown) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -904,7 +904,7 @@ func (x *CostBreakdown) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CostBreakdown.ProtoReflect.Descriptor instead.
 func (*CostBreakdown) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{11}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *CostBreakdown) GetModelId() string {
@@ -956,7 +956,7 @@ type UsageAnalyticsServiceGetOrganizationUsageSummaryRequest struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageSummaryRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -968,7 +968,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) String() strin
 func (*UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -981,7 +981,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) ProtoReflect()
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{12}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryRequest) GetOrganizationId() string {
@@ -1030,7 +1030,7 @@ type UsageAnalyticsServiceGetOrganizationUsageSummaryResponse struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageSummaryResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1042,7 +1042,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) String() stri
 func (*UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1055,7 +1055,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) ProtoReflect(
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{13}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageSummaryResponse) GetPeriod() *UsagePeriod {
@@ -1093,7 +1093,7 @@ type UsageAnalyticsServiceGetOrganizationUsageByUserRequest struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserRequest) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageByUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1105,7 +1105,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByUserRequest) String() string
 func (*UsageAnalyticsServiceGetOrganizationUsageByUserRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1118,7 +1118,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByUserRequest) ProtoReflect() 
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageByUserRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageByUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{14}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserRequest) GetOrganizationId() string {
@@ -1166,7 +1166,7 @@ type UsageAnalyticsServiceGetOrganizationUsageByUserResponse struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserResponse) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageByUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1178,7 +1178,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByUserResponse) String() strin
 func (*UsageAnalyticsServiceGetOrganizationUsageByUserResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1191,7 +1191,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByUserResponse) ProtoReflect()
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageByUserResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageByUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{15}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByUserResponse) GetUserSummaries() []*UserUsageSummary {
@@ -1222,7 +1222,7 @@ type UsageAnalyticsServiceGetOrganizationUsageByModelRequest struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelRequest) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageByModelRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1234,7 +1234,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByModelRequest) String() strin
 func (*UsageAnalyticsServiceGetOrganizationUsageByModelRequest) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1247,7 +1247,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByModelRequest) ProtoReflect()
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageByModelRequest.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageByModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{16}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelRequest) GetOrganizationId() string {
@@ -1295,7 +1295,7 @@ type UsageAnalyticsServiceGetOrganizationUsageByModelResponse struct {
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) Reset() {
 	*x = UsageAnalyticsServiceGetOrganizationUsageByModelResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1307,7 +1307,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) String() stri
 func (*UsageAnalyticsServiceGetOrganizationUsageByModelResponse) ProtoMessage() {}
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1320,7 +1320,7 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) ProtoReflect(
 
 // Deprecated: Use UsageAnalyticsServiceGetOrganizationUsageByModelResponse.ProtoReflect.Descriptor instead.
 func (*UsageAnalyticsServiceGetOrganizationUsageByModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP(), []int{17}
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) GetModelUsage() []*ModelUsage {
@@ -1337,20 +1337,20 @@ func (x *UsageAnalyticsServiceGetOrganizationUsageByModelResponse) GetTotalCount
 	return 0
 }
 
-var File_proto_madsrc_llmgw_v1_usage_analytics_proto protoreflect.FileDescriptor
+var File_proto_madsrc_trustedai_v1_usage_analytics_proto protoreflect.FileDescriptor
 
-const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
+const file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDesc = "" +
 	"\n" +
-	"+proto/madsrc/llmgw/v1/usage_analytics.proto\x12\bllmgw.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"m\n" +
+	"/proto/madsrc/trustedai/v1/usage_analytics.proto\x12\ftrustedai.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"m\n" +
 	"\vUsagePeriod\x120\n" +
 	"\x05start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
-	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\"\xeb\x01\n" +
+	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\"\xef\x01\n" +
 	"\fUsageSummary\x12%\n" +
 	"\x0etotal_requests\x18\x01 \x01(\x05R\rtotalRequests\x12,\n" +
 	"\x12total_input_tokens\x18\x02 \x01(\x03R\x10totalInputTokens\x12.\n" +
 	"\x13total_output_tokens\x18\x03 \x01(\x03R\x11totalOutputTokens\x12(\n" +
-	"\x10total_cost_cents\x18\x04 \x01(\x01R\x0etotalCostCents\x12,\n" +
-	"\x06models\x18\x05 \x03(\v2\x14.llmgw.v1.ModelUsageR\x06models\"\xaa\x01\n" +
+	"\x10total_cost_cents\x18\x04 \x01(\x01R\x0etotalCostCents\x120\n" +
+	"\x06models\x18\x05 \x03(\v2\x18.trustedai.v1.ModelUsageR\x06models\"\xaa\x01\n" +
 	"\n" +
 	"ModelUsage\x12\x19\n" +
 	"\bmodel_id\x18\x01 \x01(\tR\amodelId\x12\x1a\n" +
@@ -1395,31 +1395,31 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\f_duration_msB\x13\n" +
 	"\x11_input_cost_centsB\x14\n" +
 	"\x12_output_cost_centsB\x13\n" +
-	"\x11_total_cost_cents\"\x99\x01\n" +
+	"\x11_total_cost_cents\"\x9d\x01\n" +
 	"\x10UserUsageSummary\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
 	"\n" +
 	"user_email\x18\x02 \x01(\tR\tuserEmail\x12\x1b\n" +
-	"\tuser_name\x18\x03 \x01(\tR\buserName\x120\n" +
-	"\asummary\x18\x04 \x01(\v2\x16.llmgw.v1.UsageSummaryR\asummary\"\xd2\x01\n" +
+	"\tuser_name\x18\x03 \x01(\tR\buserName\x124\n" +
+	"\asummary\x18\x04 \x01(\v2\x1a.trustedai.v1.UsageSummaryR\asummary\"\xd2\x01\n" +
 	"+UsageAnalyticsServiceGetUsageSummaryRequest\x12\x16\n" +
 	"\x06period\x18\x01 \x01(\tR\x06period\x120\n" +
 	"\x05start\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x1e\n" +
 	"\bmodel_id\x18\x04 \x01(\tH\x00R\amodelId\x88\x01\x01B\v\n" +
-	"\t_model_id\"\x8f\x01\n" +
-	",UsageAnalyticsServiceGetUsageSummaryResponse\x12-\n" +
-	"\x06period\x18\x01 \x01(\v2\x15.llmgw.v1.UsagePeriodR\x06period\x120\n" +
-	"\asummary\x18\x02 \x01(\v2\x16.llmgw.v1.UsageSummaryR\asummary\"\xe8\x01\n" +
+	"\t_model_id\"\x97\x01\n" +
+	",UsageAnalyticsServiceGetUsageSummaryResponse\x121\n" +
+	"\x06period\x18\x01 \x01(\v2\x19.trustedai.v1.UsagePeriodR\x06period\x124\n" +
+	"\asummary\x18\x02 \x01(\v2\x1a.trustedai.v1.UsageSummaryR\asummary\"\xe8\x01\n" +
 	"+UsageAnalyticsServiceGetUsageDetailsRequest\x120\n" +
 	"\x05start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x1e\n" +
 	"\bmodel_id\x18\x03 \x01(\tH\x00R\amodelId\x88\x01\x01\x12\x14\n" +
 	"\x05limit\x18\x04 \x01(\x05R\x05limit\x12\x16\n" +
 	"\x06offset\x18\x05 \x01(\x05R\x06offsetB\v\n" +
-	"\t_model_id\"}\n" +
-	",UsageAnalyticsServiceGetUsageDetailsResponse\x12,\n" +
-	"\x06events\x18\x01 \x03(\v2\x14.llmgw.v1.UsageEventR\x06events\x12\x1f\n" +
+	"\t_model_id\"\x81\x01\n" +
+	",UsageAnalyticsServiceGetUsageDetailsResponse\x120\n" +
+	"\x06events\x18\x01 \x03(\v2\x18.trustedai.v1.UsageEventR\x06events\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\"\xd0\x01\n" +
 	")UsageAnalyticsServiceGetUsageCostsRequest\x12\x16\n" +
@@ -1427,10 +1427,10 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\x05start\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x1e\n" +
 	"\bmodel_id\x18\x04 \x01(\tH\x00R\amodelId\x88\x01\x01B\v\n" +
-	"\t_model_id\"\xc5\x01\n" +
-	"*UsageAnalyticsServiceGetUsageCostsResponse\x12-\n" +
-	"\x06period\x18\x01 \x01(\v2\x15.llmgw.v1.UsagePeriodR\x06period\x12>\n" +
-	"\x0ecost_breakdown\x18\x02 \x03(\v2\x17.llmgw.v1.CostBreakdownR\rcostBreakdown\x12(\n" +
+	"\t_model_id\"\xcd\x01\n" +
+	"*UsageAnalyticsServiceGetUsageCostsResponse\x121\n" +
+	"\x06period\x18\x01 \x01(\v2\x19.trustedai.v1.UsagePeriodR\x06period\x12B\n" +
+	"\x0ecost_breakdown\x18\x02 \x03(\v2\x1b.trustedai.v1.CostBreakdownR\rcostBreakdown\x12(\n" +
 	"\x10total_cost_cents\x18\x03 \x01(\x01R\x0etotalCostCents\"\xc6\x01\n" +
 	"\rCostBreakdown\x12\x19\n" +
 	"\bmodel_id\x18\x01 \x01(\tR\amodelId\x12(\n" +
@@ -1444,19 +1444,19 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\x05start\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x1e\n" +
 	"\bmodel_id\x18\x05 \x01(\tH\x00R\amodelId\x88\x01\x01B\v\n" +
-	"\t_model_id\"\xde\x01\n" +
-	"8UsageAnalyticsServiceGetOrganizationUsageSummaryResponse\x12-\n" +
-	"\x06period\x18\x01 \x01(\v2\x15.llmgw.v1.UsagePeriodR\x06period\x120\n" +
-	"\asummary\x18\x02 \x01(\v2\x16.llmgw.v1.UsageSummaryR\asummary\x12A\n" +
-	"\x0euser_summaries\x18\x03 \x03(\v2\x1a.llmgw.v1.UserUsageSummaryR\ruserSummaries\"\xef\x01\n" +
+	"\t_model_id\"\xea\x01\n" +
+	"8UsageAnalyticsServiceGetOrganizationUsageSummaryResponse\x121\n" +
+	"\x06period\x18\x01 \x01(\v2\x19.trustedai.v1.UsagePeriodR\x06period\x124\n" +
+	"\asummary\x18\x02 \x01(\v2\x1a.trustedai.v1.UsageSummaryR\asummary\x12E\n" +
+	"\x0euser_summaries\x18\x03 \x03(\v2\x1e.trustedai.v1.UserUsageSummaryR\ruserSummaries\"\xef\x01\n" +
 	"6UsageAnalyticsServiceGetOrganizationUsageByUserRequest\x12'\n" +
 	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x120\n" +
 	"\x05start\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x14\n" +
 	"\x05limit\x18\x04 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x05 \x01(\x05R\x06offset\"\x9d\x01\n" +
-	"7UsageAnalyticsServiceGetOrganizationUsageByUserResponse\x12A\n" +
-	"\x0euser_summaries\x18\x01 \x03(\v2\x1a.llmgw.v1.UserUsageSummaryR\ruserSummaries\x12\x1f\n" +
+	"\x06offset\x18\x05 \x01(\x05R\x06offset\"\xa1\x01\n" +
+	"7UsageAnalyticsServiceGetOrganizationUsageByUserResponse\x12E\n" +
+	"\x0euser_summaries\x18\x01 \x03(\v2\x1e.trustedai.v1.UserUsageSummaryR\ruserSummaries\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\"\xf0\x01\n" +
 	"7UsageAnalyticsServiceGetOrganizationUsageByModelRequest\x12'\n" +
@@ -1464,94 +1464,94 @@ const file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc = "" +
 	"\x05start\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12\x14\n" +
 	"\x05limit\x18\x04 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x05 \x01(\x05R\x06offset\"\x92\x01\n" +
-	"8UsageAnalyticsServiceGetOrganizationUsageByModelResponse\x125\n" +
-	"\vmodel_usage\x18\x01 \x03(\v2\x14.llmgw.v1.ModelUsageR\n" +
+	"\x06offset\x18\x05 \x01(\x05R\x06offset\"\x96\x01\n" +
+	"8UsageAnalyticsServiceGetOrganizationUsageByModelResponse\x129\n" +
+	"\vmodel_usage\x18\x01 \x03(\v2\x18.trustedai.v1.ModelUsageR\n" +
 	"modelUsage\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
-	"totalCount2\x8b\a\n" +
-	"\x15UsageAnalyticsService\x12\x80\x01\n" +
-	"\x0fGetUsageSummary\x125.llmgw.v1.UsageAnalyticsServiceGetUsageSummaryRequest\x1a6.llmgw.v1.UsageAnalyticsServiceGetUsageSummaryResponse\x12\x80\x01\n" +
-	"\x0fGetUsageDetails\x125.llmgw.v1.UsageAnalyticsServiceGetUsageDetailsRequest\x1a6.llmgw.v1.UsageAnalyticsServiceGetUsageDetailsResponse\x12z\n" +
-	"\rGetUsageCosts\x123.llmgw.v1.UsageAnalyticsServiceGetUsageCostsRequest\x1a4.llmgw.v1.UsageAnalyticsServiceGetUsageCostsResponse\x12\xa4\x01\n" +
-	"\x1bGetOrganizationUsageSummary\x12A.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest\x1aB.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse\x12\xa1\x01\n" +
-	"\x1aGetOrganizationUsageByUser\x12@.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest\x1aA.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse\x12\xa4\x01\n" +
-	"\x1bGetOrganizationUsageByModel\x12A.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest\x1aB.llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponseB=Z;codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1b\x06proto3"
+	"totalCount2\xbc\a\n" +
+	"\x15UsageAnalyticsService\x12\x88\x01\n" +
+	"\x0fGetUsageSummary\x129.trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest\x1a:.trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse\x12\x88\x01\n" +
+	"\x0fGetUsageDetails\x129.trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest\x1a:.trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse\x12\x82\x01\n" +
+	"\rGetUsageCosts\x127.trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest\x1a8.trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse\x12\xac\x01\n" +
+	"\x1bGetOrganizationUsageSummary\x12E.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest\x1aF.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse\x12\xa9\x01\n" +
+	"\x1aGetOrganizationUsageByUser\x12D.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest\x1aE.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse\x12\xac\x01\n" +
+	"\x1bGetOrganizationUsageByModel\x12E.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest\x1aF.trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponseBGZEgithub.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1;trustedaiv1b\x06proto3"
 
 var (
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescOnce sync.Once
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescData []byte
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescOnce sync.Once
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescData []byte
 )
 
-func file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescGZIP() []byte {
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescOnce.Do(func() {
-		file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc)))
+func file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescGZIP() []byte {
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescOnce.Do(func() {
+		file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDesc)))
 	})
-	return file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDescData
+	return file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDescData
 }
 
-var file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
-var file_proto_madsrc_llmgw_v1_usage_analytics_proto_goTypes = []any{
-	(*UsagePeriod)(nil),      // 0: llmgw.v1.UsagePeriod
-	(*UsageSummary)(nil),     // 1: llmgw.v1.UsageSummary
-	(*ModelUsage)(nil),       // 2: llmgw.v1.ModelUsage
-	(*UsageEvent)(nil),       // 3: llmgw.v1.UsageEvent
-	(*UserUsageSummary)(nil), // 4: llmgw.v1.UserUsageSummary
-	(*UsageAnalyticsServiceGetUsageSummaryRequest)(nil),              // 5: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryRequest
-	(*UsageAnalyticsServiceGetUsageSummaryResponse)(nil),             // 6: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryResponse
-	(*UsageAnalyticsServiceGetUsageDetailsRequest)(nil),              // 7: llmgw.v1.UsageAnalyticsServiceGetUsageDetailsRequest
-	(*UsageAnalyticsServiceGetUsageDetailsResponse)(nil),             // 8: llmgw.v1.UsageAnalyticsServiceGetUsageDetailsResponse
-	(*UsageAnalyticsServiceGetUsageCostsRequest)(nil),                // 9: llmgw.v1.UsageAnalyticsServiceGetUsageCostsRequest
-	(*UsageAnalyticsServiceGetUsageCostsResponse)(nil),               // 10: llmgw.v1.UsageAnalyticsServiceGetUsageCostsResponse
-	(*CostBreakdown)(nil),                                            // 11: llmgw.v1.CostBreakdown
-	(*UsageAnalyticsServiceGetOrganizationUsageSummaryRequest)(nil),  // 12: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest
-	(*UsageAnalyticsServiceGetOrganizationUsageSummaryResponse)(nil), // 13: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse
-	(*UsageAnalyticsServiceGetOrganizationUsageByUserRequest)(nil),   // 14: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest
-	(*UsageAnalyticsServiceGetOrganizationUsageByUserResponse)(nil),  // 15: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse
-	(*UsageAnalyticsServiceGetOrganizationUsageByModelRequest)(nil),  // 16: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest
-	(*UsageAnalyticsServiceGetOrganizationUsageByModelResponse)(nil), // 17: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse
+var file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_proto_madsrc_trustedai_v1_usage_analytics_proto_goTypes = []any{
+	(*UsagePeriod)(nil),      // 0: trustedai.v1.UsagePeriod
+	(*UsageSummary)(nil),     // 1: trustedai.v1.UsageSummary
+	(*ModelUsage)(nil),       // 2: trustedai.v1.ModelUsage
+	(*UsageEvent)(nil),       // 3: trustedai.v1.UsageEvent
+	(*UserUsageSummary)(nil), // 4: trustedai.v1.UserUsageSummary
+	(*UsageAnalyticsServiceGetUsageSummaryRequest)(nil),              // 5: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest
+	(*UsageAnalyticsServiceGetUsageSummaryResponse)(nil),             // 6: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse
+	(*UsageAnalyticsServiceGetUsageDetailsRequest)(nil),              // 7: trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest
+	(*UsageAnalyticsServiceGetUsageDetailsResponse)(nil),             // 8: trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse
+	(*UsageAnalyticsServiceGetUsageCostsRequest)(nil),                // 9: trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest
+	(*UsageAnalyticsServiceGetUsageCostsResponse)(nil),               // 10: trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse
+	(*CostBreakdown)(nil),                                            // 11: trustedai.v1.CostBreakdown
+	(*UsageAnalyticsServiceGetOrganizationUsageSummaryRequest)(nil),  // 12: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest
+	(*UsageAnalyticsServiceGetOrganizationUsageSummaryResponse)(nil), // 13: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse
+	(*UsageAnalyticsServiceGetOrganizationUsageByUserRequest)(nil),   // 14: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest
+	(*UsageAnalyticsServiceGetOrganizationUsageByUserResponse)(nil),  // 15: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse
+	(*UsageAnalyticsServiceGetOrganizationUsageByModelRequest)(nil),  // 16: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest
+	(*UsageAnalyticsServiceGetOrganizationUsageByModelResponse)(nil), // 17: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse
 	(*timestamppb.Timestamp)(nil),                                    // 18: google.protobuf.Timestamp
 }
-var file_proto_madsrc_llmgw_v1_usage_analytics_proto_depIdxs = []int32{
-	18, // 0: llmgw.v1.UsagePeriod.start:type_name -> google.protobuf.Timestamp
-	18, // 1: llmgw.v1.UsagePeriod.end:type_name -> google.protobuf.Timestamp
-	2,  // 2: llmgw.v1.UsageSummary.models:type_name -> llmgw.v1.ModelUsage
-	18, // 3: llmgw.v1.UsageEvent.timestamp:type_name -> google.protobuf.Timestamp
-	1,  // 4: llmgw.v1.UserUsageSummary.summary:type_name -> llmgw.v1.UsageSummary
-	18, // 5: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 6: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryRequest.end:type_name -> google.protobuf.Timestamp
-	0,  // 7: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryResponse.period:type_name -> llmgw.v1.UsagePeriod
-	1,  // 8: llmgw.v1.UsageAnalyticsServiceGetUsageSummaryResponse.summary:type_name -> llmgw.v1.UsageSummary
-	18, // 9: llmgw.v1.UsageAnalyticsServiceGetUsageDetailsRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 10: llmgw.v1.UsageAnalyticsServiceGetUsageDetailsRequest.end:type_name -> google.protobuf.Timestamp
-	3,  // 11: llmgw.v1.UsageAnalyticsServiceGetUsageDetailsResponse.events:type_name -> llmgw.v1.UsageEvent
-	18, // 12: llmgw.v1.UsageAnalyticsServiceGetUsageCostsRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 13: llmgw.v1.UsageAnalyticsServiceGetUsageCostsRequest.end:type_name -> google.protobuf.Timestamp
-	0,  // 14: llmgw.v1.UsageAnalyticsServiceGetUsageCostsResponse.period:type_name -> llmgw.v1.UsagePeriod
-	11, // 15: llmgw.v1.UsageAnalyticsServiceGetUsageCostsResponse.cost_breakdown:type_name -> llmgw.v1.CostBreakdown
-	18, // 16: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 17: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.end:type_name -> google.protobuf.Timestamp
-	0,  // 18: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.period:type_name -> llmgw.v1.UsagePeriod
-	1,  // 19: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.summary:type_name -> llmgw.v1.UsageSummary
-	4,  // 20: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.user_summaries:type_name -> llmgw.v1.UserUsageSummary
-	18, // 21: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 22: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest.end:type_name -> google.protobuf.Timestamp
-	4,  // 23: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse.user_summaries:type_name -> llmgw.v1.UserUsageSummary
-	18, // 24: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest.start:type_name -> google.protobuf.Timestamp
-	18, // 25: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest.end:type_name -> google.protobuf.Timestamp
-	2,  // 26: llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse.model_usage:type_name -> llmgw.v1.ModelUsage
-	5,  // 27: llmgw.v1.UsageAnalyticsService.GetUsageSummary:input_type -> llmgw.v1.UsageAnalyticsServiceGetUsageSummaryRequest
-	7,  // 28: llmgw.v1.UsageAnalyticsService.GetUsageDetails:input_type -> llmgw.v1.UsageAnalyticsServiceGetUsageDetailsRequest
-	9,  // 29: llmgw.v1.UsageAnalyticsService.GetUsageCosts:input_type -> llmgw.v1.UsageAnalyticsServiceGetUsageCostsRequest
-	12, // 30: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageSummary:input_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest
-	14, // 31: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageByUser:input_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest
-	16, // 32: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageByModel:input_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest
-	6,  // 33: llmgw.v1.UsageAnalyticsService.GetUsageSummary:output_type -> llmgw.v1.UsageAnalyticsServiceGetUsageSummaryResponse
-	8,  // 34: llmgw.v1.UsageAnalyticsService.GetUsageDetails:output_type -> llmgw.v1.UsageAnalyticsServiceGetUsageDetailsResponse
-	10, // 35: llmgw.v1.UsageAnalyticsService.GetUsageCosts:output_type -> llmgw.v1.UsageAnalyticsServiceGetUsageCostsResponse
-	13, // 36: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageSummary:output_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse
-	15, // 37: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageByUser:output_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse
-	17, // 38: llmgw.v1.UsageAnalyticsService.GetOrganizationUsageByModel:output_type -> llmgw.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse
+var file_proto_madsrc_trustedai_v1_usage_analytics_proto_depIdxs = []int32{
+	18, // 0: trustedai.v1.UsagePeriod.start:type_name -> google.protobuf.Timestamp
+	18, // 1: trustedai.v1.UsagePeriod.end:type_name -> google.protobuf.Timestamp
+	2,  // 2: trustedai.v1.UsageSummary.models:type_name -> trustedai.v1.ModelUsage
+	18, // 3: trustedai.v1.UsageEvent.timestamp:type_name -> google.protobuf.Timestamp
+	1,  // 4: trustedai.v1.UserUsageSummary.summary:type_name -> trustedai.v1.UsageSummary
+	18, // 5: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 6: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest.end:type_name -> google.protobuf.Timestamp
+	0,  // 7: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse.period:type_name -> trustedai.v1.UsagePeriod
+	1,  // 8: trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse.summary:type_name -> trustedai.v1.UsageSummary
+	18, // 9: trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 10: trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest.end:type_name -> google.protobuf.Timestamp
+	3,  // 11: trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse.events:type_name -> trustedai.v1.UsageEvent
+	18, // 12: trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 13: trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest.end:type_name -> google.protobuf.Timestamp
+	0,  // 14: trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse.period:type_name -> trustedai.v1.UsagePeriod
+	11, // 15: trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse.cost_breakdown:type_name -> trustedai.v1.CostBreakdown
+	18, // 16: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 17: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.end:type_name -> google.protobuf.Timestamp
+	0,  // 18: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.period:type_name -> trustedai.v1.UsagePeriod
+	1,  // 19: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.summary:type_name -> trustedai.v1.UsageSummary
+	4,  // 20: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.user_summaries:type_name -> trustedai.v1.UserUsageSummary
+	18, // 21: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 22: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest.end:type_name -> google.protobuf.Timestamp
+	4,  // 23: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse.user_summaries:type_name -> trustedai.v1.UserUsageSummary
+	18, // 24: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest.start:type_name -> google.protobuf.Timestamp
+	18, // 25: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest.end:type_name -> google.protobuf.Timestamp
+	2,  // 26: trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse.model_usage:type_name -> trustedai.v1.ModelUsage
+	5,  // 27: trustedai.v1.UsageAnalyticsService.GetUsageSummary:input_type -> trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest
+	7,  // 28: trustedai.v1.UsageAnalyticsService.GetUsageDetails:input_type -> trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest
+	9,  // 29: trustedai.v1.UsageAnalyticsService.GetUsageCosts:input_type -> trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest
+	12, // 30: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageSummary:input_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest
+	14, // 31: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByUser:input_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest
+	16, // 32: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByModel:input_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest
+	6,  // 33: trustedai.v1.UsageAnalyticsService.GetUsageSummary:output_type -> trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse
+	8,  // 34: trustedai.v1.UsageAnalyticsService.GetUsageDetails:output_type -> trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse
+	10, // 35: trustedai.v1.UsageAnalyticsService.GetUsageCosts:output_type -> trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse
+	13, // 36: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageSummary:output_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse
+	15, // 37: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByUser:output_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse
+	17, // 38: trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByModel:output_type -> trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse
 	33, // [33:39] is the sub-list for method output_type
 	27, // [27:33] is the sub-list for method input_type
 	27, // [27:27] is the sub-list for extension type_name
@@ -1559,31 +1559,31 @@ var file_proto_madsrc_llmgw_v1_usage_analytics_proto_depIdxs = []int32{
 	0,  // [0:27] is the sub-list for field type_name
 }
 
-func init() { file_proto_madsrc_llmgw_v1_usage_analytics_proto_init() }
-func file_proto_madsrc_llmgw_v1_usage_analytics_proto_init() {
-	if File_proto_madsrc_llmgw_v1_usage_analytics_proto != nil {
+func init() { file_proto_madsrc_trustedai_v1_usage_analytics_proto_init() }
+func file_proto_madsrc_trustedai_v1_usage_analytics_proto_init() {
+	if File_proto_madsrc_trustedai_v1_usage_analytics_proto != nil {
 		return
 	}
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[3].OneofWrappers = []any{}
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[5].OneofWrappers = []any{}
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[7].OneofWrappers = []any{}
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[9].OneofWrappers = []any{}
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes[12].OneofWrappers = []any{}
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[3].OneofWrappers = []any{}
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[5].OneofWrappers = []any{}
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[7].OneofWrappers = []any{}
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[9].OneofWrappers = []any{}
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_usage_analytics_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_usage_analytics_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_madsrc_llmgw_v1_usage_analytics_proto_goTypes,
-		DependencyIndexes: file_proto_madsrc_llmgw_v1_usage_analytics_proto_depIdxs,
-		MessageInfos:      file_proto_madsrc_llmgw_v1_usage_analytics_proto_msgTypes,
+		GoTypes:           file_proto_madsrc_trustedai_v1_usage_analytics_proto_goTypes,
+		DependencyIndexes: file_proto_madsrc_trustedai_v1_usage_analytics_proto_depIdxs,
+		MessageInfos:      file_proto_madsrc_trustedai_v1_usage_analytics_proto_msgTypes,
 	}.Build()
-	File_proto_madsrc_llmgw_v1_usage_analytics_proto = out.File
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_goTypes = nil
-	file_proto_madsrc_llmgw_v1_usage_analytics_proto_depIdxs = nil
+	File_proto_madsrc_trustedai_v1_usage_analytics_proto = out.File
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_goTypes = nil
+	file_proto_madsrc_trustedai_v1_usage_analytics_proto_depIdxs = nil
 }

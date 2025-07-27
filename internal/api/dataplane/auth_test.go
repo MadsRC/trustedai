@@ -14,37 +14,37 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/auth"
 )
 
-// mockTokenRepository implements llmgw.TokenRepository for testing
+// mockTokenRepository implements trustedai.TokenRepository for testing
 type mockTokenRepository struct {
-	tokens map[string]*llmgw.APIToken
+	tokens map[string]*trustedai.APIToken
 }
 
 func newMockTokenRepository() *mockTokenRepository {
 	return &mockTokenRepository{
-		tokens: make(map[string]*llmgw.APIToken),
+		tokens: make(map[string]*trustedai.APIToken),
 	}
 }
 
-func (m *mockTokenRepository) CreateToken(ctx context.Context, userID string, description string, expiresAt time.Time) (*llmgw.APIToken, string, error) {
+func (m *mockTokenRepository) CreateToken(ctx context.Context, userID string, description string, expiresAt time.Time) (*trustedai.APIToken, string, error) {
 	return nil, "", fmt.Errorf("not implemented")
 }
 
-func (m *mockTokenRepository) GetTokenByPrefixHash(ctx context.Context, prefixHash string) (*llmgw.APIToken, error) {
+func (m *mockTokenRepository) GetTokenByPrefixHash(ctx context.Context, prefixHash string) (*trustedai.APIToken, error) {
 	if token, exists := m.tokens[prefixHash]; exists {
 		return token, nil
 	}
-	return nil, llmgw.ErrNotFound
+	return nil, trustedai.ErrNotFound
 }
 
 func (m *mockTokenRepository) RevokeToken(ctx context.Context, tokenID string) error {
 	return fmt.Errorf("not implemented")
 }
 
-func (m *mockTokenRepository) ListUserTokens(ctx context.Context, userID string) ([]*llmgw.APIToken, error) {
+func (m *mockTokenRepository) ListUserTokens(ctx context.Context, userID string) ([]*trustedai.APIToken, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
@@ -52,53 +52,53 @@ func (m *mockTokenRepository) UpdateTokenUsage(ctx context.Context, tokenID stri
 	return nil // No-op for testing
 }
 
-func (m *mockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *llmgw.User, targetUserID string) ([]*llmgw.APIToken, error) {
+func (m *mockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *trustedai.User, targetUserID string) ([]*trustedai.APIToken, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.APIToken, error) {
+func (m *mockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *trustedai.User) ([]*trustedai.APIToken, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *llmgw.User, tokenID string) error {
+func (m *mockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *trustedai.User, tokenID string) error {
 	return fmt.Errorf("not implemented")
 }
 
-// mockUserRepository implements llmgw.UserRepository for testing
+// mockUserRepository implements trustedai.UserRepository for testing
 type mockUserRepository struct {
-	users map[string]*llmgw.User
+	users map[string]*trustedai.User
 }
 
 func newMockUserRepository() *mockUserRepository {
 	return &mockUserRepository{
-		users: make(map[string]*llmgw.User),
+		users: make(map[string]*trustedai.User),
 	}
 }
 
-func (m *mockUserRepository) Create(ctx context.Context, user *llmgw.User) error {
+func (m *mockUserRepository) Create(ctx context.Context, user *trustedai.User) error {
 	return fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) Get(ctx context.Context, id string) (*llmgw.User, error) {
+func (m *mockUserRepository) Get(ctx context.Context, id string) (*trustedai.User, error) {
 	if user, exists := m.users[id]; exists {
 		return user, nil
 	}
-	return nil, llmgw.ErrNotFound
+	return nil, trustedai.ErrNotFound
 }
 
-func (m *mockUserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.User, error) {
+func (m *mockUserRepository) GetByEmail(ctx context.Context, email string) (*trustedai.User, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*llmgw.User, error) {
+func (m *mockUserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*trustedai.User, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*llmgw.User, error) {
+func (m *mockUserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*trustedai.User, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) Update(ctx context.Context, user *llmgw.User) error {
+func (m *mockUserRepository) Update(ctx context.Context, user *trustedai.User) error {
 	return fmt.Errorf("not implemented")
 }
 
@@ -106,11 +106,11 @@ func (m *mockUserRepository) Delete(ctx context.Context, id string) error {
 	return fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+func (m *mockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *trustedai.User, orgID string) ([]*trustedai.User, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (m *mockUserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+func (m *mockUserRepository) ListAllForUser(ctx context.Context, requestingUser *trustedai.User) ([]*trustedai.User, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
@@ -120,7 +120,7 @@ func TestDataPlaneAuthenticationIntegration(t *testing.T) {
 	userRepo := newMockUserRepository()
 
 	// Create a mock user
-	testUser := &llmgw.User{
+	testUser := &trustedai.User{
 		ID:   "test-user-id",
 		Name: "Test User",
 	}
@@ -128,7 +128,7 @@ func TestDataPlaneAuthenticationIntegration(t *testing.T) {
 
 	// Create a mock token with a simplified hash for testing
 	// In a real scenario, this would be properly hashed with Argon2id
-	testToken := &llmgw.APIToken{
+	testToken := &trustedai.APIToken{
 		ID:         "test-token-id",
 		UserID:     "test-user-id",
 		PrefixHash: "test-prefix-hash",
@@ -214,14 +214,14 @@ func TestDataPlaneXAPIKeyAuthentication(t *testing.T) {
 	userRepo := newMockUserRepository()
 
 	// Create a mock user
-	testUser := &llmgw.User{
+	testUser := &trustedai.User{
 		ID:   "test-user-id",
 		Name: "Test User",
 	}
 	userRepo.users["test-user-id"] = testUser
 
 	// Create a mock token with a simplified hash for testing
-	testToken := &llmgw.APIToken{
+	testToken := &trustedai.APIToken{
 		ID:         "test-token-id",
 		UserID:     "test-user-id",
 		PrefixHash: "test-prefix-hash",

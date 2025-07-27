@@ -11,7 +11,7 @@ import (
 	"log/slog"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/google/uuid"
 )
 
@@ -26,19 +26,19 @@ const (
 func CheckAndBootstrap(
 	ctx context.Context,
 	logger *slog.Logger,
-	orgRepo llmgw.OrganizationRepository,
-	userRepo llmgw.UserRepository,
-	tokenRepo llmgw.TokenRepository,
+	orgRepo trustedai.OrganizationRepository,
+	userRepo trustedai.UserRepository,
+	tokenRepo trustedai.TokenRepository,
 ) error {
 	logger.Info("Checking if system needs bootstrapping...")
 
 	// Check if system organization exists
 	systemOrg, err := findSystemOrganization(ctx, orgRepo)
-	if err != nil && !errors.Is(err, llmgw.ErrNotFound) {
+	if err != nil && !errors.Is(err, trustedai.ErrNotFound) {
 		return fmt.Errorf("failed to check for system organization: %w", err)
 	}
 
-	if errors.Is(err, llmgw.ErrNotFound) {
+	if errors.Is(err, trustedai.ErrNotFound) {
 		logger.Info("No system organization found, bootstrapping required")
 	}
 
@@ -78,7 +78,7 @@ func CheckAndBootstrap(
 }
 
 // findSystemOrganization looks for an organization with IsSystem=true
-func findSystemOrganization(ctx context.Context, orgRepo llmgw.OrganizationRepository) (*llmgw.Organization, error) {
+func findSystemOrganization(ctx context.Context, orgRepo trustedai.OrganizationRepository) (*trustedai.Organization, error) {
 	orgs, err := orgRepo.List(ctx)
 	if err != nil {
 		return nil, err
@@ -90,11 +90,11 @@ func findSystemOrganization(ctx context.Context, orgRepo llmgw.OrganizationRepos
 		}
 	}
 
-	return nil, llmgw.ErrNotFound
+	return nil, trustedai.ErrNotFound
 }
 
 // hasSystemAdministrator checks if there's at least one system admin user in the given organization
-func hasSystemAdministrator(ctx context.Context, userRepo llmgw.UserRepository, orgID string) (bool, error) {
+func hasSystemAdministrator(ctx context.Context, userRepo trustedai.UserRepository, orgID string) (bool, error) {
 	users, err := userRepo.ListByOrganization(ctx, orgID)
 	if err != nil {
 		return false, err
@@ -113,25 +113,25 @@ func hasSystemAdministrator(ctx context.Context, userRepo llmgw.UserRepository, 
 func performBootstrap(
 	ctx context.Context,
 	logger *slog.Logger,
-	orgRepo llmgw.OrganizationRepository,
-	userRepo llmgw.UserRepository,
-	tokenRepo llmgw.TokenRepository,
-	existingSystemOrg *llmgw.Organization,
+	orgRepo trustedai.OrganizationRepository,
+	userRepo trustedai.UserRepository,
+	tokenRepo trustedai.TokenRepository,
+	existingSystemOrg *trustedai.Organization,
 ) (string, error) {
-	var systemOrg *llmgw.Organization
+	var systemOrg *trustedai.Organization
 	var err error
 
 	// Create system organization if it doesn't exist
 	if existingSystemOrg == nil {
 		logger.Info("Creating system organization...")
-		systemOrg = &llmgw.Organization{
+		systemOrg = &trustedai.Organization{
 			ID:          func() string { id, _ := uuid.NewV7(); return id.String() }(),
 			Name:        SystemOrgName,
 			DisplayName: SystemOrgDisplayName,
 			IsSystem:    true,
 			CreatedAt:   time.Now(),
 			SSOType:     "",
-			SSOConfig:   make(llmgw.SSOConfig),
+			SSOConfig:   make(trustedai.SSOConfig),
 		}
 
 		if err := orgRepo.Create(ctx, systemOrg); err != nil {
@@ -145,7 +145,7 @@ func performBootstrap(
 
 	// Create system administrator user
 	logger.Info("Creating system administrator...")
-	adminUser := &llmgw.User{
+	adminUser := &trustedai.User{
 		ID:             func() string { id, _ := uuid.NewV7(); return id.String() }(),
 		Email:          DefaultAdminEmail,
 		Name:           DefaultAdminName,

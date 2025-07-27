@@ -8,13 +8,13 @@ import (
 	"context"
 	"errors"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // Create adds a new user to the database
-func (r *UserRepository) Create(ctx context.Context, user *llmgw.User) error {
+func (r *UserRepository) Create(ctx context.Context, user *trustedai.User) error {
 	query := `
 		INSERT INTO users (
 			id, email, name, organization_id, 
@@ -38,7 +38,7 @@ func (r *UserRepository) Create(ctx context.Context, user *llmgw.User) error {
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return llmgw.ErrDuplicateEntry
+			return trustedai.ErrDuplicateEntry
 		}
 		r.options.Logger.Error("Failed to create user", "error", err)
 		return err
@@ -47,7 +47,7 @@ func (r *UserRepository) Create(ctx context.Context, user *llmgw.User) error {
 }
 
 // Get retrieves a user by ID
-func (r *UserRepository) Get(ctx context.Context, id string) (*llmgw.User, error) {
+func (r *UserRepository) Get(ctx context.Context, id string) (*trustedai.User, error) {
 	query := `
 		SELECT id, email, name, organization_id, 
 			external_id, provider, system_admin, 
@@ -57,7 +57,7 @@ func (r *UserRepository) Get(ctx context.Context, id string) (*llmgw.User, error
 
 	row := r.options.Db.QueryRow(ctx, query, id)
 
-	var user llmgw.User
+	var user trustedai.User
 	err := row.Scan(
 		&user.ID,
 		&user.Email,
@@ -71,7 +71,7 @@ func (r *UserRepository) Get(ctx context.Context, id string) (*llmgw.User, error
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get user", "error", err, "id", id)
@@ -81,7 +81,7 @@ func (r *UserRepository) Get(ctx context.Context, id string) (*llmgw.User, error
 }
 
 // GetByEmail retrieves a user by email address
-func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.User, error) {
+func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*trustedai.User, error) {
 	query := `
 		SELECT id, email, name, organization_id, 
 			external_id, provider, system_admin, 
@@ -91,7 +91,7 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.U
 
 	row := r.options.Db.QueryRow(ctx, query, email)
 
-	var user llmgw.User
+	var user trustedai.User
 	err := row.Scan(
 		&user.ID,
 		&user.Email,
@@ -105,7 +105,7 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.U
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get user by email", "error", err, "email", email)
@@ -115,7 +115,7 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.U
 }
 
 // GetByExternalID retrieves a user by their external provider ID
-func (r *UserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*llmgw.User, error) {
+func (r *UserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*trustedai.User, error) {
 	query := `
 		SELECT id, email, name, organization_id, 
 			external_id, provider, system_admin, 
@@ -125,7 +125,7 @@ func (r *UserRepository) GetByExternalID(ctx context.Context, provider, external
 
 	row := r.options.Db.QueryRow(ctx, query, provider, externalID)
 
-	var user llmgw.User
+	var user trustedai.User
 	err := row.Scan(
 		&user.ID,
 		&user.Email,
@@ -139,7 +139,7 @@ func (r *UserRepository) GetByExternalID(ctx context.Context, provider, external
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get user by external ID",
@@ -150,7 +150,7 @@ func (r *UserRepository) GetByExternalID(ctx context.Context, provider, external
 }
 
 // ListByOrganization retrieves all users belonging to an organization
-func (r *UserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*llmgw.User, error) {
+func (r *UserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*trustedai.User, error) {
 	query := `
 		SELECT id, email, name, organization_id, 
 			external_id, provider, system_admin, 
@@ -165,9 +165,9 @@ func (r *UserRepository) ListByOrganization(ctx context.Context, orgID string) (
 	}
 	defer rows.Close()
 
-	var users []*llmgw.User
+	var users []*trustedai.User
 	for rows.Next() {
-		var user llmgw.User
+		var user trustedai.User
 		err := rows.Scan(
 			&user.ID,
 			&user.Email,
@@ -195,7 +195,7 @@ func (r *UserRepository) ListByOrganization(ctx context.Context, orgID string) (
 }
 
 // Update modifies an existing user
-func (r *UserRepository) Update(ctx context.Context, user *llmgw.User) error {
+func (r *UserRepository) Update(ctx context.Context, user *trustedai.User) error {
 	query := `
 		UPDATE users SET
 			email = $2,
@@ -224,7 +224,7 @@ func (r *UserRepository) Update(ctx context.Context, user *llmgw.User) error {
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil
@@ -241,7 +241,7 @@ func (r *UserRepository) Delete(ctx context.Context, id string) error {
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil
@@ -249,11 +249,11 @@ func (r *UserRepository) Delete(ctx context.Context, id string) error {
 
 // ListByOrganizationForUser retrieves users from the specified organization
 // if the requesting user has permission to see them
-func (r *UserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+func (r *UserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *trustedai.User, orgID string) ([]*trustedai.User, error) {
 	// Authorization check: users can only list users from their own organization
 	// unless they are system admins
 	if !requestingUser.IsSystemAdmin() && requestingUser.OrganizationID != orgID {
-		return nil, llmgw.ErrUnauthorized
+		return nil, trustedai.ErrUnauthorized
 	}
 
 	return r.ListByOrganization(ctx, orgID)
@@ -262,7 +262,7 @@ func (r *UserRepository) ListByOrganizationForUser(ctx context.Context, requesti
 // ListAllForUser retrieves all users visible to the requesting user
 // System admins see all users across all organizations
 // Regular users see only users from their own organization
-func (r *UserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+func (r *UserRepository) ListAllForUser(ctx context.Context, requestingUser *trustedai.User) ([]*trustedai.User, error) {
 	if requestingUser.IsSystemAdmin() {
 		query := `
 			SELECT id, email, name, organization_id, 
@@ -278,9 +278,9 @@ func (r *UserRepository) ListAllForUser(ctx context.Context, requestingUser *llm
 		}
 		defer rows.Close()
 
-		var users []*llmgw.User
+		var users []*trustedai.User
 		for rows.Next() {
-			var user llmgw.User
+			var user trustedai.User
 			err := rows.Scan(
 				&user.ID,
 				&user.Email,

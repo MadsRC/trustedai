@@ -14,20 +14,20 @@ import (
 	"strings"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"golang.org/x/crypto/argon2"
 )
 
 // TokenAuthenticator handles API token authentication
 type TokenAuthenticator struct {
-	tokenRepository llmgw.TokenRepository
-	userRepository  llmgw.UserRepository
+	tokenRepository trustedai.TokenRepository
+	userRepository  trustedai.UserRepository
 }
 
 // NewTokenAuthenticator creates a new token authenticator
 func NewTokenAuthenticator(
-	tokenRepository llmgw.TokenRepository,
-	userRepository llmgw.UserRepository,
+	tokenRepository trustedai.TokenRepository,
+	userRepository trustedai.UserRepository,
 ) *TokenAuthenticator {
 	return &TokenAuthenticator{
 		tokenRepository: tokenRepository,
@@ -36,7 +36,7 @@ func NewTokenAuthenticator(
 }
 
 // AuthenticateToken validates an API token and returns the associated user
-func (a *TokenAuthenticator) AuthenticateToken(ctx context.Context, token string) (*llmgw.User, error) {
+func (a *TokenAuthenticator) AuthenticateToken(ctx context.Context, token string) (*trustedai.User, error) {
 	// Token must be at least prefix length
 	if len(token) <= 8 {
 		return nil, errors.New("invalid token format")
@@ -52,7 +52,7 @@ func (a *TokenAuthenticator) AuthenticateToken(ctx context.Context, token string
 	// Look up token by prefix hash
 	tokenRecord, err := a.tokenRepository.GetTokenByPrefixHash(ctx, prefixHashStr)
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, errors.New("invalid token")
 		}
 		return nil, fmt.Errorf("token lookup failed: %w", err)

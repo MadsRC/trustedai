@@ -9,7 +9,7 @@ import {
   IAMService,
   type User,
   IAMServiceGetCurrentUserRequestSchema,
-} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+} from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import { create } from "@bufbuild/protobuf";
 import { type AuthContextType } from "../types/auth";
 import { AuthContext } from "./AuthContextDefinition";

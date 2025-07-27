@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/pashagolub/pgxmock/v4"
@@ -27,7 +27,7 @@ func TestOrganizationRepository_Create(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "test-org",
 			DisplayName: "Test Organization",
@@ -69,7 +69,7 @@ func TestOrganizationRepository_Create(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "test-org",
 			DisplayName: "Test Organization",
@@ -95,7 +95,7 @@ func TestOrganizationRepository_Create(t *testing.T) {
 		}
 
 		err = repo.Create(context.Background(), org)
-		assert.ErrorIs(t, err, llmgw.ErrDuplicateEntry)
+		assert.ErrorIs(t, err, trustedai.ErrDuplicateEntry)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -104,7 +104,7 @@ func TestOrganizationRepository_Create(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "test-org",
 			DisplayName: "Test Organization",
@@ -143,7 +143,7 @@ func TestOrganizationRepository_Get(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		expectedOrg := &llmgw.Organization{
+		expectedOrg := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "test-org",
 			DisplayName: "Test Org",
@@ -210,7 +210,7 @@ func TestOrganizationRepository_Get(t *testing.T) {
 		}
 
 		_, err = repo.Get(context.Background(), "missing-id")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -244,7 +244,7 @@ func TestOrganizationRepository_GetByName(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		expectedOrg := &llmgw.Organization{
+		expectedOrg := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "test-org",
 			DisplayName: "Test Org",
@@ -311,7 +311,7 @@ func TestOrganizationRepository_GetByName(t *testing.T) {
 		}
 
 		_, err = repo.GetByName(context.Background(), "missing-name")
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -345,7 +345,7 @@ func TestOrganizationRepository_List(t *testing.T) {
 		defer mock.Close()
 
 		now := time.Now()
-		org1 := &llmgw.Organization{
+		org1 := &trustedai.Organization{
 			ID:          "org-1",
 			Name:        "org-one",
 			DisplayName: "Organization One",
@@ -354,7 +354,7 @@ func TestOrganizationRepository_List(t *testing.T) {
 			SSOType:     "",
 		}
 
-		org2 := &llmgw.Organization{
+		org2 := &trustedai.Organization{
 			ID:          "org-2",
 			Name:        "org-two",
 			DisplayName: "Organization Two",
@@ -509,7 +509,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "updated-org",
 			DisplayName: "Updated Organization",
@@ -551,7 +551,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "non-existent-id",
 			Name:        "updated-org",
 			DisplayName: "Updated Organization",
@@ -574,7 +574,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		}
 
 		err = repo.Update(context.Background(), org)
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -583,7 +583,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "duplicate-name",
 			DisplayName: "Duplicate Organization",
@@ -606,7 +606,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		}
 
 		err = repo.Update(context.Background(), org)
-		assert.ErrorIs(t, err, llmgw.ErrDuplicateEntry)
+		assert.ErrorIs(t, err, trustedai.ErrDuplicateEntry)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
@@ -615,7 +615,7 @@ func TestOrganizationRepository_Update(t *testing.T) {
 		require.NoError(t, err)
 		defer mock.Close()
 
-		org := &llmgw.Organization{
+		org := &trustedai.Organization{
 			ID:          "org-123",
 			Name:        "updated-org",
 			DisplayName: "Updated Organization",
@@ -687,7 +687,7 @@ func TestOrganizationRepository_Delete(t *testing.T) {
 		}
 
 		err = repo.Delete(context.Background(), orgID)
-		assert.ErrorIs(t, err, llmgw.ErrNotFound)
+		assert.ErrorIs(t, err, trustedai.ErrNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 

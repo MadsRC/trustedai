@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -21,44 +21,44 @@ type MockUserRepository struct {
 	mock.Mock
 }
 
-func (m *MockUserRepository) Create(ctx context.Context, user *llmgw.User) error {
+func (m *MockUserRepository) Create(ctx context.Context, user *trustedai.User) error {
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) Get(ctx context.Context, id string) (*llmgw.User, error) {
+func (m *MockUserRepository) Get(ctx context.Context, id string) (*trustedai.User, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.User), args.Error(1)
+	return args.Get(0).(*trustedai.User), args.Error(1)
 }
 
-func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*llmgw.User, error) {
+func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*trustedai.User, error) {
 	args := m.Called(ctx, email)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.User), args.Error(1)
+	return args.Get(0).(*trustedai.User), args.Error(1)
 }
 
-func (m *MockUserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*llmgw.User, error) {
+func (m *MockUserRepository) GetByExternalID(ctx context.Context, provider, externalID string) (*trustedai.User, error) {
 	args := m.Called(ctx, provider, externalID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.User), args.Error(1)
+	return args.Get(0).(*trustedai.User), args.Error(1)
 }
 
-func (m *MockUserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*llmgw.User, error) {
+func (m *MockUserRepository) ListByOrganization(ctx context.Context, orgID string) ([]*trustedai.User, error) {
 	args := m.Called(ctx, orgID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.User), args.Error(1)
+	return args.Get(0).([]*trustedai.User), args.Error(1)
 }
 
-func (m *MockUserRepository) Update(ctx context.Context, user *llmgw.User) error {
+func (m *MockUserRepository) Update(ctx context.Context, user *trustedai.User) error {
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }
@@ -68,56 +68,56 @@ func (m *MockUserRepository) Delete(ctx context.Context, id string) error {
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *llmgw.User, orgID string) ([]*llmgw.User, error) {
+func (m *MockUserRepository) ListByOrganizationForUser(ctx context.Context, requestingUser *trustedai.User, orgID string) ([]*trustedai.User, error) {
 	args := m.Called(ctx, requestingUser, orgID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.User), args.Error(1)
+	return args.Get(0).([]*trustedai.User), args.Error(1)
 }
 
-func (m *MockUserRepository) ListAllForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.User, error) {
+func (m *MockUserRepository) ListAllForUser(ctx context.Context, requestingUser *trustedai.User) ([]*trustedai.User, error) {
 	args := m.Called(ctx, requestingUser)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.User), args.Error(1)
+	return args.Get(0).([]*trustedai.User), args.Error(1)
 }
 
 type MockOrganizationRepository struct {
 	mock.Mock
 }
 
-func (m *MockOrganizationRepository) Create(ctx context.Context, org *llmgw.Organization) error {
+func (m *MockOrganizationRepository) Create(ctx context.Context, org *trustedai.Organization) error {
 	args := m.Called(ctx, org)
 	return args.Error(0)
 }
 
-func (m *MockOrganizationRepository) Get(ctx context.Context, id string) (*llmgw.Organization, error) {
+func (m *MockOrganizationRepository) Get(ctx context.Context, id string) (*trustedai.Organization, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.Organization), args.Error(1)
+	return args.Get(0).(*trustedai.Organization), args.Error(1)
 }
 
-func (m *MockOrganizationRepository) GetByName(ctx context.Context, name string) (*llmgw.Organization, error) {
+func (m *MockOrganizationRepository) GetByName(ctx context.Context, name string) (*trustedai.Organization, error) {
 	args := m.Called(ctx, name)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.Organization), args.Error(1)
+	return args.Get(0).(*trustedai.Organization), args.Error(1)
 }
 
-func (m *MockOrganizationRepository) List(ctx context.Context) ([]*llmgw.Organization, error) {
+func (m *MockOrganizationRepository) List(ctx context.Context) ([]*trustedai.Organization, error) {
 	args := m.Called(ctx)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.Organization), args.Error(1)
+	return args.Get(0).([]*trustedai.Organization), args.Error(1)
 }
 
-func (m *MockOrganizationRepository) Update(ctx context.Context, org *llmgw.Organization) error {
+func (m *MockOrganizationRepository) Update(ctx context.Context, org *trustedai.Organization) error {
 	args := m.Called(ctx, org)
 	return args.Error(0)
 }
@@ -127,32 +127,32 @@ func (m *MockOrganizationRepository) Delete(ctx context.Context, id string) erro
 	return args.Error(0)
 }
 
-func (m *MockOrganizationRepository) ListForUser(ctx context.Context, user *llmgw.User) ([]*llmgw.Organization, error) {
+func (m *MockOrganizationRepository) ListForUser(ctx context.Context, user *trustedai.User) ([]*trustedai.Organization, error) {
 	args := m.Called(ctx, user)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.Organization), args.Error(1)
+	return args.Get(0).([]*trustedai.Organization), args.Error(1)
 }
 
 type MockTokenRepository struct {
 	mock.Mock
 }
 
-func (m *MockTokenRepository) CreateToken(ctx context.Context, userID string, description string, expiresAt time.Time) (*llmgw.APIToken, string, error) {
+func (m *MockTokenRepository) CreateToken(ctx context.Context, userID string, description string, expiresAt time.Time) (*trustedai.APIToken, string, error) {
 	args := m.Called(ctx, userID, description, expiresAt)
 	if args.Get(0) == nil {
 		return nil, "", args.Error(2)
 	}
-	return args.Get(0).(*llmgw.APIToken), args.String(1), args.Error(2)
+	return args.Get(0).(*trustedai.APIToken), args.String(1), args.Error(2)
 }
 
-func (m *MockTokenRepository) GetTokenByPrefixHash(ctx context.Context, prefixHash string) (*llmgw.APIToken, error) {
+func (m *MockTokenRepository) GetTokenByPrefixHash(ctx context.Context, prefixHash string) (*trustedai.APIToken, error) {
 	args := m.Called(ctx, prefixHash)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.APIToken), args.Error(1)
+	return args.Get(0).(*trustedai.APIToken), args.Error(1)
 }
 
 func (m *MockTokenRepository) RevokeToken(ctx context.Context, tokenID string) error {
@@ -160,12 +160,12 @@ func (m *MockTokenRepository) RevokeToken(ctx context.Context, tokenID string) e
 	return args.Error(0)
 }
 
-func (m *MockTokenRepository) ListUserTokens(ctx context.Context, userID string) ([]*llmgw.APIToken, error) {
+func (m *MockTokenRepository) ListUserTokens(ctx context.Context, userID string) ([]*trustedai.APIToken, error) {
 	args := m.Called(ctx, userID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.APIToken), args.Error(1)
+	return args.Get(0).([]*trustedai.APIToken), args.Error(1)
 }
 
 func (m *MockTokenRepository) UpdateTokenUsage(ctx context.Context, tokenID string) error {
@@ -173,23 +173,23 @@ func (m *MockTokenRepository) UpdateTokenUsage(ctx context.Context, tokenID stri
 	return args.Error(0)
 }
 
-func (m *MockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *llmgw.User, targetUserID string) ([]*llmgw.APIToken, error) {
+func (m *MockTokenRepository) ListUserTokensForUser(ctx context.Context, requestingUser *trustedai.User, targetUserID string) ([]*trustedai.APIToken, error) {
 	args := m.Called(ctx, requestingUser, targetUserID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.APIToken), args.Error(1)
+	return args.Get(0).([]*trustedai.APIToken), args.Error(1)
 }
 
-func (m *MockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *llmgw.User) ([]*llmgw.APIToken, error) {
+func (m *MockTokenRepository) ListAllTokensForUser(ctx context.Context, requestingUser *trustedai.User) ([]*trustedai.APIToken, error) {
 	args := m.Called(ctx, requestingUser)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*llmgw.APIToken), args.Error(1)
+	return args.Get(0).([]*trustedai.APIToken), args.Error(1)
 }
 
-func (m *MockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *llmgw.User, tokenID string) error {
+func (m *MockTokenRepository) RevokeTokenForUser(ctx context.Context, requestingUser *trustedai.User, tokenID string) error {
 	args := m.Called(ctx, requestingUser, tokenID)
 	return args.Error(0)
 }

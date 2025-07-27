@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/packages/param"
 )

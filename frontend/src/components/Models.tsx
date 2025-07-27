@@ -15,7 +15,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
-import { ModelManagementService } from "../gen/proto/madsrc/llmgw/v1/model_management_pb";
+import { ModelManagementService } from "../gen/proto/madsrc/trustedai/v1/model_management_pb";
 import {
   type Model,
   type Provider,
@@ -34,7 +34,7 @@ import {
   ModelCapabilitiesSchema,
   CredentialType,
   ProviderId,
-} from "../gen/proto/madsrc/llmgw/v1/model_management_pb";
+} from "../gen/proto/madsrc/trustedai/v1/model_management_pb";
 import { create } from "@bufbuild/protobuf";
 import { useAuth } from "../hooks/useAuth";
 

@@ -11,7 +11,7 @@ import {
   type Organization,
   IAMServiceUpdateOrganizationRequestSchema,
   OrganizationSchema,
-} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+} from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import { create } from "@bufbuild/protobuf";
 import { useAuth } from "../hooks/useAuth";
 

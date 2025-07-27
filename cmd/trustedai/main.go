@@ -17,19 +17,19 @@ import (
 
 	"codeberg.org/gai-org/gai"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/controlplane"
-	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
-	controlplaneservices "codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/providers"
-	"codeberg.org/MadsRC/llmgw/internal/bootstrap"
-	"codeberg.org/MadsRC/llmgw/internal/modelrouter"
-	"codeberg.org/MadsRC/llmgw/internal/monitoring"
-	"codeberg.org/MadsRC/llmgw/internal/oidc"
-	"codeberg.org/MadsRC/llmgw/internal/postgres"
-	"codeberg.org/MadsRC/llmgw/internal/services"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/auth"
+	"github.com/MadsRC/trustedai/internal/api/controlplane"
+	cauth "github.com/MadsRC/trustedai/internal/api/controlplane/auth"
+	controlplaneservices "github.com/MadsRC/trustedai/internal/api/controlplane/services"
+	"github.com/MadsRC/trustedai/internal/api/dataplane"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/providers"
+	"github.com/MadsRC/trustedai/internal/bootstrap"
+	"github.com/MadsRC/trustedai/internal/modelrouter"
+	"github.com/MadsRC/trustedai/internal/monitoring"
+	"github.com/MadsRC/trustedai/internal/oidc"
+	"github.com/MadsRC/trustedai/internal/postgres"
+	"github.com/MadsRC/trustedai/internal/services"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/urfave/cli/v3"
 	"golang.org/x/net/http2"
@@ -38,7 +38,7 @@ import (
 
 func main() {
 	cmd := &cli.Command{
-		Name:    "llmgw",
+		Name:    "trustedai",
 		Usage:   "LLM Gateway Control Plane Server",
 		Version: "0.1.0",
 		Flags: []cli.Flag{
@@ -177,7 +177,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 	// Set up monitoring system
 	logger.Info("Setting up monitoring system...")
 	monitoringConfig := monitoring.Config{
-		ServiceName:    "llmgw",
+		ServiceName:    "trustedai",
 		ServiceVersion: "0.1.0",
 		OTLPEndpoint:   c.String("otlp-endpoint"),
 	}
@@ -236,7 +236,7 @@ func runServer(ctx context.Context, c *cli.Command) error {
 		controlplane.WithSessionStore(sessionStore),
 		controlplane.WithAuthInterceptor(authInterceptor),
 		controlplane.WithTokenInterceptor(tokenInterceptor),
-		controlplane.WithFrontendFS(llmgw.GetFrontendFS()),
+		controlplane.WithFrontendFS(trustedai.GetFrontendFS()),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create server: %w", err)

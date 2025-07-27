@@ -8,10 +8,10 @@ import (
 	"context"
 	"encoding/json"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/internal/models"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/internal/models"
 	"github.com/google/uuid"
 )
 
@@ -75,7 +75,7 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 	return modelList, nil
 }
 
-func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmgw.ModelWithReference, error) {
+func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
 	query := `
 		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
@@ -88,9 +88,9 @@ func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmg
 	}
 	defer rows.Close()
 
-	var modelList []llmgw.ModelWithReference
+	var modelList []trustedai.ModelWithReference
 	for rows.Next() {
-		var modelWithRef llmgw.ModelWithReference
+		var modelWithRef trustedai.ModelWithReference
 		var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 		err := rows.Scan(
@@ -166,7 +166,7 @@ func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*ga
 	return &model, nil
 }
 
-func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*llmgw.ModelWithReference, error) {
+func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
 	query := `
 		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
 		FROM models m
@@ -175,7 +175,7 @@ func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID
 
 	row := r.pool.QueryRow(ctx, query, modelID)
 
-	var modelWithRef llmgw.ModelWithReference
+	var modelWithRef trustedai.ModelWithReference
 	var pricingJSON, capabilitiesJSON, metadataJSON []byte
 
 	err := row.Scan(
@@ -205,7 +205,7 @@ func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID
 	return &modelWithRef, nil
 }
 
-func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*llmgw.ModelWithCredentials, error) {
+func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	query := `
 		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.credential_id, m.credential_type, m.metadata
 		FROM models m
@@ -214,7 +214,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 
 	row := r.pool.QueryRow(ctx, query, modelID)
 
-	var modelWithCreds llmgw.ModelWithCredentials
+	var modelWithCreds trustedai.ModelWithCredentials
 	var pricingJSON, capabilitiesJSON, metadataJSON []byte
 	var credentialTypeInt int
 
@@ -233,7 +233,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 	}
 
 	// Convert integer credential type to CredentialType
-	modelWithCreds.CredentialType = llmgwv1.CredentialType(credentialTypeInt)
+	modelWithCreds.CredentialType = trustedaiv1.CredentialType(credentialTypeInt)
 
 	if err := json.Unmarshal(pricingJSON, &modelWithCreds.Model.Pricing); err != nil {
 		return nil, err
@@ -250,7 +250,7 @@ func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID s
 	return &modelWithCreds, nil
 }
 
-func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	query := `
 		INSERT INTO models (id, name, provider_id, pricing, capabilities, credential_id, credential_type, metadata, enabled)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -285,7 +285,7 @@ func (r *ModelRepository) CreateModel(ctx context.Context, model *gai.Model, cre
 	return err
 }
 
-func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (r *ModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	query := `
 		UPDATE models 
 		SET name = $2, provider_id = $3, pricing = $4, capabilities = $5, credential_id = $6, credential_type = $7, metadata = $8

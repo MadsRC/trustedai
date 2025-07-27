@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Bootstrap the LLMGW application for development. Run this after a first boot of the app - requires admin API token as first param"
 
-# Bootstrap script for llmgw development environment
+# Bootstrap script for trustedai development environment
 # Creates test organization with OIDC SSO and updates system organization
 
 set -e
@@ -17,9 +17,9 @@ fi
 
 API_KEY="$1"
 SERVER="localhost:9999"
-PROTO_PATH="proto/madsrc/llmgw/v1/iam.proto"
+PROTO_PATH="proto/madsrc/trustedai/v1/iam.proto"
 
-echo "Bootstrapping llmgw development environment..."
+echo "Bootstrapping trustedai development environment..."
 
 # Create testorg organization with OIDC SSO
 echo "Creating testorg organization..."
@@ -34,14 +34,14 @@ grpcurl -plaintext -proto "$PROTO_PATH" \
             "sso_config": "{\"client_id\":\"client01\",\"client_secret\":\"tJJtLCazP5JoR5LHWhii9Am8QXdLUVGI\",\"issuer\":\"http://localhost:8080/realms/testrealm01\",\"redirect_uri\":\"http://localhost:9999/sso/oidc/testorg/callback\",\"scopes\":[\"openid\",\"profile\",\"email\"]}"
         }
     }' \
-    "$SERVER" llmgw.v1.IAMService/CreateOrganization
+    "$SERVER" trustedai.v1.IAMService/CreateOrganization
 
 # Get system organization ID
 echo "Getting system organization..."
 SYSTEM_ORG=$(grpcurl -plaintext -proto "$PROTO_PATH" \
     -H "Authorization: Bearer $API_KEY" \
     -d '{"name": "system"}' \
-    "$SERVER" llmgw.v1.IAMService/GetOrganizationByName)
+    "$SERVER" trustedai.v1.IAMService/GetOrganizationByName)
 
 # Extract system organization ID from response using jq
 SYSTEM_ORG_ID=$(echo "$SYSTEM_ORG" | jq -r '.organization.id')
@@ -63,14 +63,14 @@ grpcurl -plaintext -proto "$PROTO_PATH" \
             "sso_config": "{\"client_id\":\"client01\",\"client_secret\":\"F9RVr1gvjNfi5mct6hij4rrwbrFH4jPI\",\"issuer\":\"http://localhost:8080/realms/testrealm02\",\"redirect_uri\":\"http://localhost:9999/sso/oidc/system/callback\",\"scopes\":[\"openid\",\"profile\",\"email\"]}"
         }
     }' \
-    "$SERVER" llmgw.v1.IAMService/UpdateOrganization
+    "$SERVER" trustedai.v1.IAMService/UpdateOrganization
 
 # Get admin@localhost user
 echo "Getting admin@localhost user..."
 ADMIN_USER=$(grpcurl -plaintext -proto "$PROTO_PATH" \
     -H "Authorization: Bearer $API_KEY" \
     -d '{"email": "admin@localhost"}' \
-    "$SERVER" llmgw.v1.IAMService/GetUserByEmail)
+    "$SERVER" trustedai.v1.IAMService/GetUserByEmail)
 
 # Extract user information from response using jq
 ADMIN_USER_ID=$(echo "$ADMIN_USER" | jq -r '.user.id')
@@ -98,6 +98,6 @@ grpcurl -plaintext -proto "$PROTO_PATH" \
             "system_admin": '"$ADMIN_USER_SYSTEM_ADMIN"'
         }
     }' \
-    "$SERVER" llmgw.v1.IAMService/UpdateUser
+    "$SERVER" trustedai.v1.IAMService/UpdateUser
 
 echo "Bootstrap completed successfully!"

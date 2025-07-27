@@ -8,8 +8,8 @@ import (
 	"context"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/interfaces"
 )
 
 // TrackedLLMClient wraps an LLMClient to automatically handle usage tracking

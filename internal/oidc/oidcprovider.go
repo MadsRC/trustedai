@@ -15,14 +15,14 @@ import (
 	"strings"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/google/uuid"
 	"golang.org/x/oauth2"
 )
 
 // Ensure Provider implements the SsoProvider interface
-var _ llmgw.SsoProvider = (*Provider)(nil)
+var _ trustedai.SsoProvider = (*Provider)(nil)
 
 // Provider implements the OIDC provider
 type Provider struct {
@@ -81,7 +81,7 @@ func (p *Provider) GetAuthURL(ctx context.Context, state string) (string, error)
 }
 
 // HandleCallback processes the OIDC callback
-func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User, error) {
+func (p *Provider) HandleCallback(ctx context.Context, code string) (*trustedai.User, error) {
 	orgName, err := getOrgNameFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (p *Provider) HandleCallback(ctx context.Context, code string) (*llmgw.User
 	}
 
 	// Create or retrieve user
-	user := &llmgw.User{
+	user := &trustedai.User{
 		Email:      claims.Email,
 		Name:       claims.Name,
 		ExternalID: claims.Subject,
@@ -232,7 +232,7 @@ func (p *Provider) ValidateToken(ctx context.Context, token string) (bool, map[s
 }
 
 // StartDeviceAuth initiates the device authorization flow
-func (p *Provider) StartDeviceAuth(ctx context.Context) (*llmgw.DeviceAuthResponse, error) {
+func (p *Provider) StartDeviceAuth(ctx context.Context) (*trustedai.DeviceAuthResponse, error) {
 	orgName, err := getOrgNameFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -309,7 +309,7 @@ func (p *Provider) StartDeviceAuth(ctx context.Context) (*llmgw.DeviceAuthRespon
 		verificationURI = authResp.VerificationURIComplete
 	}
 
-	return &llmgw.DeviceAuthResponse{
+	return &trustedai.DeviceAuthResponse{
 		DeviceCode:      authResp.DeviceCode,
 		UserCode:        authResp.UserCode,
 		VerificationURI: verificationURI,
@@ -319,7 +319,7 @@ func (p *Provider) StartDeviceAuth(ctx context.Context) (*llmgw.DeviceAuthRespon
 }
 
 // CheckDeviceAuth polls for the status of a device authorization
-func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llmgw.User, error) {
+func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*trustedai.User, error) {
 	orgName, err := getOrgNameFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -421,7 +421,7 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 	}
 
 	// Create or retrieve user
-	user := &llmgw.User{
+	user := &trustedai.User{
 		Email:      claims.Email,
 		Name:       claims.Name,
 		ExternalID: claims.Subject,
@@ -471,7 +471,7 @@ func (p *Provider) CheckDeviceAuth(ctx context.Context, deviceCode string) (*llm
 
 // Helper function to get organization name from context
 func getOrgNameFromContext(ctx context.Context) (string, error) {
-	value := ctx.Value(llmgw.OrganizationContextKey)
+	value := ctx.Value(trustedai.OrganizationContextKey)
 
 	orgName, ok := value.(string)
 	if !ok || orgName == "" {
@@ -534,8 +534,8 @@ type oidcConfig struct {
 // Provider options
 type providerOptions struct {
 	Logger     *slog.Logger
-	UserRepo   llmgw.UserRepository
-	OrgRepo    llmgw.OrganizationRepository
+	UserRepo   trustedai.UserRepository
+	OrgRepo    trustedai.OrganizationRepository
 	HTTPClient *http.Client
 	BaseURL    string
 }
@@ -574,14 +574,14 @@ func WithProviderLogger(logger *slog.Logger) ProviderOption {
 }
 
 // WithProviderUserRepo sets the user repository for the provider
-func WithProviderUserRepo(userRepo llmgw.UserRepository) ProviderOption {
+func WithProviderUserRepo(userRepo trustedai.UserRepository) ProviderOption {
 	return newFuncProviderOption(func(opts *providerOptions) {
 		opts.UserRepo = userRepo
 	})
 }
 
 // WithProviderOrgRepo sets the organization repository for the provider
-func WithProviderOrgRepo(orgRepo llmgw.OrganizationRepository) ProviderOption {
+func WithProviderOrgRepo(orgRepo trustedai.OrganizationRepository) ProviderOption {
 	return newFuncProviderOption(func(opts *providerOptions) {
 		opts.OrgRepo = orgRepo
 	})

@@ -13,8 +13,8 @@ import (
 	"net/http"
 	"strings"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane"
 )
 
 const (

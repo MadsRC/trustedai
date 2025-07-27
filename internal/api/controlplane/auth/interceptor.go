@@ -8,8 +8,8 @@ import (
 	"context"
 	"strings"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 type Interceptor struct {

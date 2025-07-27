@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strings"
 
-	sharedauth "codeberg.org/MadsRC/llmgw/internal/api/auth"
+	sharedauth "github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 // CombinedAuthMiddleware provides authentication via Bearer token or x-api-key header

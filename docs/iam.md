@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-# Identity and Access Management (IAM) in llmgw
+# Identity and Access Management (IAM) in trustedai
 
 ## IAM Model
 
@@ -16,7 +16,7 @@ The following primitives exists, or is planned, in the IAM model:
 | `organization` | ✅ Implemented |
 | `group` | ⏳To Implement |
 
-llmgw is a Single-Sign-On (SSO) only service and does not support local
+trustedai is a Single-Sign-On (SSO) only service and does not support local
 authentication. All users must be authenticated through an external identity
 provider (IdP).
 
@@ -41,7 +41,7 @@ priority at this time.
 > Please note that Enterprise-grade SSO is not yet fully implemented
 
 Users are able to configure Enterprise-grade SSO at the organizational level
-in llmgw, by leveraging the OIDC (OpenID Connect) protocol.
+in trustedai, by leveraging the OIDC (OpenID Connect) protocol.
 
 Furthermore, with Enterprise-grade SSO, users are able to configure either
 support provisioning of users into their organization via Just-in-Time (JIT)
@@ -56,7 +56,7 @@ which users are provisioned and how they are managed. This is useful for
 large organizations with many users, or organizations that have
 specific requirements for user management.
 
-llmgw are planning on supporting the following Enterprise-grade SSO
+trustedai are planning on supporting the following Enterprise-grade SSO
 providers:
 
 - Keycloak
@@ -73,16 +73,16 @@ providers:
 During authentication, the user proves their identity to the Identity Provider (IdP)
 and the IdP issues an access token, which is then used to mint a session-token.
 
-The session-token is provided on each subsequent request to the llmgw
+The session-token is provided on each subsequent request to the trustedai
 API, and serves as a proof of authentication.
 
-Within llmgw, we've opted to not use JSON Web Tokens (JWT), but instead
+Within trustedai, we've opted to not use JSON Web Tokens (JWT), but instead
 rely on a local session store and the creation of randomly generated session
 tokens. The main reason for this is to ensure sessions can be easily revoked.
 
 ## Authorization
 
-Authorization within llmgw is planned to be a 2 stage system, with the
+Authorization within trustedai is planned to be a 2 stage system, with the
 first stage being the distinction between system organizations and regular
 organizations and the second stage being Role Based Access Control (RBAC)
 within individual organizations.
@@ -90,7 +90,7 @@ within individual organizations.
 ### System vs Regular Organizations
 
 An organization can be a System Organization, meaning its users are considered
-to be operators of the llmgw platform. This is a special type of
+to be operators of the trustedai platform. This is a special type of
 organization that is allowed to do things like listing all organizations
 or all users.
 

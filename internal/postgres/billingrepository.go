@@ -9,13 +9,13 @@ import (
 	"errors"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // CreateBillingSummary stores a new billing summary
-func (r *BillingRepository) CreateBillingSummary(ctx context.Context, summary *llmgw.BillingSummary) error {
+func (r *BillingRepository) CreateBillingSummary(ctx context.Context, summary *trustedai.BillingSummary) error {
 	query := `
 		INSERT INTO billing_summaries (
 			id, user_id, period_start, period_end,
@@ -39,7 +39,7 @@ func (r *BillingRepository) CreateBillingSummary(ctx context.Context, summary *l
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return llmgw.ErrDuplicateEntry
+			return trustedai.ErrDuplicateEntry
 		}
 		r.options.Logger.Error("Failed to create billing summary", "error", err)
 		return err
@@ -48,7 +48,7 @@ func (r *BillingRepository) CreateBillingSummary(ctx context.Context, summary *l
 }
 
 // GetBillingSummary retrieves a billing summary by ID
-func (r *BillingRepository) GetBillingSummary(ctx context.Context, id string) (*llmgw.BillingSummary, error) {
+func (r *BillingRepository) GetBillingSummary(ctx context.Context, id string) (*trustedai.BillingSummary, error) {
 	query := `
 		SELECT id, user_id, period_start, period_end,
 			total_requests, total_input_tokens, total_output_tokens,
@@ -58,7 +58,7 @@ func (r *BillingRepository) GetBillingSummary(ctx context.Context, id string) (*
 
 	row := r.options.Db.QueryRow(ctx, query, id)
 
-	var summary llmgw.BillingSummary
+	var summary trustedai.BillingSummary
 	err := row.Scan(
 		&summary.ID,
 		&summary.UserID,
@@ -72,7 +72,7 @@ func (r *BillingRepository) GetBillingSummary(ctx context.Context, id string) (*
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get billing summary", "error", err, "id", id)
@@ -82,7 +82,7 @@ func (r *BillingRepository) GetBillingSummary(ctx context.Context, id string) (*
 }
 
 // ListBillingSummariesByUser retrieves billing summaries for a specific user
-func (r *BillingRepository) ListBillingSummariesByUser(ctx context.Context, userID string, limit, offset int) ([]*llmgw.BillingSummary, error) {
+func (r *BillingRepository) ListBillingSummariesByUser(ctx context.Context, userID string, limit, offset int) ([]*trustedai.BillingSummary, error) {
 	query := `
 		SELECT id, user_id, period_start, period_end,
 			total_requests, total_input_tokens, total_output_tokens,
@@ -99,9 +99,9 @@ func (r *BillingRepository) ListBillingSummariesByUser(ctx context.Context, user
 	}
 	defer rows.Close()
 
-	var summaries []*llmgw.BillingSummary
+	var summaries []*trustedai.BillingSummary
 	for rows.Next() {
-		var summary llmgw.BillingSummary
+		var summary trustedai.BillingSummary
 		err := rows.Scan(
 			&summary.ID,
 			&summary.UserID,
@@ -129,7 +129,7 @@ func (r *BillingRepository) ListBillingSummariesByUser(ctx context.Context, user
 }
 
 // ListBillingSummariesByPeriod retrieves billing summaries for a specific period
-func (r *BillingRepository) ListBillingSummariesByPeriod(ctx context.Context, start, end time.Time) ([]*llmgw.BillingSummary, error) {
+func (r *BillingRepository) ListBillingSummariesByPeriod(ctx context.Context, start, end time.Time) ([]*trustedai.BillingSummary, error) {
 	query := `
 		SELECT id, user_id, period_start, period_end,
 			total_requests, total_input_tokens, total_output_tokens,
@@ -145,9 +145,9 @@ func (r *BillingRepository) ListBillingSummariesByPeriod(ctx context.Context, st
 	}
 	defer rows.Close()
 
-	var summaries []*llmgw.BillingSummary
+	var summaries []*trustedai.BillingSummary
 	for rows.Next() {
-		var summary llmgw.BillingSummary
+		var summary trustedai.BillingSummary
 		err := rows.Scan(
 			&summary.ID,
 			&summary.UserID,
@@ -175,7 +175,7 @@ func (r *BillingRepository) ListBillingSummariesByPeriod(ctx context.Context, st
 }
 
 // GetBillingSummaryForUserPeriod retrieves existing billing summary for a user and period
-func (r *BillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, userID string, start, end time.Time) (*llmgw.BillingSummary, error) {
+func (r *BillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, userID string, start, end time.Time) (*trustedai.BillingSummary, error) {
 	query := `
 		SELECT id, user_id, period_start, period_end,
 			total_requests, total_input_tokens, total_output_tokens,
@@ -185,7 +185,7 @@ func (r *BillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, 
 
 	row := r.options.Db.QueryRow(ctx, query, userID, start, end)
 
-	var summary llmgw.BillingSummary
+	var summary trustedai.BillingSummary
 	err := row.Scan(
 		&summary.ID,
 		&summary.UserID,
@@ -199,7 +199,7 @@ func (r *BillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, 
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get billing summary for user period", "error", err, "userID", userID)
@@ -209,7 +209,7 @@ func (r *BillingRepository) GetBillingSummaryForUserPeriod(ctx context.Context, 
 }
 
 // UpdateBillingSummary updates an existing billing summary
-func (r *BillingRepository) UpdateBillingSummary(ctx context.Context, summary *llmgw.BillingSummary) error {
+func (r *BillingRepository) UpdateBillingSummary(ctx context.Context, summary *trustedai.BillingSummary) error {
 	query := `
 		UPDATE billing_summaries SET
 			total_requests = $2,
@@ -232,7 +232,7 @@ func (r *BillingRepository) UpdateBillingSummary(ctx context.Context, summary *l
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil

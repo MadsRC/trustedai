@@ -7,15 +7,15 @@ package services
 import (
 	"log/slog"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 )
 
 // UsageAnalyticsOptions holds the configuration options for the usage analytics service
 type UsageAnalyticsOptions struct {
 	Logger            *slog.Logger
-	UserRepository    llmgw.UserRepository
-	UsageRepository   llmgw.UsageRepository
-	BillingRepository llmgw.BillingRepository
+	UserRepository    trustedai.UserRepository
+	UsageRepository   trustedai.UsageRepository
+	BillingRepository trustedai.BillingRepository
 }
 
 // NewUsageAnalytics creates a new UsageAnalytics service with the provided options
@@ -68,21 +68,21 @@ func WithUsageAnalyticsLogger(logger *slog.Logger) UsageAnalyticsOption {
 }
 
 // WithUsageAnalyticsUserRepository returns a UsageAnalyticsOption that uses the provided user repository
-func WithUsageAnalyticsUserRepository(repo llmgw.UserRepository) UsageAnalyticsOption {
+func WithUsageAnalyticsUserRepository(repo trustedai.UserRepository) UsageAnalyticsOption {
 	return newFuncUsageAnalyticsOption(func(opts *UsageAnalyticsOptions) {
 		opts.UserRepository = repo
 	})
 }
 
 // WithUsageRepository returns a UsageAnalyticsOption that uses the provided usage repository
-func WithUsageRepository(repo llmgw.UsageRepository) UsageAnalyticsOption {
+func WithUsageRepository(repo trustedai.UsageRepository) UsageAnalyticsOption {
 	return newFuncUsageAnalyticsOption(func(opts *UsageAnalyticsOptions) {
 		opts.UsageRepository = repo
 	})
 }
 
 // WithBillingRepository returns a UsageAnalyticsOption that uses the provided billing repository
-func WithBillingRepository(repo llmgw.BillingRepository) UsageAnalyticsOption {
+func WithBillingRepository(repo trustedai.BillingRepository) UsageAnalyticsOption {
 	return newFuncUsageAnalyticsOption(func(opts *UsageAnalyticsOptions) {
 		opts.BillingRepository = repo
 	})

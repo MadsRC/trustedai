@@ -4,11 +4,11 @@
 
 syntax = "proto3";
 
-package llmgw.v1;
+package trustedai.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1";
+option go_package = "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1;trustedaiv1";
 
 service UsageAnalyticsService {
   // User usage queries

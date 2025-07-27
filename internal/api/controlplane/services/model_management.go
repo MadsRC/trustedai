@@ -10,26 +10,26 @@ import (
 	"fmt"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
-	"codeberg.org/MadsRC/llmgw/internal/models"
 	"codeberg.org/gai-org/gai"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	"github.com/MadsRC/trustedai/internal/models"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Ensure ModelManagement implements the required interfaces
-var _ llmgwv1connect.ModelManagementServiceHandler = (*ModelManagement)(nil)
+var _ trustedaiv1connect.ModelManagementServiceHandler = (*ModelManagement)(nil)
 
 // Provider Service Methods
 
 // GetProvider retrieves a provider by ID from hardcoded providers
 func (s *ModelManagement) GetProvider(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceGetProviderRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceGetProviderResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceGetProviderRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceGetProviderResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] GetProvider invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -38,10 +38,10 @@ func (s *ModelManagement) GetProvider(
 	}
 
 	// Check hardcoded providers from models package
-	var protoProvider *llmgwv1.Provider
+	var protoProvider *trustedaiv1.Provider
 	switch req.Msg.GetId() {
 	case "openrouter":
-		protoProvider = &llmgwv1.Provider{
+		protoProvider = &trustedaiv1.Provider{
 			Id:           "openrouter",
 			Name:         "OpenRouter",
 			ProviderType: "openrouter",
@@ -54,7 +54,7 @@ func (s *ModelManagement) GetProvider(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceGetProviderResponse{
+	response := &trustedaiv1.ModelManagementServiceGetProviderResponse{
 		Provider: protoProvider,
 	}
 
@@ -64,12 +64,12 @@ func (s *ModelManagement) GetProvider(
 // ListProviders retrieves all hardcoded providers
 func (s *ModelManagement) ListProviders(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListProvidersRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListProvidersResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListProvidersRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListProvidersResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListProviders invoked", "includeDisabled", req.Msg.GetIncludeDisabled())
 
 	// Return hardcoded providers
-	protoProviders := []*llmgwv1.Provider{
+	protoProviders := []*trustedaiv1.Provider{
 		{
 			Id:           "openrouter",
 			Name:         "OpenRouter",
@@ -81,7 +81,7 @@ func (s *ModelManagement) ListProviders(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceListProvidersResponse{
+	response := &trustedaiv1.ModelManagementServiceListProvidersResponse{
 		Providers: protoProviders,
 	}
 
@@ -93,8 +93,8 @@ func (s *ModelManagement) ListProviders(
 // CreateOpenRouterCredential creates a new OpenRouter credential
 func (s *ModelManagement) CreateOpenRouterCredential(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceCreateOpenRouterCredentialRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceCreateOpenRouterCredentialResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceCreateOpenRouterCredentialRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceCreateOpenRouterCredentialResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] CreateOpenRouterCredential invoked", "name", req.Msg.GetCredential().GetName())
 
 	// Validate request
@@ -122,7 +122,7 @@ func (s *ModelManagement) CreateOpenRouterCredential(
 	// If ID is empty, the repository will generate one
 
 	// Create credential domain object
-	credential := &llmgw.OpenRouterCredential{
+	credential := &trustedai.OpenRouterCredential{
 		ID:          credentialID,
 		Name:        req.Msg.GetCredential().GetName(),
 		Description: req.Msg.GetCredential().GetDescription(),
@@ -140,7 +140,7 @@ func (s *ModelManagement) CreateOpenRouterCredential(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceCreateOpenRouterCredentialResponse{
+	response := &trustedaiv1.ModelManagementServiceCreateOpenRouterCredentialResponse{
 		Credential: openRouterCredentialToProto(credential),
 	}
 
@@ -150,8 +150,8 @@ func (s *ModelManagement) CreateOpenRouterCredential(
 // GetOpenRouterCredential retrieves an OpenRouter credential by ID
 func (s *ModelManagement) GetOpenRouterCredential(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceGetOpenRouterCredentialRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceGetOpenRouterCredentialResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceGetOpenRouterCredentialRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceGetOpenRouterCredentialResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] GetOpenRouterCredential invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -173,7 +173,7 @@ func (s *ModelManagement) GetOpenRouterCredential(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceGetOpenRouterCredentialResponse{
+	response := &trustedaiv1.ModelManagementServiceGetOpenRouterCredentialResponse{
 		Credential: openRouterCredentialToProto(credential),
 	}
 
@@ -183,8 +183,8 @@ func (s *ModelManagement) GetOpenRouterCredential(
 // ListOpenRouterCredentials retrieves all OpenRouter credentials
 func (s *ModelManagement) ListOpenRouterCredentials(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListOpenRouterCredentialsRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListOpenRouterCredentialsResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListOpenRouterCredentialsRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListOpenRouterCredentialsResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListOpenRouterCredentials invoked", "includeDisabled", req.Msg.GetIncludeDisabled())
 
 	// Get credentials from repository (existing repo only returns enabled credentials)
@@ -195,13 +195,13 @@ func (s *ModelManagement) ListOpenRouterCredentials(
 	}
 
 	// Convert credentials to proto
-	protoCredentials := make([]*llmgwv1.OpenRouterCredential, 0, len(credentials))
+	protoCredentials := make([]*trustedaiv1.OpenRouterCredential, 0, len(credentials))
 	for _, credential := range credentials {
 		protoCredentials = append(protoCredentials, openRouterCredentialToProto(&credential))
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceListOpenRouterCredentialsResponse{
+	response := &trustedaiv1.ModelManagementServiceListOpenRouterCredentialsResponse{
 		Credentials: protoCredentials,
 	}
 
@@ -211,8 +211,8 @@ func (s *ModelManagement) ListOpenRouterCredentials(
 // UpdateOpenRouterCredential updates an existing OpenRouter credential
 func (s *ModelManagement) UpdateOpenRouterCredential(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceUpdateOpenRouterCredentialRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceUpdateOpenRouterCredentialResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceUpdateOpenRouterCredentialRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceUpdateOpenRouterCredentialResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] UpdateOpenRouterCredential invoked", "id", req.Msg.GetCredential().GetId())
 
 	// Validate request
@@ -271,7 +271,7 @@ func (s *ModelManagement) UpdateOpenRouterCredential(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceUpdateOpenRouterCredentialResponse{
+	response := &trustedaiv1.ModelManagementServiceUpdateOpenRouterCredentialResponse{
 		Credential: openRouterCredentialToProto(existingCredential),
 	}
 
@@ -281,8 +281,8 @@ func (s *ModelManagement) UpdateOpenRouterCredential(
 // DeleteOpenRouterCredential removes an OpenRouter credential
 func (s *ModelManagement) DeleteOpenRouterCredential(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceDeleteOpenRouterCredentialRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceDeleteOpenRouterCredentialResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceDeleteOpenRouterCredentialRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceDeleteOpenRouterCredentialResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] DeleteOpenRouterCredential invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -311,7 +311,7 @@ func (s *ModelManagement) DeleteOpenRouterCredential(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceDeleteOpenRouterCredentialResponse{
+	response := &trustedaiv1.ModelManagementServiceDeleteOpenRouterCredentialResponse{
 		Success: true,
 	}
 
@@ -321,8 +321,8 @@ func (s *ModelManagement) DeleteOpenRouterCredential(
 // CreateModel creates a new model with automatic inference from hardcoded models
 func (s *ModelManagement) CreateModel(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceCreateModelRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceCreateModelResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceCreateModelRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceCreateModelResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] CreateModel invoked", "id", req.Msg.GetModel().GetId())
 
 	// Validate request
@@ -352,7 +352,7 @@ func (s *ModelManagement) CreateModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential ID is required"))
 	}
 
-	if req.Msg.GetModel().GetCredentialType() == llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
+	if req.Msg.GetModel().GetCredentialType() == trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential type is required"))
 	}
 
@@ -382,7 +382,7 @@ func (s *ModelManagement) CreateModel(
 	protoModel := gaiModelToProto(gaiModel, req.Msg.GetModel().GetCredentialId(), req.Msg.GetModel().GetCredentialType())
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceCreateModelResponse{
+	response := &trustedaiv1.ModelManagementServiceCreateModelResponse{
 		Model: protoModel,
 	}
 
@@ -392,8 +392,8 @@ func (s *ModelManagement) CreateModel(
 // GetModel retrieves a model by ID with model reference
 func (s *ModelManagement) GetModel(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceGetModelRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceGetModelResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceGetModelRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceGetModelResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] GetModel invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -409,12 +409,12 @@ func (s *ModelManagement) GetModel(
 	}
 
 	// Convert to proto model
-	protoModel := &llmgwv1.Model{
+	protoModel := &trustedaiv1.Model{
 		Id:             modelWithRef.Model.ID,
 		Name:           modelWithRef.Model.Name,
 		ProviderId:     modelWithRef.Model.Provider,
-		CredentialId:   "",                                                 // Not available in current model structure
-		CredentialType: llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
+		CredentialId:   "",                                                     // Not available in current model structure
+		CredentialType: trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
 		Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 		Enabled:        true,
 		CreatedAt:      timestamppb.New(time.Now()),
@@ -423,14 +423,14 @@ func (s *ModelManagement) GetModel(
 
 	// Add pricing if available
 	if modelWithRef.Model.Pricing.InputTokenPrice > 0 || modelWithRef.Model.Pricing.OutputTokenPrice > 0 {
-		protoModel.Pricing = &llmgwv1.ModelPricing{
+		protoModel.Pricing = &trustedaiv1.ModelPricing{
 			InputTokenPrice:  modelWithRef.Model.Pricing.InputTokenPrice,
 			OutputTokenPrice: modelWithRef.Model.Pricing.OutputTokenPrice,
 		}
 	}
 
 	// Add capabilities
-	protoModel.Capabilities = &llmgwv1.ModelCapabilities{
+	protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
 		SupportsStreaming: modelWithRef.Model.Capabilities.SupportsStreaming,
 		SupportsJson:      modelWithRef.Model.Capabilities.SupportsJSON,
 		SupportsTools:     modelWithRef.Model.Capabilities.SupportsTools,
@@ -441,7 +441,7 @@ func (s *ModelManagement) GetModel(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceGetModelResponse{
+	response := &trustedaiv1.ModelManagementServiceGetModelResponse{
 		Model: protoModel,
 	}
 
@@ -451,8 +451,8 @@ func (s *ModelManagement) GetModel(
 // ListModels retrieves models based on filters with model references
 func (s *ModelManagement) ListModels(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListModelsRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListModelsResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListModelsRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListModelsResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListModels invoked", "includeDisabled", req.Msg.GetIncludeDisabled())
 
 	// Get models with references from repository (existing repo only returns enabled models)
@@ -463,14 +463,14 @@ func (s *ModelManagement) ListModels(
 	}
 
 	// Convert models to proto
-	protoModels := make([]*llmgwv1.Model, 0, len(modelsWithRef))
+	protoModels := make([]*trustedaiv1.Model, 0, len(modelsWithRef))
 	for _, modelWithRef := range modelsWithRef {
-		protoModel := &llmgwv1.Model{
+		protoModel := &trustedaiv1.Model{
 			Id:             modelWithRef.Model.ID,
 			Name:           modelWithRef.Model.Name,
 			ProviderId:     modelWithRef.Model.Provider,
-			CredentialId:   "",                                                 // Not available in current model structure
-			CredentialType: llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
+			CredentialId:   "",                                                     // Not available in current model structure
+			CredentialType: trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
 			Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
 			Enabled:        true,
 			CreatedAt:      timestamppb.New(time.Now()),
@@ -479,14 +479,14 @@ func (s *ModelManagement) ListModels(
 
 		// Add pricing if available
 		if modelWithRef.Model.Pricing.InputTokenPrice > 0 || modelWithRef.Model.Pricing.OutputTokenPrice > 0 {
-			protoModel.Pricing = &llmgwv1.ModelPricing{
+			protoModel.Pricing = &trustedaiv1.ModelPricing{
 				InputTokenPrice:  modelWithRef.Model.Pricing.InputTokenPrice,
 				OutputTokenPrice: modelWithRef.Model.Pricing.OutputTokenPrice,
 			}
 		}
 
 		// Add capabilities
-		protoModel.Capabilities = &llmgwv1.ModelCapabilities{
+		protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
 			SupportsStreaming: modelWithRef.Model.Capabilities.SupportsStreaming,
 			SupportsJson:      modelWithRef.Model.Capabilities.SupportsJSON,
 			SupportsTools:     modelWithRef.Model.Capabilities.SupportsTools,
@@ -500,7 +500,7 @@ func (s *ModelManagement) ListModels(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceListModelsResponse{
+	response := &trustedaiv1.ModelManagementServiceListModelsResponse{
 		Models: protoModels,
 	}
 
@@ -510,8 +510,8 @@ func (s *ModelManagement) ListModels(
 // UpdateModel updates an existing model
 func (s *ModelManagement) UpdateModel(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceUpdateModelRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceUpdateModelResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceUpdateModelRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceUpdateModelResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] UpdateModel invoked", "id", req.Msg.GetModel().GetId())
 
 	// Validate request
@@ -535,7 +535,7 @@ func (s *ModelManagement) UpdateModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential ID is required"))
 	}
 
-	if req.Msg.GetModel().GetCredentialType() == llmgwv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
+	if req.Msg.GetModel().GetCredentialType() == trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED {
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: credential type is required"))
 	}
 
@@ -559,7 +559,7 @@ func (s *ModelManagement) UpdateModel(
 	protoModel := gaiModelToProto(gaiModel, req.Msg.GetModel().GetCredentialId(), req.Msg.GetModel().GetCredentialType())
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceUpdateModelResponse{
+	response := &trustedaiv1.ModelManagementServiceUpdateModelResponse{
 		Model: protoModel,
 	}
 
@@ -569,8 +569,8 @@ func (s *ModelManagement) UpdateModel(
 // DeleteModel removes a model
 func (s *ModelManagement) DeleteModel(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceDeleteModelRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceDeleteModelResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceDeleteModelRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceDeleteModelResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] DeleteModel invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -586,7 +586,7 @@ func (s *ModelManagement) DeleteModel(
 	}
 
 	// Return response
-	response := &llmgwv1.ModelManagementServiceDeleteModelResponse{
+	response := &trustedaiv1.ModelManagementServiceDeleteModelResponse{
 		Success: true,
 	}
 
@@ -598,19 +598,19 @@ func (s *ModelManagement) DeleteModel(
 // ListSupportedCredentialTypes returns the credential types supported by the system
 func (s *ModelManagement) ListSupportedCredentialTypes(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedCredentialTypesRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedCredentialTypesResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListSupportedCredentialTypesRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListSupportedCredentialTypesResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListSupportedCredentialTypes invoked")
 
-	supportedTypes := []*llmgwv1.SupportedCredentialType{
+	supportedTypes := []*trustedaiv1.SupportedCredentialType{
 		{
-			Type:        llmgwv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER,
+			Type:        trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER,
 			DisplayName: "OpenRouter",
 			Description: "OpenRouter API credentials for accessing various LLM providers through OpenRouter's unified API",
 		},
 	}
 
-	response := &llmgwv1.ModelManagementServiceListSupportedCredentialTypesResponse{
+	response := &trustedaiv1.ModelManagementServiceListSupportedCredentialTypesResponse{
 		CredentialTypes: supportedTypes,
 	}
 
@@ -620,11 +620,11 @@ func (s *ModelManagement) ListSupportedCredentialTypes(
 // ListSupportedProviders returns the providers supported by the system
 func (s *ModelManagement) ListSupportedProviders(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedProvidersRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedProvidersResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListSupportedProvidersRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListSupportedProvidersResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListSupportedProviders invoked")
 
-	supportedProviders := []*llmgwv1.Provider{
+	supportedProviders := []*trustedaiv1.Provider{
 		{
 			Id:           models.PROVIDER_ID_OPENROUTER,
 			Name:         "OpenRouter",
@@ -635,7 +635,7 @@ func (s *ModelManagement) ListSupportedProviders(
 		},
 	}
 
-	response := &llmgwv1.ModelManagementServiceListSupportedProvidersResponse{
+	response := &trustedaiv1.ModelManagementServiceListSupportedProvidersResponse{
 		Providers: supportedProviders,
 	}
 
@@ -645,16 +645,16 @@ func (s *ModelManagement) ListSupportedProviders(
 // ListSupportedModelsForProvider returns the models supported for a specific provider
 func (s *ModelManagement) ListSupportedModelsForProvider(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.ModelManagementServiceListSupportedModelsForProviderRequest],
-) (*connect.Response[llmgwv1.ModelManagementServiceListSupportedModelsForProviderResponse], error) {
+	req *connect.Request[trustedaiv1.ModelManagementServiceListSupportedModelsForProviderRequest],
+) (*connect.Response[trustedaiv1.ModelManagementServiceListSupportedModelsForProviderResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListSupportedModelsForProvider invoked", "providerId", req.Msg.GetProviderId())
 
-	var supportedModels []*llmgwv1.Model
+	var supportedModels []*trustedaiv1.Model
 
 	switch req.Msg.GetProviderId() {
-	case llmgwv1.ProviderId_PROVIDER_ID_OPENROUTER:
+	case trustedaiv1.ProviderId_PROVIDER_ID_OPENROUTER:
 		for modelID, gaiModel := range models.OpenRouterModels {
-			protoModel := &llmgwv1.Model{
+			protoModel := &trustedaiv1.Model{
 				Id:         modelID,
 				Name:       gaiModel.Name,
 				ProviderId: gaiModel.Provider,
@@ -665,13 +665,13 @@ func (s *ModelManagement) ListSupportedModelsForProvider(
 			}
 
 			if gaiModel.Pricing.InputTokenPrice > 0 || gaiModel.Pricing.OutputTokenPrice > 0 {
-				protoModel.Pricing = &llmgwv1.ModelPricing{
+				protoModel.Pricing = &trustedaiv1.ModelPricing{
 					InputTokenPrice:  gaiModel.Pricing.InputTokenPrice,
 					OutputTokenPrice: gaiModel.Pricing.OutputTokenPrice,
 				}
 			}
 
-			protoModel.Capabilities = &llmgwv1.ModelCapabilities{
+			protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
 				SupportsStreaming: gaiModel.Capabilities.SupportsStreaming,
 				SupportsJson:      gaiModel.Capabilities.SupportsJSON,
 				SupportsTools:     gaiModel.Capabilities.SupportsTools,
@@ -683,13 +683,13 @@ func (s *ModelManagement) ListSupportedModelsForProvider(
 
 			supportedModels = append(supportedModels, protoModel)
 		}
-	case llmgwv1.ProviderId_PROVIDER_ID_UNSPECIFIED:
+	case trustedaiv1.ProviderId_PROVIDER_ID_UNSPECIFIED:
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: provider ID must be specified"))
 	default:
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: unsupported provider ID"))
 	}
 
-	response := &llmgwv1.ModelManagementServiceListSupportedModelsForProviderResponse{
+	response := &trustedaiv1.ModelManagementServiceListSupportedModelsForProviderResponse{
 		Models: supportedModels,
 	}
 
@@ -699,7 +699,7 @@ func (s *ModelManagement) ListSupportedModelsForProvider(
 // Helper functions
 
 // createModelWithInference creates a gai.Model with automatic inference from hardcoded models
-func createModelWithInference(protoModel *llmgwv1.Model, hardcodedModel *gai.Model, modelReference string) *gai.Model {
+func createModelWithInference(protoModel *trustedaiv1.Model, hardcodedModel *gai.Model, modelReference string) *gai.Model {
 	gaiModel := &gai.Model{
 		ID:       protoModel.GetId(),
 		Provider: protoModel.GetProviderId(),
@@ -762,7 +762,7 @@ func createModelWithInference(protoModel *llmgwv1.Model, hardcodedModel *gai.Mod
 // Note: This is a simplified approach - in reality, protobuf doesn't distinguish between
 // false and unset for booleans. For proper field presence detection, we'd need to use
 // protobuf reflection or optional fields.
-func hasExplicitBooleanCapabilities(caps *llmgwv1.ModelCapabilities) bool {
+func hasExplicitBooleanCapabilities(caps *trustedaiv1.ModelCapabilities) bool {
 	// For now, we assume if any boolean is true, they were explicitly set
 	// This could be enhanced with field presence detection if needed
 	return caps.GetSupportsStreaming() || caps.GetSupportsJson() ||
@@ -770,8 +770,8 @@ func hasExplicitBooleanCapabilities(caps *llmgwv1.ModelCapabilities) bool {
 }
 
 // openRouterCredentialToProto converts a domain OpenRouter credential to a protobuf credential
-func openRouterCredentialToProto(credential *llmgw.OpenRouterCredential) *llmgwv1.OpenRouterCredential {
-	return &llmgwv1.OpenRouterCredential{
+func openRouterCredentialToProto(credential *trustedai.OpenRouterCredential) *trustedaiv1.OpenRouterCredential {
+	return &trustedaiv1.OpenRouterCredential{
 		Id:          credential.ID.String(),
 		Name:        credential.Name,
 		Description: credential.Description,
@@ -785,7 +785,7 @@ func openRouterCredentialToProto(credential *llmgw.OpenRouterCredential) *llmgwv
 }
 
 // protoModelToGaiModel converts a protobuf model to a gai.Model
-func protoModelToGaiModel(protoModel *llmgwv1.Model) *gai.Model {
+func protoModelToGaiModel(protoModel *trustedaiv1.Model) *gai.Model {
 	model := &gai.Model{
 		ID:       protoModel.GetId(),
 		Name:     protoModel.GetName(),
@@ -818,8 +818,8 @@ func protoModelToGaiModel(protoModel *llmgwv1.Model) *gai.Model {
 }
 
 // gaiModelToProto converts a gai.Model to a protobuf model
-func gaiModelToProto(gaiModel *gai.Model, credentialID string, credentialType llmgwv1.CredentialType) *llmgwv1.Model {
-	protoModel := &llmgwv1.Model{
+func gaiModelToProto(gaiModel *gai.Model, credentialID string, credentialType trustedaiv1.CredentialType) *trustedaiv1.Model {
+	protoModel := &trustedaiv1.Model{
 		Id:             gaiModel.ID,
 		Name:           gaiModel.Name,
 		ProviderId:     gaiModel.Provider,
@@ -833,14 +833,14 @@ func gaiModelToProto(gaiModel *gai.Model, credentialID string, credentialType ll
 
 	// Convert pricing
 	if gaiModel.Pricing.InputTokenPrice > 0 || gaiModel.Pricing.OutputTokenPrice > 0 {
-		protoModel.Pricing = &llmgwv1.ModelPricing{
+		protoModel.Pricing = &trustedaiv1.ModelPricing{
 			InputTokenPrice:  gaiModel.Pricing.InputTokenPrice,
 			OutputTokenPrice: gaiModel.Pricing.OutputTokenPrice,
 		}
 	}
 
 	// Convert capabilities
-	protoModel.Capabilities = &llmgwv1.ModelCapabilities{
+	protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
 		SupportsStreaming: gaiModel.Capabilities.SupportsStreaming,
 		SupportsJson:      gaiModel.Capabilities.SupportsJSON,
 		SupportsTools:     gaiModel.Capabilities.SupportsTools,

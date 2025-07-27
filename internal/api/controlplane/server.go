@@ -10,14 +10,14 @@ import (
 	"log/slog"
 	"net/http"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
-	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/services"
 	"connectrpc.com/connect"
 	connectcors "connectrpc.com/cors"
 	"connectrpc.com/grpcreflect"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	"github.com/MadsRC/trustedai/internal/api/auth"
+	cauth "github.com/MadsRC/trustedai/internal/api/controlplane/auth"
+	"github.com/MadsRC/trustedai/internal/api/controlplane/services"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -126,21 +126,21 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 	servicesToRegister := make(map[string]any)
 
 	// IAM service
-	iamPath, iamHandler := llmgwv1connect.NewIAMServiceHandler(
+	iamPath, iamHandler := trustedaiv1connect.NewIAMServiceHandler(
 		iamServiceHandler,
 		connect.WithInterceptors(interceptors...),
 	)
 	servicesToRegister[iamPath] = iamHandler
 
 	// Model Management service
-	modelManagementPath, modelManagementHandler := llmgwv1connect.NewModelManagementServiceHandler(
+	modelManagementPath, modelManagementHandler := trustedaiv1connect.NewModelManagementServiceHandler(
 		modelManagementServiceHandler,
 		connect.WithInterceptors(interceptors...),
 	)
 	servicesToRegister[modelManagementPath] = modelManagementHandler
 
 	// Usage Analytics service
-	usageAnalyticsPath, usageAnalyticsHandler := llmgwv1connect.NewUsageAnalyticsServiceHandler(
+	usageAnalyticsPath, usageAnalyticsHandler := trustedaiv1connect.NewUsageAnalyticsServiceHandler(
 		usageAnalyticsServiceHandler,
 		connect.WithInterceptors(interceptors...),
 	)
@@ -150,9 +150,9 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 
 	// Add gRPC reflection support
 	reflector := grpcreflect.NewStaticReflector(
-		llmgwv1connect.IAMServiceName,
-		llmgwv1connect.ModelManagementServiceName,
-		llmgwv1connect.UsageAnalyticsServiceName,
+		trustedaiv1connect.IAMServiceName,
+		trustedaiv1connect.ModelManagementServiceName,
+		trustedaiv1connect.UsageAnalyticsServiceName,
 	)
 	reflectionV1Path, reflectionV1Handler := grpcreflect.NewHandlerV1(reflector)
 	reflectionV1AlphaPath, reflectionV1AlphaHandler := grpcreflect.NewHandlerV1Alpha(reflector)
@@ -186,14 +186,14 @@ func NewControlPlaneServer(options ...ControlPlaneOption) (*ControlPlaneServer, 
 
 type controlPlaneOptions struct {
 	Logger                 *slog.Logger
-	UserRepository         llmgw.UserRepository
-	OrganizationRepository llmgw.OrganizationRepository
-	TokenRepository        llmgw.TokenRepository
-	ProviderRepository     llmgw.ProviderRepository
-	CredentialRepository   llmgw.CredentialRepository
-	ModelRepository        llmgw.ModelRepository
-	UsageRepository        llmgw.UsageRepository
-	BillingRepository      llmgw.BillingRepository
+	UserRepository         trustedai.UserRepository
+	OrganizationRepository trustedai.OrganizationRepository
+	TokenRepository        trustedai.TokenRepository
+	ProviderRepository     trustedai.ProviderRepository
+	CredentialRepository   trustedai.CredentialRepository
+	ModelRepository        trustedai.ModelRepository
+	UsageRepository        trustedai.UsageRepository
+	BillingRepository      trustedai.BillingRepository
 	SsoHandler             http.Handler
 	SessionStore           auth.SessionStore
 	AuthInterceptor        *cauth.Interceptor
@@ -237,56 +237,56 @@ func WithControlPlaneLogger(logger *slog.Logger) ControlPlaneOption {
 }
 
 // WithControlPlaneUserRepository returns a [ControlPlaneOption] that uses the provided UserRepository.
-func WithControlPlaneUserRepository(repository llmgw.UserRepository) ControlPlaneOption {
+func WithControlPlaneUserRepository(repository trustedai.UserRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.UserRepository = repository
 	})
 }
 
 // WithControlPlaneOrganizationRepository returns a [ControlPlaneOption] that uses the provided OrganizationRepository.
-func WithControlPlaneOrganizationRepository(repository llmgw.OrganizationRepository) ControlPlaneOption {
+func WithControlPlaneOrganizationRepository(repository trustedai.OrganizationRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.OrganizationRepository = repository
 	})
 }
 
 // WithControlPlaneTokenRepository returns a [ControlPlaneOption] that uses the provided TokenRepository.
-func WithControlPlaneTokenRepository(repository llmgw.TokenRepository) ControlPlaneOption {
+func WithControlPlaneTokenRepository(repository trustedai.TokenRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.TokenRepository = repository
 	})
 }
 
 // WithControlPlaneProviderRepository returns a [ControlPlaneOption] that uses the provided ProviderRepository.
-func WithControlPlaneProviderRepository(repository llmgw.ProviderRepository) ControlPlaneOption {
+func WithControlPlaneProviderRepository(repository trustedai.ProviderRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.ProviderRepository = repository
 	})
 }
 
 // WithControlPlaneCredentialRepository returns a [ControlPlaneOption] that uses the provided CredentialRepository.
-func WithControlPlaneCredentialRepository(repository llmgw.CredentialRepository) ControlPlaneOption {
+func WithControlPlaneCredentialRepository(repository trustedai.CredentialRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.CredentialRepository = repository
 	})
 }
 
 // WithControlPlaneModelRepository returns a [ControlPlaneOption] that uses the provided ModelRepository.
-func WithControlPlaneModelRepository(repository llmgw.ModelRepository) ControlPlaneOption {
+func WithControlPlaneModelRepository(repository trustedai.ModelRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.ModelRepository = repository
 	})
 }
 
 // WithControlPlaneUsageRepository returns a [ControlPlaneOption] that uses the provided UsageRepository.
-func WithControlPlaneUsageRepository(repository llmgw.UsageRepository) ControlPlaneOption {
+func WithControlPlaneUsageRepository(repository trustedai.UsageRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.UsageRepository = repository
 	})
 }
 
 // WithControlPlaneBillingRepository returns a [ControlPlaneOption] that uses the provided BillingRepository.
-func WithControlPlaneBillingRepository(repository llmgw.BillingRepository) ControlPlaneOption {
+func WithControlPlaneBillingRepository(repository trustedai.BillingRepository) ControlPlaneOption {
 	return newFuncControlPlaneOption(func(opts *controlPlaneOptions) {
 		opts.BillingRepository = repository
 	})

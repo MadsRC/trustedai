@@ -10,11 +10,11 @@ import (
 	"log/slog"
 	"testing"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/internal/models"
 	"codeberg.org/gai-org/gai"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/internal/models"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -29,7 +29,7 @@ func TestModelManagement_ListSupportedCredentialTypes(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	req := connect.NewRequest(&llmgwv1.ModelManagementServiceListSupportedCredentialTypesRequest{})
+	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceListSupportedCredentialTypesRequest{})
 
 	resp, err := service.ListSupportedCredentialTypes(context.Background(), req)
 	require.NoError(t, err)
@@ -39,7 +39,7 @@ func TestModelManagement_ListSupportedCredentialTypes(t *testing.T) {
 	require.Len(t, credentialTypes, 1)
 
 	openRouterType := credentialTypes[0]
-	assert.Equal(t, llmgwv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER, openRouterType.GetType())
+	assert.Equal(t, trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER, openRouterType.GetType())
 	assert.Equal(t, "OpenRouter", openRouterType.GetDisplayName())
 	assert.Contains(t, openRouterType.GetDescription(), "OpenRouter API credentials")
 }
@@ -52,7 +52,7 @@ func TestModelManagement_ListSupportedProviders(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	req := connect.NewRequest(&llmgwv1.ModelManagementServiceListSupportedProvidersRequest{})
+	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceListSupportedProvidersRequest{})
 
 	resp, err := service.ListSupportedProviders(context.Background(), req)
 	require.NoError(t, err)
@@ -80,18 +80,18 @@ func TestModelManagement_ListSupportedModelsForProvider(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		providerId  llmgwv1.ProviderId
+		providerId  trustedaiv1.ProviderId
 		wantErr     bool
 		expectedErr string
 	}{
 		{
 			name:       "OpenRouter provider",
-			providerId: llmgwv1.ProviderId_PROVIDER_ID_OPENROUTER,
+			providerId: trustedaiv1.ProviderId_PROVIDER_ID_OPENROUTER,
 			wantErr:    false,
 		},
 		{
 			name:        "Unspecified provider",
-			providerId:  llmgwv1.ProviderId_PROVIDER_ID_UNSPECIFIED,
+			providerId:  trustedaiv1.ProviderId_PROVIDER_ID_UNSPECIFIED,
 			wantErr:     true,
 			expectedErr: "provider ID must be specified",
 		},
@@ -99,7 +99,7 @@ func TestModelManagement_ListSupportedModelsForProvider(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req := connect.NewRequest(&llmgwv1.ModelManagementServiceListSupportedModelsForProviderRequest{
+			req := connect.NewRequest(&trustedaiv1.ModelManagementServiceListSupportedModelsForProviderRequest{
 				ProviderId: tt.providerId,
 			})
 
@@ -147,8 +147,8 @@ func TestModelManagement_ListSupportedModelsForProvider_ValidatesModels(t *testi
 	)
 	require.NoError(t, err)
 
-	req := connect.NewRequest(&llmgwv1.ModelManagementServiceListSupportedModelsForProviderRequest{
-		ProviderId: llmgwv1.ProviderId_PROVIDER_ID_OPENROUTER,
+	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceListSupportedModelsForProviderRequest{
+		ProviderId: trustedaiv1.ProviderId_PROVIDER_ID_OPENROUTER,
 	})
 
 	resp, err := service.ListSupportedModelsForProvider(context.Background(), req)
@@ -241,28 +241,28 @@ type MockCredentialRepository struct {
 	mock.Mock
 }
 
-func (m *MockCredentialRepository) CreateOpenRouterCredential(ctx context.Context, credential *llmgw.OpenRouterCredential) error {
+func (m *MockCredentialRepository) CreateOpenRouterCredential(ctx context.Context, credential *trustedai.OpenRouterCredential) error {
 	args := m.Called(ctx, credential)
 	return args.Error(0)
 }
 
-func (m *MockCredentialRepository) GetOpenRouterCredential(ctx context.Context, id uuid.UUID) (*llmgw.OpenRouterCredential, error) {
+func (m *MockCredentialRepository) GetOpenRouterCredential(ctx context.Context, id uuid.UUID) (*trustedai.OpenRouterCredential, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.OpenRouterCredential), args.Error(1)
+	return args.Get(0).(*trustedai.OpenRouterCredential), args.Error(1)
 }
 
-func (m *MockCredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]llmgw.OpenRouterCredential, error) {
+func (m *MockCredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]trustedai.OpenRouterCredential, error) {
 	args := m.Called(ctx)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]llmgw.OpenRouterCredential), args.Error(1)
+	return args.Get(0).([]trustedai.OpenRouterCredential), args.Error(1)
 }
 
-func (m *MockCredentialRepository) UpdateOpenRouterCredential(ctx context.Context, credential *llmgw.OpenRouterCredential) error {
+func (m *MockCredentialRepository) UpdateOpenRouterCredential(ctx context.Context, credential *trustedai.OpenRouterCredential) error {
 	args := m.Called(ctx, credential)
 	return args.Error(0)
 }
@@ -284,12 +284,12 @@ func (m *MockModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, er
 	return args.Get(0).([]gai.Model), args.Error(1)
 }
 
-func (m *MockModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmgw.ModelWithReference, error) {
+func (m *MockModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
 	args := m.Called(ctx)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]llmgw.ModelWithReference), args.Error(1)
+	return args.Get(0).([]trustedai.ModelWithReference), args.Error(1)
 }
 
 func (m *MockModelRepository) GetModelByID(ctx context.Context, modelID string) (*gai.Model, error) {
@@ -300,28 +300,28 @@ func (m *MockModelRepository) GetModelByID(ctx context.Context, modelID string) 
 	return args.Get(0).(*gai.Model), args.Error(1)
 }
 
-func (m *MockModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*llmgw.ModelWithReference, error) {
+func (m *MockModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
 	args := m.Called(ctx, modelID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.ModelWithReference), args.Error(1)
+	return args.Get(0).(*trustedai.ModelWithReference), args.Error(1)
 }
 
-func (m *MockModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*llmgw.ModelWithCredentials, error) {
+func (m *MockModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	args := m.Called(ctx, modelID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*llmgw.ModelWithCredentials), args.Error(1)
+	return args.Get(0).(*trustedai.ModelWithCredentials), args.Error(1)
 }
 
-func (m *MockModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (m *MockModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	args := m.Called(ctx, model, credentialID, credentialType)
 	return args.Error(0)
 }
 
-func (m *MockModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (m *MockModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	args := m.Called(ctx, model, credentialID, credentialType)
 	return args.Error(0)
 }

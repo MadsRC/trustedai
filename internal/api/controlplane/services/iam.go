@@ -11,25 +11,25 @@ import (
 	"fmt"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
-	"codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	"github.com/MadsRC/trustedai/internal/api/controlplane/auth"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Ensure Iam implements the required interfaces
-var _ llmgwv1connect.IAMServiceHandler = (*Iam)(nil)
+var _ trustedaiv1connect.IAMServiceHandler = (*Iam)(nil)
 
 // User Service Methods
 
 // CreateUser creates a new user
 func (s *Iam) CreateUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceCreateUserRequest],
-) (*connect.Response[llmgwv1.IAMServiceCreateUserResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceCreateUserRequest],
+) (*connect.Response[trustedaiv1.IAMServiceCreateUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateUser invoked", "email", req.Msg.GetUser().GetEmail())
 
 	// Validate request
@@ -48,7 +48,7 @@ func (s *Iam) CreateUser(
 	// Check if organization exists
 	_, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetUser().GetOrganizationId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization", "error", err)
@@ -74,7 +74,7 @@ func (s *Iam) CreateUser(
 	}
 
 	// Create user domain object
-	user := &llmgw.User{
+	user := &trustedai.User{
 		ID:             userID,
 		Email:          req.Msg.GetUser().GetEmail(),
 		Name:           req.Msg.GetUser().GetName(),
@@ -89,7 +89,7 @@ func (s *Iam) CreateUser(
 	// Create user in repository
 	err = s.options.UserRepository.Create(ctx, user)
 	if err != nil {
-		if errors.Is(err, llmgw.ErrDuplicateEntry) {
+		if errors.Is(err, trustedai.ErrDuplicateEntry) {
 			return nil, connect.NewError(connect.CodeAlreadyExists, fmt.Errorf("iam service: user already exists: %w", err))
 		}
 		s.options.Logger.Error("Failed to create user", "error", err)
@@ -97,7 +97,7 @@ func (s *Iam) CreateUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceCreateUserResponse{
+	response := &trustedaiv1.IAMServiceCreateUserResponse{
 		User: userToProto(user),
 	}
 
@@ -107,8 +107,8 @@ func (s *Iam) CreateUser(
 // GetUser retrieves a user by ID
 func (s *Iam) GetUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetUserRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetUserResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetUserRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUser invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -119,7 +119,7 @@ func (s *Iam) GetUser(
 	// Get user from repository
 	user, err := s.options.UserRepository.Get(ctx, req.Msg.GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user", "error", err, "id", req.Msg.GetId())
@@ -127,7 +127,7 @@ func (s *Iam) GetUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceGetUserResponse{
+	response := &trustedaiv1.IAMServiceGetUserResponse{
 		User: userToProto(user),
 	}
 
@@ -137,8 +137,8 @@ func (s *Iam) GetUser(
 // GetUserByEmail retrieves a user by email
 func (s *Iam) GetUserByEmail(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetUserByEmailRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetUserByEmailResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetUserByEmailRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetUserByEmailResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUserByEmail invoked", "email", req.Msg.GetEmail())
 
 	// Validate request
@@ -149,7 +149,7 @@ func (s *Iam) GetUserByEmail(
 	// Get user from repository
 	user, err := s.options.UserRepository.GetByEmail(ctx, req.Msg.GetEmail())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user by email", "error", err, "email", req.Msg.GetEmail())
@@ -157,7 +157,7 @@ func (s *Iam) GetUserByEmail(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceGetUserByEmailResponse{
+	response := &trustedaiv1.IAMServiceGetUserByEmailResponse{
 		User: userToProto(user),
 	}
 
@@ -167,8 +167,8 @@ func (s *Iam) GetUserByEmail(
 // GetUserByExternalID retrieves a user by external ID and provider
 func (s *Iam) GetUserByExternalID(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetUserByExternalIDRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetUserByExternalIDResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetUserByExternalIDRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetUserByExternalIDResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetUserByExternalID invoked",
 		"provider", req.Msg.GetProvider(), "externalID", req.Msg.GetExternalId())
 
@@ -184,7 +184,7 @@ func (s *Iam) GetUserByExternalID(
 	// Get user from repository
 	user, err := s.options.UserRepository.GetByExternalID(ctx, req.Msg.GetProvider(), req.Msg.GetExternalId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user by external ID",
@@ -193,7 +193,7 @@ func (s *Iam) GetUserByExternalID(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceGetUserByExternalIDResponse{
+	response := &trustedaiv1.IAMServiceGetUserByExternalIDResponse{
 		User: userToProto(user),
 	}
 
@@ -202,7 +202,7 @@ func (s *Iam) GetUserByExternalID(
 
 // getUserFromConnection extracts the authenticated user from the connection context
 // This function checks both session-based authentication (SSO) and API key authentication
-func (s *Iam) getUserFromConnection(ctx context.Context) (*llmgw.User, error) {
+func (s *Iam) getUserFromConnection(ctx context.Context) (*trustedai.User, error) {
 	// Check for session-based authentication (SSO) first
 	if session := auth.SessionFromContext(ctx); session != nil {
 		s.options.Logger.Debug("[IAMService] Found session user",
@@ -225,8 +225,8 @@ func (s *Iam) getUserFromConnection(ctx context.Context) (*llmgw.User, error) {
 // GetCurrentUser retrieves the current authenticated user (from session or API key)
 func (s *Iam) GetCurrentUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetCurrentUserRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetCurrentUserResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetCurrentUserRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetCurrentUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetCurrentUser invoked")
 
 	user, err := s.getUserFromConnection(ctx)
@@ -235,7 +235,7 @@ func (s *Iam) GetCurrentUser(
 	}
 
 	// Return the user
-	response := &llmgwv1.IAMServiceGetCurrentUserResponse{
+	response := &trustedaiv1.IAMServiceGetCurrentUserResponse{
 		User: userToProto(user),
 	}
 
@@ -245,8 +245,8 @@ func (s *Iam) GetCurrentUser(
 // ListUsersByOrganization retrieves users in an organization if the requester has permission
 func (s *Iam) ListUsersByOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceListUsersByOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceListUsersByOrganizationResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceListUsersByOrganizationRequest],
+) (*connect.Response[trustedaiv1.IAMServiceListUsersByOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListUsersByOrganization invoked", "organizationID", req.Msg.GetOrganizationId())
 
 	// Validate request
@@ -263,7 +263,7 @@ func (s *Iam) ListUsersByOrganization(
 	// Check if organization exists
 	_, err = s.options.OrganizationRepository.Get(ctx, req.Msg.GetOrganizationId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization", "error", err)
@@ -273,7 +273,7 @@ func (s *Iam) ListUsersByOrganization(
 	// Get users from repository with authorization check
 	users, err := s.options.UserRepository.ListByOrganizationForUser(ctx, currentUser, req.Msg.GetOrganizationId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrUnauthorized) {
+		if errors.Is(err, trustedai.ErrUnauthorized) {
 			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to list users in this organization"))
 		}
 		s.options.Logger.Error("Failed to list users by organization", "error", err, "organizationID", req.Msg.GetOrganizationId())
@@ -281,13 +281,13 @@ func (s *Iam) ListUsersByOrganization(
 	}
 
 	// Convert users to proto
-	protoUsers := make([]*llmgwv1.User, 0, len(users))
+	protoUsers := make([]*trustedaiv1.User, 0, len(users))
 	for _, user := range users {
 		protoUsers = append(protoUsers, userToProto(user))
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceListUsersByOrganizationResponse{
+	response := &trustedaiv1.IAMServiceListUsersByOrganizationResponse{
 		Users: protoUsers,
 	}
 
@@ -297,8 +297,8 @@ func (s *Iam) ListUsersByOrganization(
 // UpdateUser updates an existing user
 func (s *Iam) UpdateUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUpdateUserRequest],
-) (*connect.Response[llmgwv1.IAMServiceUpdateUserResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceUpdateUserRequest],
+) (*connect.Response[trustedaiv1.IAMServiceUpdateUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] UpdateUser invoked", "id", req.Msg.GetUser().GetId())
 
 	// Validate request
@@ -313,7 +313,7 @@ func (s *Iam) UpdateUser(
 	// Get existing user
 	existingUser, err := s.options.UserRepository.Get(ctx, req.Msg.GetUser().GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user for update", "error", err, "id", req.Msg.GetUser().GetId())
@@ -333,7 +333,7 @@ func (s *Iam) UpdateUser(
 		// Check if new organization exists
 		_, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetUser().GetOrganizationId())
 		if err != nil {
-			if errors.Is(err, llmgw.ErrNotFound) {
+			if errors.Is(err, trustedai.ErrNotFound) {
 				return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 			}
 			s.options.Logger.Error("Failed to get organization", "error", err)
@@ -366,7 +366,7 @@ func (s *Iam) UpdateUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUpdateUserResponse{
+	response := &trustedaiv1.IAMServiceUpdateUserResponse{
 		User: userToProto(existingUser),
 	}
 
@@ -376,8 +376,8 @@ func (s *Iam) UpdateUser(
 // DeleteUser removes a user
 func (s *Iam) DeleteUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceDeleteUserRequest],
-) (*connect.Response[llmgwv1.IAMServiceDeleteUserResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceDeleteUserRequest],
+) (*connect.Response[trustedaiv1.IAMServiceDeleteUserResponse], error) {
 	s.options.Logger.Debug("[IAMService] DeleteUser invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -388,7 +388,7 @@ func (s *Iam) DeleteUser(
 	// Check if user exists
 	_, err := s.options.UserRepository.Get(ctx, req.Msg.GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user for deletion", "error", err, "id", req.Msg.GetId())
@@ -403,7 +403,7 @@ func (s *Iam) DeleteUser(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceDeleteUserResponse{
+	response := &trustedaiv1.IAMServiceDeleteUserResponse{
 		Success: true,
 	}
 
@@ -415,8 +415,8 @@ func (s *Iam) DeleteUser(
 // CreateOrganization creates a new organization (system admins only)
 func (s *Iam) CreateOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceCreateOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceCreateOrganizationResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceCreateOrganizationRequest],
+) (*connect.Response[trustedaiv1.IAMServiceCreateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateOrganization invoked", "name", req.Msg.GetOrganization().GetName())
 
 	// Get authenticated user
@@ -463,7 +463,7 @@ func (s *Iam) CreateOrganization(
 	}
 
 	// Create organization domain object
-	org := &llmgw.Organization{
+	org := &trustedai.Organization{
 		ID:          orgID,
 		Name:        req.Msg.GetOrganization().GetName(),
 		DisplayName: req.Msg.GetOrganization().GetDisplayName(),
@@ -476,7 +476,7 @@ func (s *Iam) CreateOrganization(
 	// Create organization in repository
 	err = s.options.OrganizationRepository.Create(ctx, org)
 	if err != nil {
-		if errors.Is(err, llmgw.ErrDuplicateEntry) {
+		if errors.Is(err, trustedai.ErrDuplicateEntry) {
 			return nil, connect.NewError(connect.CodeAlreadyExists, fmt.Errorf("iam service: organization already exists: %w", err))
 		}
 		s.options.Logger.Error("Failed to create organization", "error", err)
@@ -484,7 +484,7 @@ func (s *Iam) CreateOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceCreateOrganizationResponse{
+	response := &trustedaiv1.IAMServiceCreateOrganizationResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -494,8 +494,8 @@ func (s *Iam) CreateOrganization(
 // GetOrganization retrieves an organization by ID
 func (s *Iam) GetOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetOrganizationResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetOrganizationRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetOrganization invoked", "id", req.Msg.GetId())
 
 	// Validate request
@@ -506,7 +506,7 @@ func (s *Iam) GetOrganization(
 	// Get organization from repository
 	org, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization", "error", err, "id", req.Msg.GetId())
@@ -514,7 +514,7 @@ func (s *Iam) GetOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceGetOrganizationResponse{
+	response := &trustedaiv1.IAMServiceGetOrganizationResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -524,8 +524,8 @@ func (s *Iam) GetOrganization(
 // GetOrganizationByName retrieves an organization by name
 func (s *Iam) GetOrganizationByName(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceGetOrganizationByNameRequest],
-) (*connect.Response[llmgwv1.IAMServiceGetOrganizationByNameResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceGetOrganizationByNameRequest],
+) (*connect.Response[trustedaiv1.IAMServiceGetOrganizationByNameResponse], error) {
 	s.options.Logger.Debug("[IAMService] GetOrganizationByName invoked", "name", req.Msg.GetName())
 
 	// Validate request
@@ -536,7 +536,7 @@ func (s *Iam) GetOrganizationByName(
 	// Get organization from repository
 	org, err := s.options.OrganizationRepository.GetByName(ctx, req.Msg.GetName())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization by name", "error", err, "name", req.Msg.GetName())
@@ -544,7 +544,7 @@ func (s *Iam) GetOrganizationByName(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceGetOrganizationByNameResponse{
+	response := &trustedaiv1.IAMServiceGetOrganizationByNameResponse{
 		Organization: organizationToProto(org),
 	}
 
@@ -554,8 +554,8 @@ func (s *Iam) GetOrganizationByName(
 // ListOrganizations retrieves organizations visible to the authenticated user
 func (s *Iam) ListOrganizations(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceListOrganizationsRequest],
-) (*connect.Response[llmgwv1.IAMServiceListOrganizationsResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceListOrganizationsRequest],
+) (*connect.Response[trustedaiv1.IAMServiceListOrganizationsResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListOrganizations invoked")
 
 	// Get authenticated user
@@ -572,13 +572,13 @@ func (s *Iam) ListOrganizations(
 	}
 
 	// Convert organizations to proto
-	protoOrgs := make([]*llmgwv1.Organization, 0, len(orgs))
+	protoOrgs := make([]*trustedaiv1.Organization, 0, len(orgs))
 	for _, org := range orgs {
 		protoOrgs = append(protoOrgs, organizationToProto(org))
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceListOrganizationsResponse{
+	response := &trustedaiv1.IAMServiceListOrganizationsResponse{
 		Organizations: protoOrgs,
 	}
 
@@ -588,8 +588,8 @@ func (s *Iam) ListOrganizations(
 // UpdateOrganization updates an existing organization (system admins only)
 func (s *Iam) UpdateOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceUpdateOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceUpdateOrganizationResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceUpdateOrganizationRequest],
+) (*connect.Response[trustedaiv1.IAMServiceUpdateOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] UpdateOrganization invoked", "id", req.Msg.GetOrganization().GetId())
 
 	// Get authenticated user
@@ -615,7 +615,7 @@ func (s *Iam) UpdateOrganization(
 	// Get existing organization
 	existingOrg, err := s.options.OrganizationRepository.Get(ctx, req.Msg.GetOrganization().GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization for update", "error", err, "id", req.Msg.GetOrganization().GetId())
@@ -652,7 +652,7 @@ func (s *Iam) UpdateOrganization(
 	// Update organization in repository
 	err = s.options.OrganizationRepository.Update(ctx, existingOrg)
 	if err != nil {
-		if errors.Is(err, llmgw.ErrDuplicateEntry) {
+		if errors.Is(err, trustedai.ErrDuplicateEntry) {
 			return nil, connect.NewError(connect.CodeAlreadyExists, fmt.Errorf("iam service: organization name already exists: %w", err))
 		}
 		s.options.Logger.Error("Failed to update organization", "error", err, "id", req.Msg.GetOrganization().GetId())
@@ -660,7 +660,7 @@ func (s *Iam) UpdateOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceUpdateOrganizationResponse{
+	response := &trustedaiv1.IAMServiceUpdateOrganizationResponse{
 		Organization: organizationToProto(existingOrg),
 	}
 
@@ -670,8 +670,8 @@ func (s *Iam) UpdateOrganization(
 // DeleteOrganization removes an organization (system admins only)
 func (s *Iam) DeleteOrganization(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceDeleteOrganizationRequest],
-) (*connect.Response[llmgwv1.IAMServiceDeleteOrganizationResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceDeleteOrganizationRequest],
+) (*connect.Response[trustedaiv1.IAMServiceDeleteOrganizationResponse], error) {
 	s.options.Logger.Debug("[IAMService] DeleteOrganization invoked", "id", req.Msg.GetId())
 
 	// Get authenticated user
@@ -693,7 +693,7 @@ func (s *Iam) DeleteOrganization(
 	// Check if organization exists
 	_, err = s.options.OrganizationRepository.Get(ctx, req.Msg.GetId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: organization not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get organization for deletion", "error", err, "id", req.Msg.GetId())
@@ -720,7 +720,7 @@ func (s *Iam) DeleteOrganization(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceDeleteOrganizationResponse{
+	response := &trustedaiv1.IAMServiceDeleteOrganizationResponse{
 		Success: true,
 	}
 
@@ -732,8 +732,8 @@ func (s *Iam) DeleteOrganization(
 // CreateToken creates a new API token for a user
 func (s *Iam) CreateToken(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceCreateTokenRequest],
-) (*connect.Response[llmgwv1.IAMServiceCreateTokenResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceCreateTokenRequest],
+) (*connect.Response[trustedaiv1.IAMServiceCreateTokenResponse], error) {
 	s.options.Logger.Debug("[IAMService] CreateToken invoked", "userID", req.Msg.GetUserId())
 
 	// Validate request
@@ -744,7 +744,7 @@ func (s *Iam) CreateToken(
 	// Check if user exists
 	_, err := s.options.UserRepository.Get(ctx, req.Msg.GetUserId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user for token creation", "error", err, "userID", req.Msg.GetUserId())
@@ -770,8 +770,8 @@ func (s *Iam) CreateToken(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceCreateTokenResponse{
-		Token: &llmgwv1.APIToken{
+	response := &trustedaiv1.IAMServiceCreateTokenResponse{
+		Token: &trustedaiv1.APIToken{
 			Id:          token.ID,
 			UserId:      token.UserID,
 			Description: token.Description,
@@ -791,8 +791,8 @@ func (s *Iam) CreateToken(
 // ListUserTokens retrieves tokens for a user if the requester has permission
 func (s *Iam) ListUserTokens(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceListUserTokensRequest],
-) (*connect.Response[llmgwv1.IAMServiceListUserTokensResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceListUserTokensRequest],
+) (*connect.Response[trustedaiv1.IAMServiceListUserTokensResponse], error) {
 	s.options.Logger.Debug("[IAMService] ListUserTokens invoked", "userID", req.Msg.GetUserId())
 
 	// Validate request
@@ -809,7 +809,7 @@ func (s *Iam) ListUserTokens(
 	// Check if user exists
 	_, err = s.options.UserRepository.Get(ctx, req.Msg.GetUserId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: user not found: %w", err))
 		}
 		s.options.Logger.Error("Failed to get user for token listing", "error", err, "userID", req.Msg.GetUserId())
@@ -819,7 +819,7 @@ func (s *Iam) ListUserTokens(
 	// Get tokens from repository with authorization check
 	tokens, err := s.options.TokenRepository.ListUserTokensForUser(ctx, currentUser, req.Msg.GetUserId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrUnauthorized) {
+		if errors.Is(err, trustedai.ErrUnauthorized) {
 			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to list tokens for this user"))
 		}
 		s.options.Logger.Error("Failed to list user tokens", "error", err, "userID", req.Msg.GetUserId())
@@ -827,9 +827,9 @@ func (s *Iam) ListUserTokens(
 	}
 
 	// Convert tokens to proto
-	protoTokens := make([]*llmgwv1.APIToken, 0, len(tokens))
+	protoTokens := make([]*trustedaiv1.APIToken, 0, len(tokens))
 	for _, token := range tokens {
-		protoToken := &llmgwv1.APIToken{
+		protoToken := &trustedaiv1.APIToken{
 			Id:          token.ID,
 			UserId:      token.UserID,
 			Description: token.Description,
@@ -845,7 +845,7 @@ func (s *Iam) ListUserTokens(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceListUserTokensResponse{
+	response := &trustedaiv1.IAMServiceListUserTokensResponse{
 		Tokens: protoTokens,
 	}
 
@@ -855,8 +855,8 @@ func (s *Iam) ListUserTokens(
 // RevokeToken invalidates a token if the requester has permission
 func (s *Iam) RevokeToken(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.IAMServiceRevokeTokenRequest],
-) (*connect.Response[llmgwv1.IAMServiceRevokeTokenResponse], error) {
+	req *connect.Request[trustedaiv1.IAMServiceRevokeTokenRequest],
+) (*connect.Response[trustedaiv1.IAMServiceRevokeTokenResponse], error) {
 	s.options.Logger.Debug("[IAMService] RevokeToken invoked", "tokenID", req.Msg.GetTokenId())
 
 	// Validate request
@@ -873,10 +873,10 @@ func (s *Iam) RevokeToken(
 	// Revoke token with authorization check
 	err = s.options.TokenRepository.RevokeTokenForUser(ctx, currentUser, req.Msg.GetTokenId())
 	if err != nil {
-		if errors.Is(err, llmgw.ErrNotFound) {
+		if errors.Is(err, trustedai.ErrNotFound) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("iam service: token not found: %w", err))
 		}
-		if errors.Is(err, llmgw.ErrUnauthorized) {
+		if errors.Is(err, trustedai.ErrUnauthorized) {
 			return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("iam service: insufficient permissions to revoke this token"))
 		}
 		s.options.Logger.Error("Failed to revoke token", "error", err, "tokenID", req.Msg.GetTokenId())
@@ -884,7 +884,7 @@ func (s *Iam) RevokeToken(
 	}
 
 	// Return response
-	response := &llmgwv1.IAMServiceRevokeTokenResponse{
+	response := &trustedaiv1.IAMServiceRevokeTokenResponse{
 		Success: true,
 	}
 
@@ -894,8 +894,8 @@ func (s *Iam) RevokeToken(
 // Helper functions
 
 // userToProto converts a domain user to a protobuf user
-func userToProto(user *llmgw.User) *llmgwv1.User {
-	protoUser := &llmgwv1.User{
+func userToProto(user *trustedai.User) *trustedaiv1.User {
+	protoUser := &trustedaiv1.User{
 		Id:             user.ID,
 		Email:          user.Email,
 		Name:           user.Name,
@@ -911,7 +911,7 @@ func userToProto(user *llmgw.User) *llmgwv1.User {
 }
 
 // organizationToProto converts a domain organization to a protobuf organization
-func organizationToProto(org *llmgw.Organization) *llmgwv1.Organization {
+func organizationToProto(org *trustedai.Organization) *trustedaiv1.Organization {
 	// Convert SSOConfig map to JSON string
 	ssoConfig := ""
 	if org.SSOConfig != nil {
@@ -921,7 +921,7 @@ func organizationToProto(org *llmgw.Organization) *llmgwv1.Organization {
 		}
 	}
 
-	protoOrg := &llmgwv1.Organization{
+	protoOrg := &trustedaiv1.Organization{
 		Id:          org.ID,
 		Name:        org.Name,
 		DisplayName: org.DisplayName,

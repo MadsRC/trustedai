@@ -8,11 +8,11 @@ import (
 	"context"
 	"errors"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1/llmgwv1connect"
-	cauth "codeberg.org/MadsRC/llmgw/internal/api/controlplane/auth"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	cauth "github.com/MadsRC/trustedai/internal/api/controlplane/auth"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -22,13 +22,13 @@ type UsageAnalytics struct {
 }
 
 // Ensure UsageAnalytics implements the required interfaces
-var _ llmgwv1connect.UsageAnalyticsServiceHandler = (*UsageAnalytics)(nil)
+var _ trustedaiv1connect.UsageAnalyticsServiceHandler = (*UsageAnalytics)(nil)
 
 // GetUsageSummary retrieves usage summary for the authenticated user
 func (s *UsageAnalytics) GetUsageSummary(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetUsageSummaryRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetUsageSummaryResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetUsageSummaryRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetUsageSummaryResponse], error) {
 	s.options.Logger.Debug("[UsageAnalyticsService] GetUsageSummary invoked")
 
 	// Extract authenticated user from context
@@ -50,7 +50,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 	}
 
 	// Try to use billing summaries for efficient queries first
-	var billingSummaries []*llmgw.BillingSummary
+	var billingSummaries []*trustedai.BillingSummary
 	if s.options.BillingRepository != nil {
 		var err error
 		billingSummaries, err = s.options.BillingRepository.ListBillingSummariesByUser(ctx, user.ID, 1000, 0)
@@ -61,7 +61,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 	}
 
 	// Filter summaries by time range and model
-	var filteredSummaries []*llmgw.BillingSummary
+	var filteredSummaries []*trustedai.BillingSummary
 	for _, summary := range billingSummaries {
 		if summary.PeriodStart.Before(end) && summary.PeriodEnd.After(start) {
 			filteredSummaries = append(filteredSummaries, summary)
@@ -73,7 +73,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 	totalInputTokens := int64(0)
 	totalOutputTokens := int64(0)
 	totalCostCents := float64(0)
-	modelUsageMap := make(map[string]*llmgwv1.ModelUsage)
+	modelUsageMap := make(map[string]*trustedaiv1.ModelUsage)
 
 	// If we have billing summaries, use them for aggregation
 	if len(filteredSummaries) > 0 {
@@ -139,7 +139,7 @@ func (s *UsageAnalytics) GetUsageSummary(
 					costCents = *event.TotalCostCents
 				}
 
-				modelUsageMap[event.ModelID] = &llmgwv1.ModelUsage{
+				modelUsageMap[event.ModelID] = &trustedaiv1.ModelUsage{
 					ModelId:      event.ModelID,
 					Requests:     1,
 					InputTokens:  inputTokens,
@@ -151,17 +151,17 @@ func (s *UsageAnalytics) GetUsageSummary(
 	}
 
 	// Convert map to slice
-	var models []*llmgwv1.ModelUsage
+	var models []*trustedaiv1.ModelUsage
 	for _, modelUsage := range modelUsageMap {
 		models = append(models, modelUsage)
 	}
 
-	response := &llmgwv1.UsageAnalyticsServiceGetUsageSummaryResponse{
-		Period: &llmgwv1.UsagePeriod{
+	response := &trustedaiv1.UsageAnalyticsServiceGetUsageSummaryResponse{
+		Period: &trustedaiv1.UsagePeriod{
 			Start: req.Msg.GetStart(),
 			End:   req.Msg.GetEnd(),
 		},
-		Summary: &llmgwv1.UsageSummary{
+		Summary: &trustedaiv1.UsageSummary{
 			TotalRequests:     totalRequests,
 			TotalInputTokens:  totalInputTokens,
 			TotalOutputTokens: totalOutputTokens,
@@ -176,8 +176,8 @@ func (s *UsageAnalytics) GetUsageSummary(
 // GetUsageDetails retrieves detailed usage events for the authenticated user
 func (s *UsageAnalytics) GetUsageDetails(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetUsageDetailsRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetUsageDetailsResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetUsageDetailsRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetUsageDetailsResponse], error) {
 	s.options.Logger.Debug("[UsageAnalyticsService] GetUsageDetails invoked")
 
 	// Extract authenticated user from context
@@ -219,7 +219,7 @@ func (s *UsageAnalytics) GetUsageDetails(
 	}
 
 	// Filter by model if specified
-	var filteredEvents []*llmgw.UsageEvent
+	var filteredEvents []*trustedai.UsageEvent
 	for _, event := range events {
 		if req.Msg.ModelId != nil && *req.Msg.ModelId != event.ModelID {
 			continue
@@ -245,9 +245,9 @@ func (s *UsageAnalytics) GetUsageDetails(
 	paginatedEvents := filteredEvents[start_idx:end_idx]
 
 	// Convert to protobuf format
-	var protoEvents []*llmgwv1.UsageEvent
+	var protoEvents []*trustedaiv1.UsageEvent
 	for _, event := range paginatedEvents {
-		protoEvent := &llmgwv1.UsageEvent{
+		protoEvent := &trustedaiv1.UsageEvent{
 			Id:              event.ID,
 			RequestId:       event.RequestID,
 			UserId:          event.UserID,
@@ -301,7 +301,7 @@ func (s *UsageAnalytics) GetUsageDetails(
 		protoEvents = append(protoEvents, protoEvent)
 	}
 
-	response := &llmgwv1.UsageAnalyticsServiceGetUsageDetailsResponse{
+	response := &trustedaiv1.UsageAnalyticsServiceGetUsageDetailsResponse{
 		Events:     protoEvents,
 		TotalCount: totalCount,
 	}
@@ -312,8 +312,8 @@ func (s *UsageAnalytics) GetUsageDetails(
 // GetUsageCosts retrieves cost breakdown for the authenticated user
 func (s *UsageAnalytics) GetUsageCosts(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetUsageCostsRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetUsageCostsResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetUsageCostsRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetUsageCostsResponse], error) {
 	s.options.Logger.Debug("[UsageAnalyticsService] GetUsageCosts invoked")
 
 	// Extract authenticated user from context
@@ -346,7 +346,7 @@ func (s *UsageAnalytics) GetUsageCosts(
 	}
 
 	// Calculate cost breakdown by model
-	costBreakdownMap := make(map[string]*llmgwv1.CostBreakdown)
+	costBreakdownMap := make(map[string]*trustedaiv1.CostBreakdown)
 	totalCostCents := float64(0)
 
 	for _, event := range events {
@@ -384,7 +384,7 @@ func (s *UsageAnalytics) GetUsageCosts(
 			breakdown.TotalCostCents += eventTotalCost
 			breakdown.Requests++
 		} else {
-			costBreakdownMap[event.ModelID] = &llmgwv1.CostBreakdown{
+			costBreakdownMap[event.ModelID] = &trustedaiv1.CostBreakdown{
 				ModelId:         event.ModelID,
 				InputCostCents:  inputCost,
 				OutputCostCents: outputCost,
@@ -395,13 +395,13 @@ func (s *UsageAnalytics) GetUsageCosts(
 	}
 
 	// Convert map to slice
-	var costBreakdown []*llmgwv1.CostBreakdown
+	var costBreakdown []*trustedaiv1.CostBreakdown
 	for _, breakdown := range costBreakdownMap {
 		costBreakdown = append(costBreakdown, breakdown)
 	}
 
-	response := &llmgwv1.UsageAnalyticsServiceGetUsageCostsResponse{
-		Period: &llmgwv1.UsagePeriod{
+	response := &trustedaiv1.UsageAnalyticsServiceGetUsageCostsResponse{
+		Period: &trustedaiv1.UsagePeriod{
 			Start: req.Msg.GetStart(),
 			End:   req.Msg.GetEnd(),
 		},
@@ -417,30 +417,30 @@ func (s *UsageAnalytics) GetUsageCosts(
 // GetOrganizationUsageSummary retrieves usage summary for an organization (admin only)
 func (s *UsageAnalytics) GetOrganizationUsageSummary(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("organization usage summary not yet implemented"))
 }
 
 // GetOrganizationUsageByUser retrieves organization usage broken down by user (admin only)
 func (s *UsageAnalytics) GetOrganizationUsageByUser(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("organization usage by user not yet implemented"))
 }
 
 // GetOrganizationUsageByModel retrieves organization usage broken down by model (admin only)
 func (s *UsageAnalytics) GetOrganizationUsageByModel(
 	ctx context.Context,
-	req *connect.Request[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest],
-) (*connect.Response[llmgwv1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse], error) {
+	req *connect.Request[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest],
+) (*connect.Response[trustedaiv1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("organization usage by model not yet implemented"))
 }
 
 // getUserFromConnection extracts the authenticated user from the connection context
 // This function checks both session-based authentication (SSO) and API key authentication
-func (s *UsageAnalytics) getUserFromConnection(ctx context.Context) (*llmgw.User, error) {
+func (s *UsageAnalytics) getUserFromConnection(ctx context.Context) (*trustedai.User, error) {
 	// Check for session-based authentication (SSO) first
 	if session := cauth.SessionFromContext(ctx); session != nil {
 		s.options.Logger.Debug("[UsageAnalyticsService] Found session user",

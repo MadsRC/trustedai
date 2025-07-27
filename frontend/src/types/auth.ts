@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { type User } from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+import { type User } from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 
 export interface AuthContextType {
   isLoggedIn: boolean;

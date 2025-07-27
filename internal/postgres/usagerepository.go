@@ -9,13 +9,13 @@ import (
 	"errors"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // CreateUsageEvent stores a new usage event
-func (r *UsageRepository) CreateUsageEvent(ctx context.Context, event *llmgw.UsageEvent) error {
+func (r *UsageRepository) CreateUsageEvent(ctx context.Context, event *trustedai.UsageEvent) error {
 	query := `
 		INSERT INTO usage_events (
 			id, request_id, user_id, model_id,
@@ -51,7 +51,7 @@ func (r *UsageRepository) CreateUsageEvent(ctx context.Context, event *llmgw.Usa
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return llmgw.ErrDuplicateEntry
+			return trustedai.ErrDuplicateEntry
 		}
 		r.options.Logger.Error("Failed to create usage event", "error", err)
 		return err
@@ -60,7 +60,7 @@ func (r *UsageRepository) CreateUsageEvent(ctx context.Context, event *llmgw.Usa
 }
 
 // GetUsageEvent retrieves a usage event by ID
-func (r *UsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.UsageEvent, error) {
+func (r *UsageRepository) GetUsageEvent(ctx context.Context, id string) (*trustedai.UsageEvent, error) {
 	query := `
 		SELECT id, request_id, user_id, model_id,
 			input_tokens, output_tokens, cached_tokens, reasoning_tokens,
@@ -72,7 +72,7 @@ func (r *UsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.
 
 	row := r.options.Db.QueryRow(ctx, query, id)
 
-	var event llmgw.UsageEvent
+	var event trustedai.UsageEvent
 	err := row.Scan(
 		&event.ID,
 		&event.RequestID,
@@ -96,7 +96,7 @@ func (r *UsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get usage event", "error", err, "id", id)
@@ -106,7 +106,7 @@ func (r *UsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.
 }
 
 // ListUsageEventsByUser retrieves usage events for a specific user with pagination
-func (r *UsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*llmgw.UsageEvent, error) {
+func (r *UsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*trustedai.UsageEvent, error) {
 	query := `
 		SELECT id, request_id, user_id, model_id,
 			input_tokens, output_tokens, cached_tokens, reasoning_tokens,
@@ -125,9 +125,9 @@ func (r *UsageRepository) ListUsageEventsByUser(ctx context.Context, userID stri
 	}
 	defer rows.Close()
 
-	var events []*llmgw.UsageEvent
+	var events []*trustedai.UsageEvent
 	for rows.Next() {
-		var event llmgw.UsageEvent
+		var event trustedai.UsageEvent
 		err := rows.Scan(
 			&event.ID,
 			&event.RequestID,
@@ -165,7 +165,7 @@ func (r *UsageRepository) ListUsageEventsByUser(ctx context.Context, userID stri
 }
 
 // ListUsageEventsForCostCalculation retrieves uncalculated usage events that are ready for cost calculation
-func (r *UsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*llmgw.UsageEvent, error) {
+func (r *UsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*trustedai.UsageEvent, error) {
 	query := `
 		SELECT id, request_id, user_id, model_id,
 			input_tokens, output_tokens, cached_tokens, reasoning_tokens,
@@ -184,9 +184,9 @@ func (r *UsageRepository) ListUsageEventsForCostCalculation(ctx context.Context,
 	}
 	defer rows.Close()
 
-	var events []*llmgw.UsageEvent
+	var events []*trustedai.UsageEvent
 	for rows.Next() {
-		var event llmgw.UsageEvent
+		var event trustedai.UsageEvent
 		err := rows.Scan(
 			&event.ID,
 			&event.RequestID,
@@ -224,7 +224,7 @@ func (r *UsageRepository) ListUsageEventsForCostCalculation(ctx context.Context,
 }
 
 // UpdateUsageEventCost updates the cost fields for a usage event
-func (r *UsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost llmgw.CostResult) error {
+func (r *UsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost trustedai.CostResult) error {
 	query := `
 		UPDATE usage_events SET
 			input_cost_cents = $2,
@@ -245,14 +245,14 @@ func (r *UsageRepository) UpdateUsageEventCost(ctx context.Context, eventID stri
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil
 }
 
 // ListUsageEventsByPeriod retrieves usage events for a specific period
-func (r *UsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*llmgw.UsageEvent, error) {
+func (r *UsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*trustedai.UsageEvent, error) {
 	query := `
 		SELECT id, request_id, user_id, model_id,
 			input_tokens, output_tokens, cached_tokens, reasoning_tokens,
@@ -270,9 +270,9 @@ func (r *UsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID st
 	}
 	defer rows.Close()
 
-	var events []*llmgw.UsageEvent
+	var events []*trustedai.UsageEvent
 	for rows.Next() {
-		var event llmgw.UsageEvent
+		var event trustedai.UsageEvent
 		err := rows.Scan(
 			&event.ID,
 			&event.RequestID,

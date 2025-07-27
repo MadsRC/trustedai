@@ -7,8 +7,8 @@ package services
 import (
 	"log/slog"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 type SsoCallback struct {
@@ -32,13 +32,13 @@ func NewSsoCallback(options ...SsoCallbackOption) (*SsoCallback, error) {
 
 type ssoCallbackOptions struct {
 	Logger       *slog.Logger
-	Providers    map[string]llmgw.SsoProvider
+	Providers    map[string]trustedai.SsoProvider
 	SessionStore auth.SessionStore
 }
 
 var defaultSsoCallbackOptions = ssoCallbackOptions{
 	Logger:       slog.Default(),
-	Providers:    make(map[string]llmgw.SsoProvider),
+	Providers:    make(map[string]trustedai.SsoProvider),
 	SessionStore: nil, // Will be set by WithSsoCallbackSessionStore
 }
 
@@ -74,7 +74,7 @@ func WithSsoCallbackLogger(logger *slog.Logger) SsoCallbackOption {
 }
 
 // WithSsoCallbackProvider returns a [SsoCallbackOption] that registers an SSO provider with the given prefix.
-func WithSsoCallbackProvider(prefix string, provider llmgw.SsoProvider) SsoCallbackOption {
+func WithSsoCallbackProvider(prefix string, provider trustedai.SsoProvider) SsoCallbackOption {
 	return newFuncSsoCallbackOption(func(opts *ssoCallbackOptions) {
 		opts.Providers[prefix] = provider
 	})

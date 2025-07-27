@@ -24,7 +24,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
 
-	pgMigrate "codeberg.org/MadsRC/llmgw/internal/postgres"
+	pgMigrate "github.com/MadsRC/trustedai/internal/postgres"
 )
 
 func TestMigrations(t *testing.T) {

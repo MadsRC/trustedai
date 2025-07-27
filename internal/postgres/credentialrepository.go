@@ -7,7 +7,7 @@ package postgres
 import (
 	"context"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/google/uuid"
 )
 
@@ -19,7 +19,7 @@ func NewCredentialRepository(pool PgxPoolInterface) *CredentialRepository {
 	return &CredentialRepository{pool: pool}
 }
 
-func (r *CredentialRepository) GetOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) (*llmgw.OpenRouterCredential, error) {
+func (r *CredentialRepository) GetOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) (*trustedai.OpenRouterCredential, error) {
 	query := `
 		SELECT id, name, description, api_key, site_name, http_referer, enabled
 		FROM openrouter_credentials
@@ -28,7 +28,7 @@ func (r *CredentialRepository) GetOpenRouterCredential(ctx context.Context, cred
 
 	row := r.pool.QueryRow(ctx, query, credentialID)
 
-	var cred llmgw.OpenRouterCredential
+	var cred trustedai.OpenRouterCredential
 	err := row.Scan(
 		&cred.ID,
 		&cred.Name,
@@ -45,7 +45,7 @@ func (r *CredentialRepository) GetOpenRouterCredential(ctx context.Context, cred
 	return &cred, nil
 }
 
-func (r *CredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]llmgw.OpenRouterCredential, error) {
+func (r *CredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]trustedai.OpenRouterCredential, error) {
 	query := `
 		SELECT id, name, description, api_key, site_name, http_referer, enabled
 		FROM openrouter_credentials
@@ -59,9 +59,9 @@ func (r *CredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([
 	}
 	defer rows.Close()
 
-	var credentials []llmgw.OpenRouterCredential
+	var credentials []trustedai.OpenRouterCredential
 	for rows.Next() {
-		var cred llmgw.OpenRouterCredential
+		var cred trustedai.OpenRouterCredential
 		err := rows.Scan(
 			&cred.ID,
 			&cred.Name,
@@ -84,7 +84,7 @@ func (r *CredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([
 	return credentials, nil
 }
 
-func (r *CredentialRepository) CreateOpenRouterCredential(ctx context.Context, cred *llmgw.OpenRouterCredential) error {
+func (r *CredentialRepository) CreateOpenRouterCredential(ctx context.Context, cred *trustedai.OpenRouterCredential) error {
 	query := `
 		INSERT INTO openrouter_credentials (id, name, description, api_key, site_name, http_referer, enabled)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -108,7 +108,7 @@ func (r *CredentialRepository) CreateOpenRouterCredential(ctx context.Context, c
 	return err
 }
 
-func (r *CredentialRepository) UpdateOpenRouterCredential(ctx context.Context, cred *llmgw.OpenRouterCredential) error {
+func (r *CredentialRepository) UpdateOpenRouterCredential(ctx context.Context, cred *trustedai.OpenRouterCredential) error {
 	query := `
 		UPDATE openrouter_credentials 
 		SET name = $2, description = $3, api_key = $4, site_name = $5, http_referer = $6, enabled = $7, updated_at = NOW()

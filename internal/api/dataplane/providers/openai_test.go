@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

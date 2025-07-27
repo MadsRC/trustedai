@@ -8,33 +8,33 @@ import (
 	"context"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/internal/cache"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/internal/cache"
 	"github.com/google/uuid"
 )
 
 // CachedModelRepository wraps a ModelRepository with caching
 type CachedModelRepository struct {
-	underlying            llmgw.ModelRepository
+	underlying            trustedai.ModelRepository
 	modelCache            *cache.Cache[string, *gai.Model]
-	modelWithCredsCache   *cache.Cache[string, *llmgw.ModelWithCredentials]
-	modelWithRefCache     *cache.Cache[string, *llmgw.ModelWithReference]
+	modelWithCredsCache   *cache.Cache[string, *trustedai.ModelWithCredentials]
+	modelWithRefCache     *cache.Cache[string, *trustedai.ModelWithReference]
 	allModelsCache        *cache.Cache[string, []gai.Model]
-	allModelsWithRefCache *cache.Cache[string, []llmgw.ModelWithReference]
+	allModelsWithRefCache *cache.Cache[string, []trustedai.ModelWithReference]
 	cacheTTL              time.Duration
 }
 
 // NewCachedModelRepository creates a new cached model repository
-func NewCachedModelRepository(underlying llmgw.ModelRepository, cacheTTL time.Duration) *CachedModelRepository {
+func NewCachedModelRepository(underlying trustedai.ModelRepository, cacheTTL time.Duration) *CachedModelRepository {
 	return &CachedModelRepository{
 		underlying:            underlying,
 		modelCache:            cache.New[string, *gai.Model](cacheTTL),
-		modelWithCredsCache:   cache.New[string, *llmgw.ModelWithCredentials](cacheTTL),
-		modelWithRefCache:     cache.New[string, *llmgw.ModelWithReference](cacheTTL),
+		modelWithCredsCache:   cache.New[string, *trustedai.ModelWithCredentials](cacheTTL),
+		modelWithRefCache:     cache.New[string, *trustedai.ModelWithReference](cacheTTL),
 		allModelsCache:        cache.New[string, []gai.Model](cacheTTL),
-		allModelsWithRefCache: cache.New[string, []llmgw.ModelWithReference](cacheTTL),
+		allModelsWithRefCache: cache.New[string, []trustedai.ModelWithReference](cacheTTL),
 		cacheTTL:              cacheTTL,
 	}
 }
@@ -66,7 +66,7 @@ func (r *CachedModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, 
 }
 
 // GetAllModelsWithReference retrieves all models with references with caching
-func (r *CachedModelRepository) GetAllModelsWithReference(ctx context.Context) ([]llmgw.ModelWithReference, error) {
+func (r *CachedModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
 	cacheKey := "all_models_with_ref"
 
 	// Try cache first
@@ -112,7 +112,7 @@ func (r *CachedModelRepository) GetModelByID(ctx context.Context, modelID string
 }
 
 // GetModelByIDWithReference retrieves a model with reference by ID with caching
-func (r *CachedModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*llmgw.ModelWithReference, error) {
+func (r *CachedModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
 	// Try cache first
 	if cached, found := r.modelWithRefCache.Get(modelID); found {
 		return cached, nil
@@ -132,7 +132,7 @@ func (r *CachedModelRepository) GetModelByIDWithReference(ctx context.Context, m
 }
 
 // GetModelWithCredentials retrieves a model with credentials by ID with caching
-func (r *CachedModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*llmgw.ModelWithCredentials, error) {
+func (r *CachedModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	// Try cache first
 	if cached, found := r.modelWithCredsCache.Get(modelID); found {
 		return cached, nil
@@ -152,7 +152,7 @@ func (r *CachedModelRepository) GetModelWithCredentials(ctx context.Context, mod
 }
 
 // CreateModel creates a new model and invalidates caches
-func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	err := r.underlying.CreateModel(ctx, model, credentialID, credentialType)
 	if err != nil {
 		return err
@@ -164,12 +164,12 @@ func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Mode
 
 	// Cache the new model entries
 	r.modelCache.Set(model.ID, model)
-	r.modelWithCredsCache.Set(model.ID, &llmgw.ModelWithCredentials{
+	r.modelWithCredsCache.Set(model.ID, &trustedai.ModelWithCredentials{
 		Model:          *model,
 		CredentialID:   credentialID,
 		CredentialType: credentialType,
 	})
-	r.modelWithRefCache.Set(model.ID, &llmgw.ModelWithReference{
+	r.modelWithRefCache.Set(model.ID, &trustedai.ModelWithReference{
 		Model: *model,
 	})
 
@@ -177,7 +177,7 @@ func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Mode
 }
 
 // UpdateModel updates an existing model and invalidates caches
-func (r *CachedModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType llmgwv1.CredentialType) error {
+func (r *CachedModelRepository) UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error {
 	err := r.underlying.UpdateModel(ctx, model, credentialID, credentialType)
 	if err != nil {
 		return err

@@ -12,11 +12,11 @@ import (
 	"net/http"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
-	dauth "codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/middleware"
-	"codeberg.org/MadsRC/llmgw/internal/monitoring"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/auth"
+	dauth "github.com/MadsRC/trustedai/internal/api/dataplane/auth"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/middleware"
+	"github.com/MadsRC/trustedai/internal/monitoring"
 )
 
 type DataPlaneServer struct {
@@ -36,7 +36,7 @@ type dataPlaneOptions struct {
 	IdleTimeout        time.Duration
 	Addr               string
 	TokenAuthenticator *auth.TokenAuthenticator
-	UsageRepository    llmgw.UsageRepository
+	UsageRepository    trustedai.UsageRepository
 	UsageMetrics       *monitoring.UsageMetrics
 	Providers          []Provider
 	LLMClient          LLMClient
@@ -100,7 +100,7 @@ func WithDataPlaneLLMClient(client LLMClient) DataPlaneOption {
 	})
 }
 
-func WithDataPlaneUsageRepository(repo llmgw.UsageRepository) DataPlaneOption {
+func WithDataPlaneUsageRepository(repo trustedai.UsageRepository) DataPlaneOption {
 	return dataPlaneOptionFunc(func(opts *dataPlaneOptions) {
 		opts.UsageRepository = repo
 	})
@@ -223,13 +223,13 @@ func (s *DataPlaneServer) handleHello(w http.ResponseWriter, r *http.Request) {
 
 	// Check if user is authenticated
 	if user := dauth.UserFromHTTPContext(r); user != nil {
-		response := fmt.Sprintf(`{"message":"Hello, %s!","server":"llmgw-dataplane","user_id":"%s"}`,
+		response := fmt.Sprintf(`{"message":"Hello, %s!","server":"trustedai-dataplane","user_id":"%s"}`,
 			user.Name, user.ID)
 		if _, err := fmt.Fprint(w, response); err != nil {
 			s.options.Logger.Error("Failed to write hello response", "error", err)
 		}
 	} else {
-		if _, err := fmt.Fprint(w, `{"message":"Hello, World!","server":"llmgw-dataplane"}`); err != nil {
+		if _, err := fmt.Fprint(w, `{"message":"Hello, World!","server":"trustedai-dataplane"}`); err != nil {
 			s.options.Logger.Error("Failed to write hello response", "error", err)
 		}
 	}

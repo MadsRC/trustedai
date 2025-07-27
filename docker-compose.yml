@@ -57,6 +57,6 @@ services:
 
 volumes:
 #  postgres_data:
-#    name: llmgw_postgres_data  # Named volume for Postgres data persistence
+#    name: trustedai_postgres_data  # Named volume for Postgres data persistence
   etcd_1_data:
-    name: llmgw_ectd_1_data
+    name: trustedai_ectd_1_data

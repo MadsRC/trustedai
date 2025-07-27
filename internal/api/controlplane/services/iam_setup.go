@@ -7,7 +7,7 @@ package services
 import (
 	"log/slog"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 )
 
 type Iam struct {
@@ -31,9 +31,9 @@ func NewIam(options ...IamOption) (*Iam, error) {
 
 type iamOptions struct {
 	Logger                 *slog.Logger
-	UserRepository         llmgw.UserRepository
-	OrganizationRepository llmgw.OrganizationRepository
-	TokenRepository        llmgw.TokenRepository
+	UserRepository         trustedai.UserRepository
+	OrganizationRepository trustedai.OrganizationRepository
+	TokenRepository        trustedai.TokenRepository
 }
 
 var defaultIamOptions = iamOptions{
@@ -72,21 +72,21 @@ func WithIamLogger(logger *slog.Logger) IamOption {
 }
 
 // WithUserRepository returns a [IamOption] that uses the provided user repository.
-func WithUserRepository(repo llmgw.UserRepository) IamOption {
+func WithUserRepository(repo trustedai.UserRepository) IamOption {
 	return newFuncIamOption(func(opts *iamOptions) {
 		opts.UserRepository = repo
 	})
 }
 
 // WithOrganizationRepository returns a [IamOption] that uses the provided organization repository.
-func WithOrganizationRepository(repo llmgw.OrganizationRepository) IamOption {
+func WithOrganizationRepository(repo trustedai.OrganizationRepository) IamOption {
 	return newFuncIamOption(func(opts *iamOptions) {
 		opts.OrganizationRepository = repo
 	})
 }
 
 // WithTokenRepository returns a [IamOption] that uses the provided token repository.
-func WithTokenRepository(repo llmgw.TokenRepository) IamOption {
+func WithTokenRepository(repo trustedai.TokenRepository) IamOption {
 	return newFuncIamOption(func(opts *iamOptions) {
 		opts.TokenRepository = repo
 	})

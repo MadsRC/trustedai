@@ -10,16 +10,16 @@ import (
 	"log/slog"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/monitoring"
 	"codeberg.org/gai-org/gai"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/monitoring"
 )
 
 // CostCalculator processes usage events to calculate costs and generate billing summaries
 type CostCalculator struct {
-	usageRepo   llmgw.UsageRepository
-	modelRepo   llmgw.ModelRepository
-	billingRepo llmgw.BillingRepository
+	usageRepo   trustedai.UsageRepository
+	modelRepo   trustedai.ModelRepository
+	billingRepo trustedai.BillingRepository
 	logger      *slog.Logger
 	batchSize   int
 	metrics     *monitoring.UsageMetrics
@@ -51,9 +51,9 @@ func WithMetrics(metrics *monitoring.UsageMetrics) CostCalculatorOption {
 
 // NewCostCalculator creates a new CostCalculator instance
 func NewCostCalculator(
-	usageRepo llmgw.UsageRepository,
-	modelRepo llmgw.ModelRepository,
-	billingRepo llmgw.BillingRepository,
+	usageRepo trustedai.UsageRepository,
+	modelRepo trustedai.ModelRepository,
+	billingRepo trustedai.BillingRepository,
 	options ...CostCalculatorOption,
 ) *CostCalculator {
 	c := &CostCalculator{
@@ -125,7 +125,7 @@ func (c *CostCalculator) ProcessUsageEvents(ctx context.Context) error {
 }
 
 // processEvent calculates the cost for a single usage event
-func (c *CostCalculator) processEvent(ctx context.Context, event *llmgw.UsageEvent) error {
+func (c *CostCalculator) processEvent(ctx context.Context, event *trustedai.UsageEvent) error {
 	// Get model pricing information
 	model, err := c.modelRepo.GetModelByID(ctx, event.ModelID)
 	if err != nil {
@@ -152,7 +152,7 @@ func (c *CostCalculator) processEvent(ctx context.Context, event *llmgw.UsageEve
 
 // calculateCost computes the cost for a usage event based on model pricing
 // Pricing is expected to be per token (e.g., 0.0000001 = $0.0000001 per token)
-func (c *CostCalculator) calculateCost(event llmgw.UsageEvent, pricing gai.ModelPricing) llmgw.CostResult {
+func (c *CostCalculator) calculateCost(event trustedai.UsageEvent, pricing gai.ModelPricing) trustedai.CostResult {
 	var inputCost, outputCost float64
 
 	// Calculate input token cost (pricing is per token)
@@ -170,7 +170,7 @@ func (c *CostCalculator) calculateCost(event llmgw.UsageEvent, pricing gai.Model
 	outputCostCents := outputCost * 100
 	totalCostCents := inputCostCents + outputCostCents
 
-	return llmgw.CostResult{
+	return trustedai.CostResult{
 		InputCostCents:  inputCostCents,
 		OutputCostCents: outputCostCents,
 		TotalCostCents:  totalCostCents,

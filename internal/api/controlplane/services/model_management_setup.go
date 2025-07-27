@@ -7,7 +7,7 @@ package services
 import (
 	"log/slog"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 )
 
 type ModelManagement struct {
@@ -31,8 +31,8 @@ func NewModelManagement(options ...ModelManagementOption) (*ModelManagement, err
 
 type modelManagementOptions struct {
 	Logger               *slog.Logger
-	CredentialRepository llmgw.CredentialRepository
-	ModelRepository      llmgw.ModelRepository
+	CredentialRepository trustedai.CredentialRepository
+	ModelRepository      trustedai.ModelRepository
 }
 
 var defaultModelManagementOptions = modelManagementOptions{
@@ -71,14 +71,14 @@ func WithModelManagementLogger(logger *slog.Logger) ModelManagementOption {
 }
 
 // WithCredentialRepository returns a [ModelManagementOption] that uses the provided credential repository.
-func WithCredentialRepository(repo llmgw.CredentialRepository) ModelManagementOption {
+func WithCredentialRepository(repo trustedai.CredentialRepository) ModelManagementOption {
 	return newFuncModelManagementOption(func(opts *modelManagementOptions) {
 		opts.CredentialRepository = repo
 	})
 }
 
 // WithModelRepository returns a [ModelManagementOption] that uses the provided model repository.
-func WithModelRepository(repo llmgw.ModelRepository) ModelManagementOption {
+func WithModelRepository(repo trustedai.ModelRepository) ModelManagementOption {
 	return newFuncModelManagementOption(func(opts *modelManagementOptions) {
 		opts.ModelRepository = repo
 	})

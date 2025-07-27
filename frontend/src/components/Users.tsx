@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { User2, Plus, Edit, Trash2, Shield } from "lucide-react";
-import { IAMService } from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+import { IAMService } from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import {
   type User,
   type Organization,
@@ -16,7 +16,7 @@ import {
   IAMServiceUpdateUserRequestSchema,
   IAMServiceDeleteUserRequestSchema,
   UserSchema,
-} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+} from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { useAuth } from "../hooks/useAuth";

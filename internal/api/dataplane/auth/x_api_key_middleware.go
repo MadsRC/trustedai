@@ -9,7 +9,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	sharedauth "codeberg.org/MadsRC/llmgw/internal/api/auth"
+	sharedauth "github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 // XAPIKeyMiddleware provides x-api-key header authentication for HTTP handlers

@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/interfaces"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -24,34 +24,34 @@ type MockUsageRepository struct {
 	mock.Mock
 }
 
-func (m *MockUsageRepository) CreateUsageEvent(ctx context.Context, event *llmgw.UsageEvent) error {
+func (m *MockUsageRepository) CreateUsageEvent(ctx context.Context, event *trustedai.UsageEvent) error {
 	args := m.Called(ctx, event)
 	return args.Error(0)
 }
 
-func (m *MockUsageRepository) GetUsageEvent(ctx context.Context, id string) (*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) GetUsageEvent(ctx context.Context, id string) (*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, id)
-	return args.Get(0).(*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).(*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsByUser(ctx context.Context, userID string, limit, offset int) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, userID, limit, offset)
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsForCostCalculation(ctx context.Context, limit int) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, limit)
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
-func (m *MockUsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost llmgw.CostResult) error {
+func (m *MockUsageRepository) UpdateUsageEventCost(ctx context.Context, eventID string, cost trustedai.CostResult) error {
 	args := m.Called(ctx, eventID, cost)
 	return args.Error(0)
 }
 
-func (m *MockUsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*llmgw.UsageEvent, error) {
+func (m *MockUsageRepository) ListUsageEventsByPeriod(ctx context.Context, userID string, start, end time.Time) ([]*trustedai.UsageEvent, error) {
 	args := m.Called(ctx, userID, start, end)
-	return args.Get(0).([]*llmgw.UsageEvent), args.Error(1)
+	return args.Get(0).([]*trustedai.UsageEvent), args.Error(1)
 }
 
 func TestUsageTrackingMiddleware_Track(t *testing.T) {
@@ -109,7 +109,7 @@ func TestUsageTrackingMiddleware_UpdateEvent(t *testing.T) {
 	defer middleware.Shutdown()
 
 	// Set up expectation for CreateUsageEvent
-	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *llmgw.UsageEvent) bool {
+	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *trustedai.UsageEvent) bool {
 		return event.Status == "success" &&
 			event.UsageDataSource == "provider_response" &&
 			event.DataComplete == true &&
@@ -183,7 +183,7 @@ func TestUsageTrackingMiddleware_ErrorHandling(t *testing.T) {
 	defer middleware.Shutdown()
 
 	// Set up expectation for CreateUsageEvent with error status
-	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *llmgw.UsageEvent) bool {
+	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *trustedai.UsageEvent) bool {
 		return event.Status == "failed" &&
 			event.ErrorType != nil && *event.ErrorType == "auth_error" &&
 			event.FailureStage != nil && *event.FailureStage == "pre_generation"
@@ -222,8 +222,8 @@ func TestUsageTrackingMiddleware_UpdateEventRaceCondition(t *testing.T) {
 
 	// Set up expectation that the event should be successfully persisted
 	// This verifies the race condition is FIXED - the event gets updated and persisted
-	var persistedEvent *llmgw.UsageEvent
-	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *llmgw.UsageEvent) bool {
+	var persistedEvent *trustedai.UsageEvent
+	mockRepo.On("CreateUsageEvent", mock.Anything, mock.MatchedBy(func(event *trustedai.UsageEvent) bool {
 		// Verify the event has the expected data from UpdateEvent
 		return event.Status == "success" &&
 			event.ModelID == "test-model" &&
@@ -232,7 +232,7 @@ func TestUsageTrackingMiddleware_UpdateEventRaceCondition(t *testing.T) {
 			event.InputTokens != nil && *event.InputTokens == 10 &&
 			event.OutputTokens != nil && *event.OutputTokens == 20
 	})).Run(func(args mock.Arguments) {
-		persistedEvent = args.Get(1).(*llmgw.UsageEvent)
+		persistedEvent = args.Get(1).(*trustedai.UsageEvent)
 	}).Return(nil).Once()
 
 	// Track if UpdateEvent was called

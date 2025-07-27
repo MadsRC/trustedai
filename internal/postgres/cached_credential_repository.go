@@ -8,31 +8,31 @@ import (
 	"context"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/cache"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/cache"
 	"github.com/google/uuid"
 )
 
 // CachedCredentialRepository wraps a CredentialRepository with caching
 type CachedCredentialRepository struct {
-	underlying          llmgw.CredentialRepository
-	openRouterCredCache *cache.Cache[uuid.UUID, *llmgw.OpenRouterCredential]
-	openRouterListCache *cache.Cache[string, []llmgw.OpenRouterCredential]
+	underlying          trustedai.CredentialRepository
+	openRouterCredCache *cache.Cache[uuid.UUID, *trustedai.OpenRouterCredential]
+	openRouterListCache *cache.Cache[string, []trustedai.OpenRouterCredential]
 	cacheTTL            time.Duration
 }
 
 // NewCachedCredentialRepository creates a new cached credential repository
-func NewCachedCredentialRepository(underlying llmgw.CredentialRepository, cacheTTL time.Duration) *CachedCredentialRepository {
+func NewCachedCredentialRepository(underlying trustedai.CredentialRepository, cacheTTL time.Duration) *CachedCredentialRepository {
 	return &CachedCredentialRepository{
 		underlying:          underlying,
-		openRouterCredCache: cache.New[uuid.UUID, *llmgw.OpenRouterCredential](cacheTTL),
-		openRouterListCache: cache.New[string, []llmgw.OpenRouterCredential](cacheTTL),
+		openRouterCredCache: cache.New[uuid.UUID, *trustedai.OpenRouterCredential](cacheTTL),
+		openRouterListCache: cache.New[string, []trustedai.OpenRouterCredential](cacheTTL),
 		cacheTTL:            cacheTTL,
 	}
 }
 
 // GetOpenRouterCredential retrieves an OpenRouter credential with caching
-func (r *CachedCredentialRepository) GetOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) (*llmgw.OpenRouterCredential, error) {
+func (r *CachedCredentialRepository) GetOpenRouterCredential(ctx context.Context, credentialID uuid.UUID) (*trustedai.OpenRouterCredential, error) {
 	// Try cache first
 	if cached, found := r.openRouterCredCache.Get(credentialID); found {
 		return cached, nil
@@ -51,7 +51,7 @@ func (r *CachedCredentialRepository) GetOpenRouterCredential(ctx context.Context
 }
 
 // ListOpenRouterCredentials retrieves all OpenRouter credentials with caching
-func (r *CachedCredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]llmgw.OpenRouterCredential, error) {
+func (r *CachedCredentialRepository) ListOpenRouterCredentials(ctx context.Context) ([]trustedai.OpenRouterCredential, error) {
 	cacheKey := "all_openrouter_credentials"
 
 	// Try cache first
@@ -77,7 +77,7 @@ func (r *CachedCredentialRepository) ListOpenRouterCredentials(ctx context.Conte
 }
 
 // CreateOpenRouterCredential creates a new OpenRouter credential and invalidates cache
-func (r *CachedCredentialRepository) CreateOpenRouterCredential(ctx context.Context, cred *llmgw.OpenRouterCredential) error {
+func (r *CachedCredentialRepository) CreateOpenRouterCredential(ctx context.Context, cred *trustedai.OpenRouterCredential) error {
 	err := r.underlying.CreateOpenRouterCredential(ctx, cred)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (r *CachedCredentialRepository) CreateOpenRouterCredential(ctx context.Cont
 }
 
 // UpdateOpenRouterCredential updates an existing OpenRouter credential and invalidates cache
-func (r *CachedCredentialRepository) UpdateOpenRouterCredential(ctx context.Context, cred *llmgw.OpenRouterCredential) error {
+func (r *CachedCredentialRepository) UpdateOpenRouterCredential(ctx context.Context, cred *trustedai.OpenRouterCredential) error {
 	err := r.underlying.UpdateOpenRouterCredential(ctx, cred)
 	if err != nil {
 		return err

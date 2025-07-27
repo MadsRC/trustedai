@@ -9,7 +9,7 @@
 
 set -e
 
-# Get the project root directory (parent of llmgw directory)
+# Get the project root directory (parent of trustedai directory)
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
 # Define build directory
@@ -19,7 +19,7 @@ BUILD_DIR="$PROJECT_ROOT/build"
 mkdir -p "$BUILD_DIR" > /dev/null 2>&1
 
 # Build variables
-BINARY_NAME="llmgw"
+BINARY_NAME="trustedai"
 
 # Determine OS and architecture
 GOOS=$(go env GOOS)
@@ -33,7 +33,7 @@ BUILD_LOG=$(mktemp)
 
 # Build the application from the current directory
 echo "Building $OUTPUT_FILENAME..."
-if ! go build -o "$BUILD_DIR/$OUTPUT_FILENAME" ./cmd/llmgw > "$BUILD_LOG" 2>&1; then
+if ! go build -o "$BUILD_DIR/$OUTPUT_FILENAME" ./cmd/trustedai > "$BUILD_LOG" 2>&1; then
     echo "Error: Failed to build $OUTPUT_FILENAME"
     echo "--- Build errors ---"
     cat "$BUILD_LOG"

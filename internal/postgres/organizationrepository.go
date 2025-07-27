@@ -8,13 +8,13 @@ import (
 	"context"
 	"errors"
 
-	"codeberg.org/MadsRC/llmgw"
+	"github.com/MadsRC/trustedai"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // Create adds a new organization to the database
-func (r *OrganizationRepository) Create(ctx context.Context, org *llmgw.Organization) error {
+func (r *OrganizationRepository) Create(ctx context.Context, org *trustedai.Organization) error {
 	query := `
 		INSERT INTO organizations (
 			id, name, display_name, is_system, 
@@ -35,7 +35,7 @@ func (r *OrganizationRepository) Create(ctx context.Context, org *llmgw.Organiza
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return llmgw.ErrDuplicateEntry
+			return trustedai.ErrDuplicateEntry
 		}
 		r.options.Logger.Error("Failed to create organization", "error", err)
 		return err
@@ -44,7 +44,7 @@ func (r *OrganizationRepository) Create(ctx context.Context, org *llmgw.Organiza
 }
 
 // Get retrieves an organization by ID
-func (r *OrganizationRepository) Get(ctx context.Context, id string) (*llmgw.Organization, error) {
+func (r *OrganizationRepository) Get(ctx context.Context, id string) (*trustedai.Organization, error) {
 	query := `
 		SELECT id, name, display_name, is_system, 
 			created_at, sso_type, sso_config
@@ -53,7 +53,7 @@ func (r *OrganizationRepository) Get(ctx context.Context, id string) (*llmgw.Org
 
 	row := r.options.Db.QueryRow(ctx, query, id)
 
-	var org llmgw.Organization
+	var org trustedai.Organization
 	err := row.Scan(
 		&org.ID,
 		&org.Name,
@@ -65,7 +65,7 @@ func (r *OrganizationRepository) Get(ctx context.Context, id string) (*llmgw.Org
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get organization", "error", err, "id", id)
@@ -75,7 +75,7 @@ func (r *OrganizationRepository) Get(ctx context.Context, id string) (*llmgw.Org
 }
 
 // GetByName retrieves an organization by its unique name
-func (r *OrganizationRepository) GetByName(ctx context.Context, name string) (*llmgw.Organization, error) {
+func (r *OrganizationRepository) GetByName(ctx context.Context, name string) (*trustedai.Organization, error) {
 	query := `
 		SELECT id, name, display_name, is_system, 
 			created_at, sso_type, sso_config
@@ -84,7 +84,7 @@ func (r *OrganizationRepository) GetByName(ctx context.Context, name string) (*l
 
 	row := r.options.Db.QueryRow(ctx, query, name)
 
-	var org llmgw.Organization
+	var org trustedai.Organization
 	err := row.Scan(
 		&org.ID,
 		&org.Name,
@@ -96,7 +96,7 @@ func (r *OrganizationRepository) GetByName(ctx context.Context, name string) (*l
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, llmgw.ErrNotFound
+		return nil, trustedai.ErrNotFound
 	}
 	if err != nil {
 		r.options.Logger.Error("Failed to get organization by name", "error", err, "name", name)
@@ -106,7 +106,7 @@ func (r *OrganizationRepository) GetByName(ctx context.Context, name string) (*l
 }
 
 // List retrieves all organizations
-func (r *OrganizationRepository) List(ctx context.Context) ([]*llmgw.Organization, error) {
+func (r *OrganizationRepository) List(ctx context.Context) ([]*trustedai.Organization, error) {
 	query := `
 		SELECT id, name, display_name, is_system, 
 			created_at, sso_type, sso_config
@@ -120,9 +120,9 @@ func (r *OrganizationRepository) List(ctx context.Context) ([]*llmgw.Organizatio
 	}
 	defer rows.Close()
 
-	var orgs []*llmgw.Organization
+	var orgs []*trustedai.Organization
 	for rows.Next() {
-		var org llmgw.Organization
+		var org trustedai.Organization
 		err := rows.Scan(
 			&org.ID,
 			&org.Name,
@@ -148,7 +148,7 @@ func (r *OrganizationRepository) List(ctx context.Context) ([]*llmgw.Organizatio
 }
 
 // Update modifies an existing organization
-func (r *OrganizationRepository) Update(ctx context.Context, org *llmgw.Organization) error {
+func (r *OrganizationRepository) Update(ctx context.Context, org *trustedai.Organization) error {
 	query := `
 		UPDATE organizations SET
 			name = $2,
@@ -170,14 +170,14 @@ func (r *OrganizationRepository) Update(ctx context.Context, org *llmgw.Organiza
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return llmgw.ErrDuplicateEntry
+			return trustedai.ErrDuplicateEntry
 		}
 		r.options.Logger.Error("Failed to update organization", "error", err, "id", org.ID)
 		return err
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil
@@ -194,7 +194,7 @@ func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
 	}
 
 	if result.RowsAffected() == 0 {
-		return llmgw.ErrNotFound
+		return trustedai.ErrNotFound
 	}
 
 	return nil
@@ -202,7 +202,7 @@ func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
 
 // ListForUser retrieves organizations visible to the specified user
 // System admins see all organizations, regular users see only their own
-func (r *OrganizationRepository) ListForUser(ctx context.Context, user *llmgw.User) ([]*llmgw.Organization, error) {
+func (r *OrganizationRepository) ListForUser(ctx context.Context, user *trustedai.User) ([]*trustedai.Organization, error) {
 	if user.IsSystemAdmin() {
 		return r.List(ctx)
 	}
@@ -211,5 +211,5 @@ func (r *OrganizationRepository) ListForUser(ctx context.Context, user *llmgw.Us
 	if err != nil {
 		return nil, err
 	}
-	return []*llmgw.Organization{org}, nil
+	return []*trustedai.Organization{org}, nil
 }

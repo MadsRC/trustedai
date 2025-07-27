@@ -31,7 +31,7 @@ func NewManager(config Config) (*Manager, error) {
 		return nil, fmt.Errorf("failed to create telemetry manager: %w", err)
 	}
 
-	meter := telemetry.GetMeter("codeberg.org/MadsRC/llmgw/usage")
+	meter := telemetry.GetMeter("github.com/MadsRC/trustedai/usage")
 	usageMetrics, err := NewUsageMetrics(meter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create usage metrics: %w", err)

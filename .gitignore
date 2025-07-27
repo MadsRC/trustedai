@@ -24,7 +24,7 @@
 
 # Go workspace file
 go.work
-/llmgw
+/trustedai
 .claude/settings.local.json
 frontend/node_modules
 frontend/build

@@ -6,9 +6,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/madsrc/llmgw/v1/iam.proto
+// source: proto/madsrc/trustedai/v1/iam.proto
 
-package llmgwv1
+package trustedaiv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -43,7 +43,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -55,7 +55,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[0]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -68,7 +68,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{0}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *User) GetId() string {
@@ -149,7 +149,7 @@ type Organization struct {
 
 func (x *Organization) Reset() {
 	*x = Organization{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -161,7 +161,7 @@ func (x *Organization) String() string {
 func (*Organization) ProtoMessage() {}
 
 func (x *Organization) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[1]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -174,7 +174,7 @@ func (x *Organization) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Organization.ProtoReflect.Descriptor instead.
 func (*Organization) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{1}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Organization) GetId() string {
@@ -240,7 +240,7 @@ type APIToken struct {
 
 func (x *APIToken) Reset() {
 	*x = APIToken{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -252,7 +252,7 @@ func (x *APIToken) String() string {
 func (*APIToken) ProtoMessage() {}
 
 func (x *APIToken) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[2]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -265,7 +265,7 @@ func (x *APIToken) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use APIToken.ProtoReflect.Descriptor instead.
 func (*APIToken) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{2}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *APIToken) GetId() string {
@@ -320,7 +320,7 @@ type IAMServiceCreateUserRequest struct {
 
 func (x *IAMServiceCreateUserRequest) Reset() {
 	*x = IAMServiceCreateUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -332,7 +332,7 @@ func (x *IAMServiceCreateUserRequest) String() string {
 func (*IAMServiceCreateUserRequest) ProtoMessage() {}
 
 func (x *IAMServiceCreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[3]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -345,7 +345,7 @@ func (x *IAMServiceCreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceCreateUserRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{3}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IAMServiceCreateUserRequest) GetUser() *User {
@@ -364,7 +364,7 @@ type IAMServiceCreateUserResponse struct {
 
 func (x *IAMServiceCreateUserResponse) Reset() {
 	*x = IAMServiceCreateUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -376,7 +376,7 @@ func (x *IAMServiceCreateUserResponse) String() string {
 func (*IAMServiceCreateUserResponse) ProtoMessage() {}
 
 func (x *IAMServiceCreateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[4]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -389,7 +389,7 @@ func (x *IAMServiceCreateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceCreateUserResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{4}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *IAMServiceCreateUserResponse) GetUser() *User {
@@ -408,7 +408,7 @@ type IAMServiceGetUserRequest struct {
 
 func (x *IAMServiceGetUserRequest) Reset() {
 	*x = IAMServiceGetUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -420,7 +420,7 @@ func (x *IAMServiceGetUserRequest) String() string {
 func (*IAMServiceGetUserRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[5]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -433,7 +433,7 @@ func (x *IAMServiceGetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetUserRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{5}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *IAMServiceGetUserRequest) GetId() string {
@@ -452,7 +452,7 @@ type IAMServiceGetUserResponse struct {
 
 func (x *IAMServiceGetUserResponse) Reset() {
 	*x = IAMServiceGetUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -464,7 +464,7 @@ func (x *IAMServiceGetUserResponse) String() string {
 func (*IAMServiceGetUserResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[6]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -477,7 +477,7 @@ func (x *IAMServiceGetUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetUserResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{6}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *IAMServiceGetUserResponse) GetUser() *User {
@@ -496,7 +496,7 @@ type IAMServiceGetUserByEmailRequest struct {
 
 func (x *IAMServiceGetUserByEmailRequest) Reset() {
 	*x = IAMServiceGetUserByEmailRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -508,7 +508,7 @@ func (x *IAMServiceGetUserByEmailRequest) String() string {
 func (*IAMServiceGetUserByEmailRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetUserByEmailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[7]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -521,7 +521,7 @@ func (x *IAMServiceGetUserByEmailRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetUserByEmailRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserByEmailRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{7}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *IAMServiceGetUserByEmailRequest) GetEmail() string {
@@ -540,7 +540,7 @@ type IAMServiceGetUserByEmailResponse struct {
 
 func (x *IAMServiceGetUserByEmailResponse) Reset() {
 	*x = IAMServiceGetUserByEmailResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -552,7 +552,7 @@ func (x *IAMServiceGetUserByEmailResponse) String() string {
 func (*IAMServiceGetUserByEmailResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetUserByEmailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[8]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -565,7 +565,7 @@ func (x *IAMServiceGetUserByEmailResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetUserByEmailResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserByEmailResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{8}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *IAMServiceGetUserByEmailResponse) GetUser() *User {
@@ -585,7 +585,7 @@ type IAMServiceGetUserByExternalIDRequest struct {
 
 func (x *IAMServiceGetUserByExternalIDRequest) Reset() {
 	*x = IAMServiceGetUserByExternalIDRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -597,7 +597,7 @@ func (x *IAMServiceGetUserByExternalIDRequest) String() string {
 func (*IAMServiceGetUserByExternalIDRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetUserByExternalIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[9]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -610,7 +610,7 @@ func (x *IAMServiceGetUserByExternalIDRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use IAMServiceGetUserByExternalIDRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserByExternalIDRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{9}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *IAMServiceGetUserByExternalIDRequest) GetProvider() string {
@@ -636,7 +636,7 @@ type IAMServiceGetUserByExternalIDResponse struct {
 
 func (x *IAMServiceGetUserByExternalIDResponse) Reset() {
 	*x = IAMServiceGetUserByExternalIDResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -648,7 +648,7 @@ func (x *IAMServiceGetUserByExternalIDResponse) String() string {
 func (*IAMServiceGetUserByExternalIDResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetUserByExternalIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[10]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +661,7 @@ func (x *IAMServiceGetUserByExternalIDResponse) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use IAMServiceGetUserByExternalIDResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetUserByExternalIDResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{10}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *IAMServiceGetUserByExternalIDResponse) GetUser() *User {
@@ -679,7 +679,7 @@ type IAMServiceGetCurrentUserRequest struct {
 
 func (x *IAMServiceGetCurrentUserRequest) Reset() {
 	*x = IAMServiceGetCurrentUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -691,7 +691,7 @@ func (x *IAMServiceGetCurrentUserRequest) String() string {
 func (*IAMServiceGetCurrentUserRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetCurrentUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[11]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -704,7 +704,7 @@ func (x *IAMServiceGetCurrentUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetCurrentUserRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetCurrentUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{11}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{11}
 }
 
 type IAMServiceGetCurrentUserResponse struct {
@@ -716,7 +716,7 @@ type IAMServiceGetCurrentUserResponse struct {
 
 func (x *IAMServiceGetCurrentUserResponse) Reset() {
 	*x = IAMServiceGetCurrentUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -728,7 +728,7 @@ func (x *IAMServiceGetCurrentUserResponse) String() string {
 func (*IAMServiceGetCurrentUserResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetCurrentUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[12]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -741,7 +741,7 @@ func (x *IAMServiceGetCurrentUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetCurrentUserResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetCurrentUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{12}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *IAMServiceGetCurrentUserResponse) GetUser() *User {
@@ -760,7 +760,7 @@ type IAMServiceListUsersByOrganizationRequest struct {
 
 func (x *IAMServiceListUsersByOrganizationRequest) Reset() {
 	*x = IAMServiceListUsersByOrganizationRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -772,7 +772,7 @@ func (x *IAMServiceListUsersByOrganizationRequest) String() string {
 func (*IAMServiceListUsersByOrganizationRequest) ProtoMessage() {}
 
 func (x *IAMServiceListUsersByOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[13]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -785,7 +785,7 @@ func (x *IAMServiceListUsersByOrganizationRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use IAMServiceListUsersByOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceListUsersByOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{13}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *IAMServiceListUsersByOrganizationRequest) GetOrganizationId() string {
@@ -804,7 +804,7 @@ type IAMServiceListUsersByOrganizationResponse struct {
 
 func (x *IAMServiceListUsersByOrganizationResponse) Reset() {
 	*x = IAMServiceListUsersByOrganizationResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -816,7 +816,7 @@ func (x *IAMServiceListUsersByOrganizationResponse) String() string {
 func (*IAMServiceListUsersByOrganizationResponse) ProtoMessage() {}
 
 func (x *IAMServiceListUsersByOrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[14]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -829,7 +829,7 @@ func (x *IAMServiceListUsersByOrganizationResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use IAMServiceListUsersByOrganizationResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceListUsersByOrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{14}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *IAMServiceListUsersByOrganizationResponse) GetUsers() []*User {
@@ -849,7 +849,7 @@ type IAMServiceUpdateUserRequest struct {
 
 func (x *IAMServiceUpdateUserRequest) Reset() {
 	*x = IAMServiceUpdateUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -861,7 +861,7 @@ func (x *IAMServiceUpdateUserRequest) String() string {
 func (*IAMServiceUpdateUserRequest) ProtoMessage() {}
 
 func (x *IAMServiceUpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[15]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -874,7 +874,7 @@ func (x *IAMServiceUpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceUpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceUpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{15}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *IAMServiceUpdateUserRequest) GetUser() *User {
@@ -900,7 +900,7 @@ type IAMServiceUpdateUserResponse struct {
 
 func (x *IAMServiceUpdateUserResponse) Reset() {
 	*x = IAMServiceUpdateUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -912,7 +912,7 @@ func (x *IAMServiceUpdateUserResponse) String() string {
 func (*IAMServiceUpdateUserResponse) ProtoMessage() {}
 
 func (x *IAMServiceUpdateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[16]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -925,7 +925,7 @@ func (x *IAMServiceUpdateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceUpdateUserResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceUpdateUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{16}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *IAMServiceUpdateUserResponse) GetUser() *User {
@@ -944,7 +944,7 @@ type IAMServiceDeleteUserRequest struct {
 
 func (x *IAMServiceDeleteUserRequest) Reset() {
 	*x = IAMServiceDeleteUserRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -956,7 +956,7 @@ func (x *IAMServiceDeleteUserRequest) String() string {
 func (*IAMServiceDeleteUserRequest) ProtoMessage() {}
 
 func (x *IAMServiceDeleteUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[17]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -969,7 +969,7 @@ func (x *IAMServiceDeleteUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceDeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceDeleteUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{17}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *IAMServiceDeleteUserRequest) GetId() string {
@@ -988,7 +988,7 @@ type IAMServiceDeleteUserResponse struct {
 
 func (x *IAMServiceDeleteUserResponse) Reset() {
 	*x = IAMServiceDeleteUserResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[18]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1000,7 +1000,7 @@ func (x *IAMServiceDeleteUserResponse) String() string {
 func (*IAMServiceDeleteUserResponse) ProtoMessage() {}
 
 func (x *IAMServiceDeleteUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[18]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1013,7 +1013,7 @@ func (x *IAMServiceDeleteUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceDeleteUserResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceDeleteUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{18}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *IAMServiceDeleteUserResponse) GetSuccess() bool {
@@ -1033,7 +1033,7 @@ type IAMServiceCreateOrganizationRequest struct {
 
 func (x *IAMServiceCreateOrganizationRequest) Reset() {
 	*x = IAMServiceCreateOrganizationRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[19]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1045,7 +1045,7 @@ func (x *IAMServiceCreateOrganizationRequest) String() string {
 func (*IAMServiceCreateOrganizationRequest) ProtoMessage() {}
 
 func (x *IAMServiceCreateOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[19]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1058,7 +1058,7 @@ func (x *IAMServiceCreateOrganizationRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use IAMServiceCreateOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{19}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *IAMServiceCreateOrganizationRequest) GetOrganization() *Organization {
@@ -1077,7 +1077,7 @@ type IAMServiceCreateOrganizationResponse struct {
 
 func (x *IAMServiceCreateOrganizationResponse) Reset() {
 	*x = IAMServiceCreateOrganizationResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[20]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1089,7 +1089,7 @@ func (x *IAMServiceCreateOrganizationResponse) String() string {
 func (*IAMServiceCreateOrganizationResponse) ProtoMessage() {}
 
 func (x *IAMServiceCreateOrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[20]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1102,7 +1102,7 @@ func (x *IAMServiceCreateOrganizationResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use IAMServiceCreateOrganizationResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateOrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{20}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *IAMServiceCreateOrganizationResponse) GetOrganization() *Organization {
@@ -1121,7 +1121,7 @@ type IAMServiceGetOrganizationRequest struct {
 
 func (x *IAMServiceGetOrganizationRequest) Reset() {
 	*x = IAMServiceGetOrganizationRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[21]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1133,7 +1133,7 @@ func (x *IAMServiceGetOrganizationRequest) String() string {
 func (*IAMServiceGetOrganizationRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[21]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1146,7 +1146,7 @@ func (x *IAMServiceGetOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceGetOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{21}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *IAMServiceGetOrganizationRequest) GetId() string {
@@ -1165,7 +1165,7 @@ type IAMServiceGetOrganizationResponse struct {
 
 func (x *IAMServiceGetOrganizationResponse) Reset() {
 	*x = IAMServiceGetOrganizationResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[22]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1177,7 +1177,7 @@ func (x *IAMServiceGetOrganizationResponse) String() string {
 func (*IAMServiceGetOrganizationResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetOrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[22]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1190,7 +1190,7 @@ func (x *IAMServiceGetOrganizationResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use IAMServiceGetOrganizationResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetOrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{22}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *IAMServiceGetOrganizationResponse) GetOrganization() *Organization {
@@ -1209,7 +1209,7 @@ type IAMServiceGetOrganizationByNameRequest struct {
 
 func (x *IAMServiceGetOrganizationByNameRequest) Reset() {
 	*x = IAMServiceGetOrganizationByNameRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[23]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1221,7 +1221,7 @@ func (x *IAMServiceGetOrganizationByNameRequest) String() string {
 func (*IAMServiceGetOrganizationByNameRequest) ProtoMessage() {}
 
 func (x *IAMServiceGetOrganizationByNameRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[23]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1234,7 +1234,7 @@ func (x *IAMServiceGetOrganizationByNameRequest) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use IAMServiceGetOrganizationByNameRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetOrganizationByNameRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{23}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *IAMServiceGetOrganizationByNameRequest) GetName() string {
@@ -1253,7 +1253,7 @@ type IAMServiceGetOrganizationByNameResponse struct {
 
 func (x *IAMServiceGetOrganizationByNameResponse) Reset() {
 	*x = IAMServiceGetOrganizationByNameResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[24]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1265,7 +1265,7 @@ func (x *IAMServiceGetOrganizationByNameResponse) String() string {
 func (*IAMServiceGetOrganizationByNameResponse) ProtoMessage() {}
 
 func (x *IAMServiceGetOrganizationByNameResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[24]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1278,7 +1278,7 @@ func (x *IAMServiceGetOrganizationByNameResponse) ProtoReflect() protoreflect.Me
 
 // Deprecated: Use IAMServiceGetOrganizationByNameResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceGetOrganizationByNameResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{24}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *IAMServiceGetOrganizationByNameResponse) GetOrganization() *Organization {
@@ -1296,7 +1296,7 @@ type IAMServiceListOrganizationsRequest struct {
 
 func (x *IAMServiceListOrganizationsRequest) Reset() {
 	*x = IAMServiceListOrganizationsRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[25]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1308,7 +1308,7 @@ func (x *IAMServiceListOrganizationsRequest) String() string {
 func (*IAMServiceListOrganizationsRequest) ProtoMessage() {}
 
 func (x *IAMServiceListOrganizationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[25]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1321,7 +1321,7 @@ func (x *IAMServiceListOrganizationsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use IAMServiceListOrganizationsRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceListOrganizationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{25}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{25}
 }
 
 type IAMServiceListOrganizationsResponse struct {
@@ -1333,7 +1333,7 @@ type IAMServiceListOrganizationsResponse struct {
 
 func (x *IAMServiceListOrganizationsResponse) Reset() {
 	*x = IAMServiceListOrganizationsResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[26]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1345,7 +1345,7 @@ func (x *IAMServiceListOrganizationsResponse) String() string {
 func (*IAMServiceListOrganizationsResponse) ProtoMessage() {}
 
 func (x *IAMServiceListOrganizationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[26]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1358,7 +1358,7 @@ func (x *IAMServiceListOrganizationsResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use IAMServiceListOrganizationsResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceListOrganizationsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{26}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *IAMServiceListOrganizationsResponse) GetOrganizations() []*Organization {
@@ -1378,7 +1378,7 @@ type IAMServiceUpdateOrganizationRequest struct {
 
 func (x *IAMServiceUpdateOrganizationRequest) Reset() {
 	*x = IAMServiceUpdateOrganizationRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[27]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1390,7 +1390,7 @@ func (x *IAMServiceUpdateOrganizationRequest) String() string {
 func (*IAMServiceUpdateOrganizationRequest) ProtoMessage() {}
 
 func (x *IAMServiceUpdateOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[27]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1403,7 +1403,7 @@ func (x *IAMServiceUpdateOrganizationRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use IAMServiceUpdateOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceUpdateOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{27}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *IAMServiceUpdateOrganizationRequest) GetOrganization() *Organization {
@@ -1429,7 +1429,7 @@ type IAMServiceUpdateOrganizationResponse struct {
 
 func (x *IAMServiceUpdateOrganizationResponse) Reset() {
 	*x = IAMServiceUpdateOrganizationResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[28]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1441,7 +1441,7 @@ func (x *IAMServiceUpdateOrganizationResponse) String() string {
 func (*IAMServiceUpdateOrganizationResponse) ProtoMessage() {}
 
 func (x *IAMServiceUpdateOrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[28]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1454,7 +1454,7 @@ func (x *IAMServiceUpdateOrganizationResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use IAMServiceUpdateOrganizationResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceUpdateOrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{28}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *IAMServiceUpdateOrganizationResponse) GetOrganization() *Organization {
@@ -1474,7 +1474,7 @@ type IAMServiceDeleteOrganizationRequest struct {
 
 func (x *IAMServiceDeleteOrganizationRequest) Reset() {
 	*x = IAMServiceDeleteOrganizationRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[29]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1486,7 +1486,7 @@ func (x *IAMServiceDeleteOrganizationRequest) String() string {
 func (*IAMServiceDeleteOrganizationRequest) ProtoMessage() {}
 
 func (x *IAMServiceDeleteOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[29]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1499,7 +1499,7 @@ func (x *IAMServiceDeleteOrganizationRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use IAMServiceDeleteOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceDeleteOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{29}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *IAMServiceDeleteOrganizationRequest) GetId() string {
@@ -1525,7 +1525,7 @@ type IAMServiceDeleteOrganizationResponse struct {
 
 func (x *IAMServiceDeleteOrganizationResponse) Reset() {
 	*x = IAMServiceDeleteOrganizationResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[30]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1537,7 +1537,7 @@ func (x *IAMServiceDeleteOrganizationResponse) String() string {
 func (*IAMServiceDeleteOrganizationResponse) ProtoMessage() {}
 
 func (x *IAMServiceDeleteOrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[30]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1550,7 +1550,7 @@ func (x *IAMServiceDeleteOrganizationResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use IAMServiceDeleteOrganizationResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceDeleteOrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{30}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *IAMServiceDeleteOrganizationResponse) GetSuccess() bool {
@@ -1572,7 +1572,7 @@ type IAMServiceCreateTokenRequest struct {
 
 func (x *IAMServiceCreateTokenRequest) Reset() {
 	*x = IAMServiceCreateTokenRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[31]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1584,7 +1584,7 @@ func (x *IAMServiceCreateTokenRequest) String() string {
 func (*IAMServiceCreateTokenRequest) ProtoMessage() {}
 
 func (x *IAMServiceCreateTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[31]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1597,7 +1597,7 @@ func (x *IAMServiceCreateTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceCreateTokenRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateTokenRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{31}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *IAMServiceCreateTokenRequest) GetUserId() string {
@@ -1631,7 +1631,7 @@ type IAMServiceCreateTokenResponse struct {
 
 func (x *IAMServiceCreateTokenResponse) Reset() {
 	*x = IAMServiceCreateTokenResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[32]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1643,7 +1643,7 @@ func (x *IAMServiceCreateTokenResponse) String() string {
 func (*IAMServiceCreateTokenResponse) ProtoMessage() {}
 
 func (x *IAMServiceCreateTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[32]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1656,7 +1656,7 @@ func (x *IAMServiceCreateTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceCreateTokenResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceCreateTokenResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{32}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *IAMServiceCreateTokenResponse) GetToken() *APIToken {
@@ -1682,7 +1682,7 @@ type IAMServiceListUserTokensRequest struct {
 
 func (x *IAMServiceListUserTokensRequest) Reset() {
 	*x = IAMServiceListUserTokensRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[33]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1694,7 +1694,7 @@ func (x *IAMServiceListUserTokensRequest) String() string {
 func (*IAMServiceListUserTokensRequest) ProtoMessage() {}
 
 func (x *IAMServiceListUserTokensRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[33]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1707,7 +1707,7 @@ func (x *IAMServiceListUserTokensRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceListUserTokensRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceListUserTokensRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{33}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *IAMServiceListUserTokensRequest) GetUserId() string {
@@ -1726,7 +1726,7 @@ type IAMServiceListUserTokensResponse struct {
 
 func (x *IAMServiceListUserTokensResponse) Reset() {
 	*x = IAMServiceListUserTokensResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[34]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1738,7 +1738,7 @@ func (x *IAMServiceListUserTokensResponse) String() string {
 func (*IAMServiceListUserTokensResponse) ProtoMessage() {}
 
 func (x *IAMServiceListUserTokensResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[34]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1751,7 +1751,7 @@ func (x *IAMServiceListUserTokensResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceListUserTokensResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceListUserTokensResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{34}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *IAMServiceListUserTokensResponse) GetTokens() []*APIToken {
@@ -1770,7 +1770,7 @@ type IAMServiceRevokeTokenRequest struct {
 
 func (x *IAMServiceRevokeTokenRequest) Reset() {
 	*x = IAMServiceRevokeTokenRequest{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[35]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1782,7 +1782,7 @@ func (x *IAMServiceRevokeTokenRequest) String() string {
 func (*IAMServiceRevokeTokenRequest) ProtoMessage() {}
 
 func (x *IAMServiceRevokeTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[35]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1795,7 +1795,7 @@ func (x *IAMServiceRevokeTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceRevokeTokenRequest.ProtoReflect.Descriptor instead.
 func (*IAMServiceRevokeTokenRequest) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{35}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *IAMServiceRevokeTokenRequest) GetTokenId() string {
@@ -1814,7 +1814,7 @@ type IAMServiceRevokeTokenResponse struct {
 
 func (x *IAMServiceRevokeTokenResponse) Reset() {
 	*x = IAMServiceRevokeTokenResponse{}
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[36]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1826,7 +1826,7 @@ func (x *IAMServiceRevokeTokenResponse) String() string {
 func (*IAMServiceRevokeTokenResponse) ProtoMessage() {}
 
 func (x *IAMServiceRevokeTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_madsrc_llmgw_v1_iam_proto_msgTypes[36]
+	mi := &file_proto_madsrc_trustedai_v1_iam_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1839,7 +1839,7 @@ func (x *IAMServiceRevokeTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IAMServiceRevokeTokenResponse.ProtoReflect.Descriptor instead.
 func (*IAMServiceRevokeTokenResponse) Descriptor() ([]byte, []int) {
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP(), []int{36}
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *IAMServiceRevokeTokenResponse) GetSuccess() bool {
@@ -1849,11 +1849,11 @@ func (x *IAMServiceRevokeTokenResponse) GetSuccess() bool {
 	return false
 }
 
-var File_proto_madsrc_llmgw_v1_iam_proto protoreflect.FileDescriptor
+var File_proto_madsrc_trustedai_v1_iam_proto protoreflect.FileDescriptor
 
-const file_proto_madsrc_llmgw_v1_iam_proto_rawDesc = "" +
+const file_proto_madsrc_trustedai_v1_iam_proto_rawDesc = "" +
 	"\n" +
-	"\x1fproto/madsrc/llmgw/v1/iam.proto\x12\bllmgw.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbf\x02\n" +
+	"#proto/madsrc/trustedai/v1/iam.proto\x12\ftrustedai.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbf\x02\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x12\n" +
@@ -1886,61 +1886,61 @@ const file_proto_madsrc_llmgw_v1_iam_proto_rawDesc = "" +
 	"\n" +
 	"expires_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12<\n" +
 	"\flast_used_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"lastUsedAt\"A\n" +
-	"\x1bIAMServiceCreateUserRequest\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"B\n" +
-	"\x1cIAMServiceCreateUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"*\n" +
+	"lastUsedAt\"E\n" +
+	"\x1bIAMServiceCreateUserRequest\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"F\n" +
+	"\x1cIAMServiceCreateUserResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"*\n" +
 	"\x18IAMServiceGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"?\n" +
-	"\x19IAMServiceGetUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"7\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"C\n" +
+	"\x19IAMServiceGetUserResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"7\n" +
 	"\x1fIAMServiceGetUserByEmailRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"F\n" +
-	" IAMServiceGetUserByEmailResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"c\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"J\n" +
+	" IAMServiceGetUserByEmailResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"c\n" +
 	"$IAMServiceGetUserByExternalIDRequest\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x1f\n" +
 	"\vexternal_id\x18\x02 \x01(\tR\n" +
-	"externalId\"K\n" +
-	"%IAMServiceGetUserByExternalIDResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"!\n" +
-	"\x1fIAMServiceGetCurrentUserRequest\"F\n" +
-	" IAMServiceGetCurrentUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"S\n" +
+	"externalId\"O\n" +
+	"%IAMServiceGetUserByExternalIDResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"!\n" +
+	"\x1fIAMServiceGetCurrentUserRequest\"J\n" +
+	" IAMServiceGetCurrentUserResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"S\n" +
 	"(IAMServiceListUsersByOrganizationRequest\x12'\n" +
-	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"Q\n" +
-	")IAMServiceListUsersByOrganizationResponse\x12$\n" +
-	"\x05users\x18\x01 \x03(\v2\x0e.llmgw.v1.UserR\x05users\"k\n" +
-	"\x1bIAMServiceUpdateUserRequest\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\x12(\n" +
-	"\x10has_system_admin\x18\x02 \x01(\bR\x0ehasSystemAdmin\"B\n" +
-	"\x1cIAMServiceUpdateUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.llmgw.v1.UserR\x04user\"-\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"U\n" +
+	")IAMServiceListUsersByOrganizationResponse\x12(\n" +
+	"\x05users\x18\x01 \x03(\v2\x12.trustedai.v1.UserR\x05users\"o\n" +
+	"\x1bIAMServiceUpdateUserRequest\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\x12(\n" +
+	"\x10has_system_admin\x18\x02 \x01(\bR\x0ehasSystemAdmin\"F\n" +
+	"\x1cIAMServiceUpdateUserResponse\x12&\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.trustedai.v1.UserR\x04user\"-\n" +
 	"\x1bIAMServiceDeleteUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"8\n" +
 	"\x1cIAMServiceDeleteUserResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"a\n" +
-	"#IAMServiceCreateOrganizationRequest\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\"b\n" +
-	"$IAMServiceCreateOrganizationResponse\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\"2\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"e\n" +
+	"#IAMServiceCreateOrganizationRequest\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\"f\n" +
+	"$IAMServiceCreateOrganizationResponse\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\"2\n" +
 	" IAMServiceGetOrganizationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"_\n" +
-	"!IAMServiceGetOrganizationResponse\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\"<\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"c\n" +
+	"!IAMServiceGetOrganizationResponse\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\"<\n" +
 	"&IAMServiceGetOrganizationByNameRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"e\n" +
-	"'IAMServiceGetOrganizationByNameResponse\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\"$\n" +
-	"\"IAMServiceListOrganizationsRequest\"c\n" +
-	"#IAMServiceListOrganizationsResponse\x12<\n" +
-	"\rorganizations\x18\x01 \x03(\v2\x16.llmgw.v1.OrganizationR\rorganizations\"\x85\x01\n" +
-	"#IAMServiceUpdateOrganizationRequest\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\x12\"\n" +
-	"\rhas_is_system\x18\x02 \x01(\bR\vhasIsSystem\"b\n" +
-	"$IAMServiceUpdateOrganizationResponse\x12:\n" +
-	"\forganization\x18\x01 \x01(\v2\x16.llmgw.v1.OrganizationR\forganization\"K\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"i\n" +
+	"'IAMServiceGetOrganizationByNameResponse\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\"$\n" +
+	"\"IAMServiceListOrganizationsRequest\"g\n" +
+	"#IAMServiceListOrganizationsResponse\x12@\n" +
+	"\rorganizations\x18\x01 \x03(\v2\x1a.trustedai.v1.OrganizationR\rorganizations\"\x89\x01\n" +
+	"#IAMServiceUpdateOrganizationRequest\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\x12\"\n" +
+	"\rhas_is_system\x18\x02 \x01(\bR\vhasIsSystem\"f\n" +
+	"$IAMServiceUpdateOrganizationResponse\x12>\n" +
+	"\forganization\x18\x01 \x01(\v2\x1a.trustedai.v1.OrganizationR\forganization\"K\n" +
 	"#IAMServiceDeleteOrganizationRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05force\x18\x02 \x01(\bR\x05force\"@\n" +
@@ -1950,154 +1950,154 @@ const file_proto_madsrc_llmgw_v1_iam_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x129\n" +
 	"\n" +
-	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"f\n" +
-	"\x1dIAMServiceCreateTokenResponse\x12(\n" +
-	"\x05token\x18\x01 \x01(\v2\x12.llmgw.v1.APITokenR\x05token\x12\x1b\n" +
+	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"j\n" +
+	"\x1dIAMServiceCreateTokenResponse\x12,\n" +
+	"\x05token\x18\x01 \x01(\v2\x16.trustedai.v1.APITokenR\x05token\x12\x1b\n" +
 	"\traw_token\x18\x02 \x01(\tR\brawToken\":\n" +
 	"\x1fIAMServiceListUserTokensRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"N\n" +
-	" IAMServiceListUserTokensResponse\x12*\n" +
-	"\x06tokens\x18\x01 \x03(\v2\x12.llmgw.v1.APITokenR\x06tokens\"9\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"R\n" +
+	" IAMServiceListUserTokensResponse\x12.\n" +
+	"\x06tokens\x18\x01 \x03(\v2\x16.trustedai.v1.APITokenR\x06tokens\"9\n" +
 	"\x1cIAMServiceRevokeTokenRequest\x12\x19\n" +
 	"\btoken_id\x18\x01 \x01(\tR\atokenId\"9\n" +
 	"\x1dIAMServiceRevokeTokenResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\xaa\x0e\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2\xb3\x0f\n" +
 	"\n" +
-	"IAMService\x12[\n" +
+	"IAMService\x12c\n" +
 	"\n" +
-	"CreateUser\x12%.llmgw.v1.IAMServiceCreateUserRequest\x1a&.llmgw.v1.IAMServiceCreateUserResponse\x12R\n" +
-	"\aGetUser\x12\".llmgw.v1.IAMServiceGetUserRequest\x1a#.llmgw.v1.IAMServiceGetUserResponse\x12g\n" +
-	"\x0eGetUserByEmail\x12).llmgw.v1.IAMServiceGetUserByEmailRequest\x1a*.llmgw.v1.IAMServiceGetUserByEmailResponse\x12v\n" +
-	"\x13GetUserByExternalID\x12..llmgw.v1.IAMServiceGetUserByExternalIDRequest\x1a/.llmgw.v1.IAMServiceGetUserByExternalIDResponse\x12g\n" +
-	"\x0eGetCurrentUser\x12).llmgw.v1.IAMServiceGetCurrentUserRequest\x1a*.llmgw.v1.IAMServiceGetCurrentUserResponse\x12\x82\x01\n" +
-	"\x17ListUsersByOrganization\x122.llmgw.v1.IAMServiceListUsersByOrganizationRequest\x1a3.llmgw.v1.IAMServiceListUsersByOrganizationResponse\x12[\n" +
+	"CreateUser\x12).trustedai.v1.IAMServiceCreateUserRequest\x1a*.trustedai.v1.IAMServiceCreateUserResponse\x12Z\n" +
+	"\aGetUser\x12&.trustedai.v1.IAMServiceGetUserRequest\x1a'.trustedai.v1.IAMServiceGetUserResponse\x12o\n" +
+	"\x0eGetUserByEmail\x12-.trustedai.v1.IAMServiceGetUserByEmailRequest\x1a..trustedai.v1.IAMServiceGetUserByEmailResponse\x12~\n" +
+	"\x13GetUserByExternalID\x122.trustedai.v1.IAMServiceGetUserByExternalIDRequest\x1a3.trustedai.v1.IAMServiceGetUserByExternalIDResponse\x12o\n" +
+	"\x0eGetCurrentUser\x12-.trustedai.v1.IAMServiceGetCurrentUserRequest\x1a..trustedai.v1.IAMServiceGetCurrentUserResponse\x12\x8a\x01\n" +
+	"\x17ListUsersByOrganization\x126.trustedai.v1.IAMServiceListUsersByOrganizationRequest\x1a7.trustedai.v1.IAMServiceListUsersByOrganizationResponse\x12c\n" +
 	"\n" +
-	"UpdateUser\x12%.llmgw.v1.IAMServiceUpdateUserRequest\x1a&.llmgw.v1.IAMServiceUpdateUserResponse\x12[\n" +
+	"UpdateUser\x12).trustedai.v1.IAMServiceUpdateUserRequest\x1a*.trustedai.v1.IAMServiceUpdateUserResponse\x12c\n" +
 	"\n" +
-	"DeleteUser\x12%.llmgw.v1.IAMServiceDeleteUserRequest\x1a&.llmgw.v1.IAMServiceDeleteUserResponse\x12s\n" +
-	"\x12CreateOrganization\x12-.llmgw.v1.IAMServiceCreateOrganizationRequest\x1a..llmgw.v1.IAMServiceCreateOrganizationResponse\x12j\n" +
-	"\x0fGetOrganization\x12*.llmgw.v1.IAMServiceGetOrganizationRequest\x1a+.llmgw.v1.IAMServiceGetOrganizationResponse\x12|\n" +
-	"\x15GetOrganizationByName\x120.llmgw.v1.IAMServiceGetOrganizationByNameRequest\x1a1.llmgw.v1.IAMServiceGetOrganizationByNameResponse\x12p\n" +
-	"\x11ListOrganizations\x12,.llmgw.v1.IAMServiceListOrganizationsRequest\x1a-.llmgw.v1.IAMServiceListOrganizationsResponse\x12s\n" +
-	"\x12UpdateOrganization\x12-.llmgw.v1.IAMServiceUpdateOrganizationRequest\x1a..llmgw.v1.IAMServiceUpdateOrganizationResponse\x12s\n" +
-	"\x12DeleteOrganization\x12-.llmgw.v1.IAMServiceDeleteOrganizationRequest\x1a..llmgw.v1.IAMServiceDeleteOrganizationResponse\x12^\n" +
-	"\vCreateToken\x12&.llmgw.v1.IAMServiceCreateTokenRequest\x1a'.llmgw.v1.IAMServiceCreateTokenResponse\x12g\n" +
-	"\x0eListUserTokens\x12).llmgw.v1.IAMServiceListUserTokensRequest\x1a*.llmgw.v1.IAMServiceListUserTokensResponse\x12^\n" +
-	"\vRevokeToken\x12&.llmgw.v1.IAMServiceRevokeTokenRequest\x1a'.llmgw.v1.IAMServiceRevokeTokenResponseB=Z;codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1;llmgwv1b\x06proto3"
+	"DeleteUser\x12).trustedai.v1.IAMServiceDeleteUserRequest\x1a*.trustedai.v1.IAMServiceDeleteUserResponse\x12{\n" +
+	"\x12CreateOrganization\x121.trustedai.v1.IAMServiceCreateOrganizationRequest\x1a2.trustedai.v1.IAMServiceCreateOrganizationResponse\x12r\n" +
+	"\x0fGetOrganization\x12..trustedai.v1.IAMServiceGetOrganizationRequest\x1a/.trustedai.v1.IAMServiceGetOrganizationResponse\x12\x84\x01\n" +
+	"\x15GetOrganizationByName\x124.trustedai.v1.IAMServiceGetOrganizationByNameRequest\x1a5.trustedai.v1.IAMServiceGetOrganizationByNameResponse\x12x\n" +
+	"\x11ListOrganizations\x120.trustedai.v1.IAMServiceListOrganizationsRequest\x1a1.trustedai.v1.IAMServiceListOrganizationsResponse\x12{\n" +
+	"\x12UpdateOrganization\x121.trustedai.v1.IAMServiceUpdateOrganizationRequest\x1a2.trustedai.v1.IAMServiceUpdateOrganizationResponse\x12{\n" +
+	"\x12DeleteOrganization\x121.trustedai.v1.IAMServiceDeleteOrganizationRequest\x1a2.trustedai.v1.IAMServiceDeleteOrganizationResponse\x12f\n" +
+	"\vCreateToken\x12*.trustedai.v1.IAMServiceCreateTokenRequest\x1a+.trustedai.v1.IAMServiceCreateTokenResponse\x12o\n" +
+	"\x0eListUserTokens\x12-.trustedai.v1.IAMServiceListUserTokensRequest\x1a..trustedai.v1.IAMServiceListUserTokensResponse\x12f\n" +
+	"\vRevokeToken\x12*.trustedai.v1.IAMServiceRevokeTokenRequest\x1a+.trustedai.v1.IAMServiceRevokeTokenResponseBGZEgithub.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1;trustedaiv1b\x06proto3"
 
 var (
-	file_proto_madsrc_llmgw_v1_iam_proto_rawDescOnce sync.Once
-	file_proto_madsrc_llmgw_v1_iam_proto_rawDescData []byte
+	file_proto_madsrc_trustedai_v1_iam_proto_rawDescOnce sync.Once
+	file_proto_madsrc_trustedai_v1_iam_proto_rawDescData []byte
 )
 
-func file_proto_madsrc_llmgw_v1_iam_proto_rawDescGZIP() []byte {
-	file_proto_madsrc_llmgw_v1_iam_proto_rawDescOnce.Do(func() {
-		file_proto_madsrc_llmgw_v1_iam_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_iam_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_iam_proto_rawDesc)))
+func file_proto_madsrc_trustedai_v1_iam_proto_rawDescGZIP() []byte {
+	file_proto_madsrc_trustedai_v1_iam_proto_rawDescOnce.Do(func() {
+		file_proto_madsrc_trustedai_v1_iam_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_iam_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_iam_proto_rawDesc)))
 	})
-	return file_proto_madsrc_llmgw_v1_iam_proto_rawDescData
+	return file_proto_madsrc_trustedai_v1_iam_proto_rawDescData
 }
 
-var file_proto_madsrc_llmgw_v1_iam_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
-var file_proto_madsrc_llmgw_v1_iam_proto_goTypes = []any{
-	(*User)(nil),                                      // 0: llmgw.v1.User
-	(*Organization)(nil),                              // 1: llmgw.v1.Organization
-	(*APIToken)(nil),                                  // 2: llmgw.v1.APIToken
-	(*IAMServiceCreateUserRequest)(nil),               // 3: llmgw.v1.IAMServiceCreateUserRequest
-	(*IAMServiceCreateUserResponse)(nil),              // 4: llmgw.v1.IAMServiceCreateUserResponse
-	(*IAMServiceGetUserRequest)(nil),                  // 5: llmgw.v1.IAMServiceGetUserRequest
-	(*IAMServiceGetUserResponse)(nil),                 // 6: llmgw.v1.IAMServiceGetUserResponse
-	(*IAMServiceGetUserByEmailRequest)(nil),           // 7: llmgw.v1.IAMServiceGetUserByEmailRequest
-	(*IAMServiceGetUserByEmailResponse)(nil),          // 8: llmgw.v1.IAMServiceGetUserByEmailResponse
-	(*IAMServiceGetUserByExternalIDRequest)(nil),      // 9: llmgw.v1.IAMServiceGetUserByExternalIDRequest
-	(*IAMServiceGetUserByExternalIDResponse)(nil),     // 10: llmgw.v1.IAMServiceGetUserByExternalIDResponse
-	(*IAMServiceGetCurrentUserRequest)(nil),           // 11: llmgw.v1.IAMServiceGetCurrentUserRequest
-	(*IAMServiceGetCurrentUserResponse)(nil),          // 12: llmgw.v1.IAMServiceGetCurrentUserResponse
-	(*IAMServiceListUsersByOrganizationRequest)(nil),  // 13: llmgw.v1.IAMServiceListUsersByOrganizationRequest
-	(*IAMServiceListUsersByOrganizationResponse)(nil), // 14: llmgw.v1.IAMServiceListUsersByOrganizationResponse
-	(*IAMServiceUpdateUserRequest)(nil),               // 15: llmgw.v1.IAMServiceUpdateUserRequest
-	(*IAMServiceUpdateUserResponse)(nil),              // 16: llmgw.v1.IAMServiceUpdateUserResponse
-	(*IAMServiceDeleteUserRequest)(nil),               // 17: llmgw.v1.IAMServiceDeleteUserRequest
-	(*IAMServiceDeleteUserResponse)(nil),              // 18: llmgw.v1.IAMServiceDeleteUserResponse
-	(*IAMServiceCreateOrganizationRequest)(nil),       // 19: llmgw.v1.IAMServiceCreateOrganizationRequest
-	(*IAMServiceCreateOrganizationResponse)(nil),      // 20: llmgw.v1.IAMServiceCreateOrganizationResponse
-	(*IAMServiceGetOrganizationRequest)(nil),          // 21: llmgw.v1.IAMServiceGetOrganizationRequest
-	(*IAMServiceGetOrganizationResponse)(nil),         // 22: llmgw.v1.IAMServiceGetOrganizationResponse
-	(*IAMServiceGetOrganizationByNameRequest)(nil),    // 23: llmgw.v1.IAMServiceGetOrganizationByNameRequest
-	(*IAMServiceGetOrganizationByNameResponse)(nil),   // 24: llmgw.v1.IAMServiceGetOrganizationByNameResponse
-	(*IAMServiceListOrganizationsRequest)(nil),        // 25: llmgw.v1.IAMServiceListOrganizationsRequest
-	(*IAMServiceListOrganizationsResponse)(nil),       // 26: llmgw.v1.IAMServiceListOrganizationsResponse
-	(*IAMServiceUpdateOrganizationRequest)(nil),       // 27: llmgw.v1.IAMServiceUpdateOrganizationRequest
-	(*IAMServiceUpdateOrganizationResponse)(nil),      // 28: llmgw.v1.IAMServiceUpdateOrganizationResponse
-	(*IAMServiceDeleteOrganizationRequest)(nil),       // 29: llmgw.v1.IAMServiceDeleteOrganizationRequest
-	(*IAMServiceDeleteOrganizationResponse)(nil),      // 30: llmgw.v1.IAMServiceDeleteOrganizationResponse
-	(*IAMServiceCreateTokenRequest)(nil),              // 31: llmgw.v1.IAMServiceCreateTokenRequest
-	(*IAMServiceCreateTokenResponse)(nil),             // 32: llmgw.v1.IAMServiceCreateTokenResponse
-	(*IAMServiceListUserTokensRequest)(nil),           // 33: llmgw.v1.IAMServiceListUserTokensRequest
-	(*IAMServiceListUserTokensResponse)(nil),          // 34: llmgw.v1.IAMServiceListUserTokensResponse
-	(*IAMServiceRevokeTokenRequest)(nil),              // 35: llmgw.v1.IAMServiceRevokeTokenRequest
-	(*IAMServiceRevokeTokenResponse)(nil),             // 36: llmgw.v1.IAMServiceRevokeTokenResponse
+var file_proto_madsrc_trustedai_v1_iam_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
+var file_proto_madsrc_trustedai_v1_iam_proto_goTypes = []any{
+	(*User)(nil),                                      // 0: trustedai.v1.User
+	(*Organization)(nil),                              // 1: trustedai.v1.Organization
+	(*APIToken)(nil),                                  // 2: trustedai.v1.APIToken
+	(*IAMServiceCreateUserRequest)(nil),               // 3: trustedai.v1.IAMServiceCreateUserRequest
+	(*IAMServiceCreateUserResponse)(nil),              // 4: trustedai.v1.IAMServiceCreateUserResponse
+	(*IAMServiceGetUserRequest)(nil),                  // 5: trustedai.v1.IAMServiceGetUserRequest
+	(*IAMServiceGetUserResponse)(nil),                 // 6: trustedai.v1.IAMServiceGetUserResponse
+	(*IAMServiceGetUserByEmailRequest)(nil),           // 7: trustedai.v1.IAMServiceGetUserByEmailRequest
+	(*IAMServiceGetUserByEmailResponse)(nil),          // 8: trustedai.v1.IAMServiceGetUserByEmailResponse
+	(*IAMServiceGetUserByExternalIDRequest)(nil),      // 9: trustedai.v1.IAMServiceGetUserByExternalIDRequest
+	(*IAMServiceGetUserByExternalIDResponse)(nil),     // 10: trustedai.v1.IAMServiceGetUserByExternalIDResponse
+	(*IAMServiceGetCurrentUserRequest)(nil),           // 11: trustedai.v1.IAMServiceGetCurrentUserRequest
+	(*IAMServiceGetCurrentUserResponse)(nil),          // 12: trustedai.v1.IAMServiceGetCurrentUserResponse
+	(*IAMServiceListUsersByOrganizationRequest)(nil),  // 13: trustedai.v1.IAMServiceListUsersByOrganizationRequest
+	(*IAMServiceListUsersByOrganizationResponse)(nil), // 14: trustedai.v1.IAMServiceListUsersByOrganizationResponse
+	(*IAMServiceUpdateUserRequest)(nil),               // 15: trustedai.v1.IAMServiceUpdateUserRequest
+	(*IAMServiceUpdateUserResponse)(nil),              // 16: trustedai.v1.IAMServiceUpdateUserResponse
+	(*IAMServiceDeleteUserRequest)(nil),               // 17: trustedai.v1.IAMServiceDeleteUserRequest
+	(*IAMServiceDeleteUserResponse)(nil),              // 18: trustedai.v1.IAMServiceDeleteUserResponse
+	(*IAMServiceCreateOrganizationRequest)(nil),       // 19: trustedai.v1.IAMServiceCreateOrganizationRequest
+	(*IAMServiceCreateOrganizationResponse)(nil),      // 20: trustedai.v1.IAMServiceCreateOrganizationResponse
+	(*IAMServiceGetOrganizationRequest)(nil),          // 21: trustedai.v1.IAMServiceGetOrganizationRequest
+	(*IAMServiceGetOrganizationResponse)(nil),         // 22: trustedai.v1.IAMServiceGetOrganizationResponse
+	(*IAMServiceGetOrganizationByNameRequest)(nil),    // 23: trustedai.v1.IAMServiceGetOrganizationByNameRequest
+	(*IAMServiceGetOrganizationByNameResponse)(nil),   // 24: trustedai.v1.IAMServiceGetOrganizationByNameResponse
+	(*IAMServiceListOrganizationsRequest)(nil),        // 25: trustedai.v1.IAMServiceListOrganizationsRequest
+	(*IAMServiceListOrganizationsResponse)(nil),       // 26: trustedai.v1.IAMServiceListOrganizationsResponse
+	(*IAMServiceUpdateOrganizationRequest)(nil),       // 27: trustedai.v1.IAMServiceUpdateOrganizationRequest
+	(*IAMServiceUpdateOrganizationResponse)(nil),      // 28: trustedai.v1.IAMServiceUpdateOrganizationResponse
+	(*IAMServiceDeleteOrganizationRequest)(nil),       // 29: trustedai.v1.IAMServiceDeleteOrganizationRequest
+	(*IAMServiceDeleteOrganizationResponse)(nil),      // 30: trustedai.v1.IAMServiceDeleteOrganizationResponse
+	(*IAMServiceCreateTokenRequest)(nil),              // 31: trustedai.v1.IAMServiceCreateTokenRequest
+	(*IAMServiceCreateTokenResponse)(nil),             // 32: trustedai.v1.IAMServiceCreateTokenResponse
+	(*IAMServiceListUserTokensRequest)(nil),           // 33: trustedai.v1.IAMServiceListUserTokensRequest
+	(*IAMServiceListUserTokensResponse)(nil),          // 34: trustedai.v1.IAMServiceListUserTokensResponse
+	(*IAMServiceRevokeTokenRequest)(nil),              // 35: trustedai.v1.IAMServiceRevokeTokenRequest
+	(*IAMServiceRevokeTokenResponse)(nil),             // 36: trustedai.v1.IAMServiceRevokeTokenResponse
 	(*timestamppb.Timestamp)(nil),                     // 37: google.protobuf.Timestamp
 }
-var file_proto_madsrc_llmgw_v1_iam_proto_depIdxs = []int32{
-	37, // 0: llmgw.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	37, // 1: llmgw.v1.User.last_login:type_name -> google.protobuf.Timestamp
-	37, // 2: llmgw.v1.Organization.created_at:type_name -> google.protobuf.Timestamp
-	37, // 3: llmgw.v1.APIToken.created_at:type_name -> google.protobuf.Timestamp
-	37, // 4: llmgw.v1.APIToken.expires_at:type_name -> google.protobuf.Timestamp
-	37, // 5: llmgw.v1.APIToken.last_used_at:type_name -> google.protobuf.Timestamp
-	0,  // 6: llmgw.v1.IAMServiceCreateUserRequest.user:type_name -> llmgw.v1.User
-	0,  // 7: llmgw.v1.IAMServiceCreateUserResponse.user:type_name -> llmgw.v1.User
-	0,  // 8: llmgw.v1.IAMServiceGetUserResponse.user:type_name -> llmgw.v1.User
-	0,  // 9: llmgw.v1.IAMServiceGetUserByEmailResponse.user:type_name -> llmgw.v1.User
-	0,  // 10: llmgw.v1.IAMServiceGetUserByExternalIDResponse.user:type_name -> llmgw.v1.User
-	0,  // 11: llmgw.v1.IAMServiceGetCurrentUserResponse.user:type_name -> llmgw.v1.User
-	0,  // 12: llmgw.v1.IAMServiceListUsersByOrganizationResponse.users:type_name -> llmgw.v1.User
-	0,  // 13: llmgw.v1.IAMServiceUpdateUserRequest.user:type_name -> llmgw.v1.User
-	0,  // 14: llmgw.v1.IAMServiceUpdateUserResponse.user:type_name -> llmgw.v1.User
-	1,  // 15: llmgw.v1.IAMServiceCreateOrganizationRequest.organization:type_name -> llmgw.v1.Organization
-	1,  // 16: llmgw.v1.IAMServiceCreateOrganizationResponse.organization:type_name -> llmgw.v1.Organization
-	1,  // 17: llmgw.v1.IAMServiceGetOrganizationResponse.organization:type_name -> llmgw.v1.Organization
-	1,  // 18: llmgw.v1.IAMServiceGetOrganizationByNameResponse.organization:type_name -> llmgw.v1.Organization
-	1,  // 19: llmgw.v1.IAMServiceListOrganizationsResponse.organizations:type_name -> llmgw.v1.Organization
-	1,  // 20: llmgw.v1.IAMServiceUpdateOrganizationRequest.organization:type_name -> llmgw.v1.Organization
-	1,  // 21: llmgw.v1.IAMServiceUpdateOrganizationResponse.organization:type_name -> llmgw.v1.Organization
-	37, // 22: llmgw.v1.IAMServiceCreateTokenRequest.expires_at:type_name -> google.protobuf.Timestamp
-	2,  // 23: llmgw.v1.IAMServiceCreateTokenResponse.token:type_name -> llmgw.v1.APIToken
-	2,  // 24: llmgw.v1.IAMServiceListUserTokensResponse.tokens:type_name -> llmgw.v1.APIToken
-	3,  // 25: llmgw.v1.IAMService.CreateUser:input_type -> llmgw.v1.IAMServiceCreateUserRequest
-	5,  // 26: llmgw.v1.IAMService.GetUser:input_type -> llmgw.v1.IAMServiceGetUserRequest
-	7,  // 27: llmgw.v1.IAMService.GetUserByEmail:input_type -> llmgw.v1.IAMServiceGetUserByEmailRequest
-	9,  // 28: llmgw.v1.IAMService.GetUserByExternalID:input_type -> llmgw.v1.IAMServiceGetUserByExternalIDRequest
-	11, // 29: llmgw.v1.IAMService.GetCurrentUser:input_type -> llmgw.v1.IAMServiceGetCurrentUserRequest
-	13, // 30: llmgw.v1.IAMService.ListUsersByOrganization:input_type -> llmgw.v1.IAMServiceListUsersByOrganizationRequest
-	15, // 31: llmgw.v1.IAMService.UpdateUser:input_type -> llmgw.v1.IAMServiceUpdateUserRequest
-	17, // 32: llmgw.v1.IAMService.DeleteUser:input_type -> llmgw.v1.IAMServiceDeleteUserRequest
-	19, // 33: llmgw.v1.IAMService.CreateOrganization:input_type -> llmgw.v1.IAMServiceCreateOrganizationRequest
-	21, // 34: llmgw.v1.IAMService.GetOrganization:input_type -> llmgw.v1.IAMServiceGetOrganizationRequest
-	23, // 35: llmgw.v1.IAMService.GetOrganizationByName:input_type -> llmgw.v1.IAMServiceGetOrganizationByNameRequest
-	25, // 36: llmgw.v1.IAMService.ListOrganizations:input_type -> llmgw.v1.IAMServiceListOrganizationsRequest
-	27, // 37: llmgw.v1.IAMService.UpdateOrganization:input_type -> llmgw.v1.IAMServiceUpdateOrganizationRequest
-	29, // 38: llmgw.v1.IAMService.DeleteOrganization:input_type -> llmgw.v1.IAMServiceDeleteOrganizationRequest
-	31, // 39: llmgw.v1.IAMService.CreateToken:input_type -> llmgw.v1.IAMServiceCreateTokenRequest
-	33, // 40: llmgw.v1.IAMService.ListUserTokens:input_type -> llmgw.v1.IAMServiceListUserTokensRequest
-	35, // 41: llmgw.v1.IAMService.RevokeToken:input_type -> llmgw.v1.IAMServiceRevokeTokenRequest
-	4,  // 42: llmgw.v1.IAMService.CreateUser:output_type -> llmgw.v1.IAMServiceCreateUserResponse
-	6,  // 43: llmgw.v1.IAMService.GetUser:output_type -> llmgw.v1.IAMServiceGetUserResponse
-	8,  // 44: llmgw.v1.IAMService.GetUserByEmail:output_type -> llmgw.v1.IAMServiceGetUserByEmailResponse
-	10, // 45: llmgw.v1.IAMService.GetUserByExternalID:output_type -> llmgw.v1.IAMServiceGetUserByExternalIDResponse
-	12, // 46: llmgw.v1.IAMService.GetCurrentUser:output_type -> llmgw.v1.IAMServiceGetCurrentUserResponse
-	14, // 47: llmgw.v1.IAMService.ListUsersByOrganization:output_type -> llmgw.v1.IAMServiceListUsersByOrganizationResponse
-	16, // 48: llmgw.v1.IAMService.UpdateUser:output_type -> llmgw.v1.IAMServiceUpdateUserResponse
-	18, // 49: llmgw.v1.IAMService.DeleteUser:output_type -> llmgw.v1.IAMServiceDeleteUserResponse
-	20, // 50: llmgw.v1.IAMService.CreateOrganization:output_type -> llmgw.v1.IAMServiceCreateOrganizationResponse
-	22, // 51: llmgw.v1.IAMService.GetOrganization:output_type -> llmgw.v1.IAMServiceGetOrganizationResponse
-	24, // 52: llmgw.v1.IAMService.GetOrganizationByName:output_type -> llmgw.v1.IAMServiceGetOrganizationByNameResponse
-	26, // 53: llmgw.v1.IAMService.ListOrganizations:output_type -> llmgw.v1.IAMServiceListOrganizationsResponse
-	28, // 54: llmgw.v1.IAMService.UpdateOrganization:output_type -> llmgw.v1.IAMServiceUpdateOrganizationResponse
-	30, // 55: llmgw.v1.IAMService.DeleteOrganization:output_type -> llmgw.v1.IAMServiceDeleteOrganizationResponse
-	32, // 56: llmgw.v1.IAMService.CreateToken:output_type -> llmgw.v1.IAMServiceCreateTokenResponse
-	34, // 57: llmgw.v1.IAMService.ListUserTokens:output_type -> llmgw.v1.IAMServiceListUserTokensResponse
-	36, // 58: llmgw.v1.IAMService.RevokeToken:output_type -> llmgw.v1.IAMServiceRevokeTokenResponse
+var file_proto_madsrc_trustedai_v1_iam_proto_depIdxs = []int32{
+	37, // 0: trustedai.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	37, // 1: trustedai.v1.User.last_login:type_name -> google.protobuf.Timestamp
+	37, // 2: trustedai.v1.Organization.created_at:type_name -> google.protobuf.Timestamp
+	37, // 3: trustedai.v1.APIToken.created_at:type_name -> google.protobuf.Timestamp
+	37, // 4: trustedai.v1.APIToken.expires_at:type_name -> google.protobuf.Timestamp
+	37, // 5: trustedai.v1.APIToken.last_used_at:type_name -> google.protobuf.Timestamp
+	0,  // 6: trustedai.v1.IAMServiceCreateUserRequest.user:type_name -> trustedai.v1.User
+	0,  // 7: trustedai.v1.IAMServiceCreateUserResponse.user:type_name -> trustedai.v1.User
+	0,  // 8: trustedai.v1.IAMServiceGetUserResponse.user:type_name -> trustedai.v1.User
+	0,  // 9: trustedai.v1.IAMServiceGetUserByEmailResponse.user:type_name -> trustedai.v1.User
+	0,  // 10: trustedai.v1.IAMServiceGetUserByExternalIDResponse.user:type_name -> trustedai.v1.User
+	0,  // 11: trustedai.v1.IAMServiceGetCurrentUserResponse.user:type_name -> trustedai.v1.User
+	0,  // 12: trustedai.v1.IAMServiceListUsersByOrganizationResponse.users:type_name -> trustedai.v1.User
+	0,  // 13: trustedai.v1.IAMServiceUpdateUserRequest.user:type_name -> trustedai.v1.User
+	0,  // 14: trustedai.v1.IAMServiceUpdateUserResponse.user:type_name -> trustedai.v1.User
+	1,  // 15: trustedai.v1.IAMServiceCreateOrganizationRequest.organization:type_name -> trustedai.v1.Organization
+	1,  // 16: trustedai.v1.IAMServiceCreateOrganizationResponse.organization:type_name -> trustedai.v1.Organization
+	1,  // 17: trustedai.v1.IAMServiceGetOrganizationResponse.organization:type_name -> trustedai.v1.Organization
+	1,  // 18: trustedai.v1.IAMServiceGetOrganizationByNameResponse.organization:type_name -> trustedai.v1.Organization
+	1,  // 19: trustedai.v1.IAMServiceListOrganizationsResponse.organizations:type_name -> trustedai.v1.Organization
+	1,  // 20: trustedai.v1.IAMServiceUpdateOrganizationRequest.organization:type_name -> trustedai.v1.Organization
+	1,  // 21: trustedai.v1.IAMServiceUpdateOrganizationResponse.organization:type_name -> trustedai.v1.Organization
+	37, // 22: trustedai.v1.IAMServiceCreateTokenRequest.expires_at:type_name -> google.protobuf.Timestamp
+	2,  // 23: trustedai.v1.IAMServiceCreateTokenResponse.token:type_name -> trustedai.v1.APIToken
+	2,  // 24: trustedai.v1.IAMServiceListUserTokensResponse.tokens:type_name -> trustedai.v1.APIToken
+	3,  // 25: trustedai.v1.IAMService.CreateUser:input_type -> trustedai.v1.IAMServiceCreateUserRequest
+	5,  // 26: trustedai.v1.IAMService.GetUser:input_type -> trustedai.v1.IAMServiceGetUserRequest
+	7,  // 27: trustedai.v1.IAMService.GetUserByEmail:input_type -> trustedai.v1.IAMServiceGetUserByEmailRequest
+	9,  // 28: trustedai.v1.IAMService.GetUserByExternalID:input_type -> trustedai.v1.IAMServiceGetUserByExternalIDRequest
+	11, // 29: trustedai.v1.IAMService.GetCurrentUser:input_type -> trustedai.v1.IAMServiceGetCurrentUserRequest
+	13, // 30: trustedai.v1.IAMService.ListUsersByOrganization:input_type -> trustedai.v1.IAMServiceListUsersByOrganizationRequest
+	15, // 31: trustedai.v1.IAMService.UpdateUser:input_type -> trustedai.v1.IAMServiceUpdateUserRequest
+	17, // 32: trustedai.v1.IAMService.DeleteUser:input_type -> trustedai.v1.IAMServiceDeleteUserRequest
+	19, // 33: trustedai.v1.IAMService.CreateOrganization:input_type -> trustedai.v1.IAMServiceCreateOrganizationRequest
+	21, // 34: trustedai.v1.IAMService.GetOrganization:input_type -> trustedai.v1.IAMServiceGetOrganizationRequest
+	23, // 35: trustedai.v1.IAMService.GetOrganizationByName:input_type -> trustedai.v1.IAMServiceGetOrganizationByNameRequest
+	25, // 36: trustedai.v1.IAMService.ListOrganizations:input_type -> trustedai.v1.IAMServiceListOrganizationsRequest
+	27, // 37: trustedai.v1.IAMService.UpdateOrganization:input_type -> trustedai.v1.IAMServiceUpdateOrganizationRequest
+	29, // 38: trustedai.v1.IAMService.DeleteOrganization:input_type -> trustedai.v1.IAMServiceDeleteOrganizationRequest
+	31, // 39: trustedai.v1.IAMService.CreateToken:input_type -> trustedai.v1.IAMServiceCreateTokenRequest
+	33, // 40: trustedai.v1.IAMService.ListUserTokens:input_type -> trustedai.v1.IAMServiceListUserTokensRequest
+	35, // 41: trustedai.v1.IAMService.RevokeToken:input_type -> trustedai.v1.IAMServiceRevokeTokenRequest
+	4,  // 42: trustedai.v1.IAMService.CreateUser:output_type -> trustedai.v1.IAMServiceCreateUserResponse
+	6,  // 43: trustedai.v1.IAMService.GetUser:output_type -> trustedai.v1.IAMServiceGetUserResponse
+	8,  // 44: trustedai.v1.IAMService.GetUserByEmail:output_type -> trustedai.v1.IAMServiceGetUserByEmailResponse
+	10, // 45: trustedai.v1.IAMService.GetUserByExternalID:output_type -> trustedai.v1.IAMServiceGetUserByExternalIDResponse
+	12, // 46: trustedai.v1.IAMService.GetCurrentUser:output_type -> trustedai.v1.IAMServiceGetCurrentUserResponse
+	14, // 47: trustedai.v1.IAMService.ListUsersByOrganization:output_type -> trustedai.v1.IAMServiceListUsersByOrganizationResponse
+	16, // 48: trustedai.v1.IAMService.UpdateUser:output_type -> trustedai.v1.IAMServiceUpdateUserResponse
+	18, // 49: trustedai.v1.IAMService.DeleteUser:output_type -> trustedai.v1.IAMServiceDeleteUserResponse
+	20, // 50: trustedai.v1.IAMService.CreateOrganization:output_type -> trustedai.v1.IAMServiceCreateOrganizationResponse
+	22, // 51: trustedai.v1.IAMService.GetOrganization:output_type -> trustedai.v1.IAMServiceGetOrganizationResponse
+	24, // 52: trustedai.v1.IAMService.GetOrganizationByName:output_type -> trustedai.v1.IAMServiceGetOrganizationByNameResponse
+	26, // 53: trustedai.v1.IAMService.ListOrganizations:output_type -> trustedai.v1.IAMServiceListOrganizationsResponse
+	28, // 54: trustedai.v1.IAMService.UpdateOrganization:output_type -> trustedai.v1.IAMServiceUpdateOrganizationResponse
+	30, // 55: trustedai.v1.IAMService.DeleteOrganization:output_type -> trustedai.v1.IAMServiceDeleteOrganizationResponse
+	32, // 56: trustedai.v1.IAMService.CreateToken:output_type -> trustedai.v1.IAMServiceCreateTokenResponse
+	34, // 57: trustedai.v1.IAMService.ListUserTokens:output_type -> trustedai.v1.IAMServiceListUserTokensResponse
+	36, // 58: trustedai.v1.IAMService.RevokeToken:output_type -> trustedai.v1.IAMServiceRevokeTokenResponse
 	42, // [42:59] is the sub-list for method output_type
 	25, // [25:42] is the sub-list for method input_type
 	25, // [25:25] is the sub-list for extension type_name
@@ -2105,26 +2105,26 @@ var file_proto_madsrc_llmgw_v1_iam_proto_depIdxs = []int32{
 	0,  // [0:25] is the sub-list for field type_name
 }
 
-func init() { file_proto_madsrc_llmgw_v1_iam_proto_init() }
-func file_proto_madsrc_llmgw_v1_iam_proto_init() {
-	if File_proto_madsrc_llmgw_v1_iam_proto != nil {
+func init() { file_proto_madsrc_trustedai_v1_iam_proto_init() }
+func file_proto_madsrc_trustedai_v1_iam_proto_init() {
+	if File_proto_madsrc_trustedai_v1_iam_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_llmgw_v1_iam_proto_rawDesc), len(file_proto_madsrc_llmgw_v1_iam_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_madsrc_trustedai_v1_iam_proto_rawDesc), len(file_proto_madsrc_trustedai_v1_iam_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_madsrc_llmgw_v1_iam_proto_goTypes,
-		DependencyIndexes: file_proto_madsrc_llmgw_v1_iam_proto_depIdxs,
-		MessageInfos:      file_proto_madsrc_llmgw_v1_iam_proto_msgTypes,
+		GoTypes:           file_proto_madsrc_trustedai_v1_iam_proto_goTypes,
+		DependencyIndexes: file_proto_madsrc_trustedai_v1_iam_proto_depIdxs,
+		MessageInfos:      file_proto_madsrc_trustedai_v1_iam_proto_msgTypes,
 	}.Build()
-	File_proto_madsrc_llmgw_v1_iam_proto = out.File
-	file_proto_madsrc_llmgw_v1_iam_proto_goTypes = nil
-	file_proto_madsrc_llmgw_v1_iam_proto_depIdxs = nil
+	File_proto_madsrc_trustedai_v1_iam_proto = out.File
+	file_proto_madsrc_trustedai_v1_iam_proto_goTypes = nil
+	file_proto_madsrc_trustedai_v1_iam_proto_depIdxs = nil
 }

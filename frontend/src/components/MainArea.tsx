@@ -19,17 +19,17 @@ import {
   type UsageEvent,
   UsageAnalyticsServiceGetUsageSummaryRequestSchema,
   UsageAnalyticsServiceGetUsageDetailsRequestSchema,
-} from "../gen/proto/madsrc/llmgw/v1/usage_analytics_pb";
+} from "../gen/proto/madsrc/trustedai/v1/usage_analytics_pb";
 import {
   IAMService,
   type Organization,
   IAMServiceListOrganizationsRequestSchema,
-} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+} from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import {
   ModelManagementService,
   ModelManagementServiceListModelsRequestSchema,
   type Model,
-} from "../gen/proto/madsrc/llmgw/v1/model_management_pb";
+} from "../gen/proto/madsrc/trustedai/v1/model_management_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { useAuth } from "../hooks/useAuth";

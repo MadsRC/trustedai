@@ -11,18 +11,18 @@ import (
 	"log/slog"
 	"strings"
 
-	"codeberg.org/MadsRC/llmgw"
-	llmgwv1 "codeberg.org/MadsRC/llmgw/gen/proto/madsrc/llmgw/v1"
-	"codeberg.org/MadsRC/llmgw/internal/models"
-	"codeberg.org/MadsRC/llmgw/internal/postgres"
 	"codeberg.org/gai-org/gai"
 	openrouter "codeberg.org/gai-org/gai-provider-openrouter"
+	"github.com/MadsRC/trustedai"
+	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
+	"github.com/MadsRC/trustedai/internal/models"
+	"github.com/MadsRC/trustedai/internal/postgres"
 )
 
 type ModelRouter struct {
 	hardcodedProviders map[string]*models.Provider
-	modelRepo          llmgw.ModelRepository
-	credentialRepo     llmgw.CredentialRepository
+	modelRepo          trustedai.ModelRepository
+	credentialRepo     trustedai.CredentialRepository
 	logger             *slog.Logger
 }
 
@@ -76,13 +76,13 @@ func WithDatabase(pool postgres.PgxPoolInterface) Option {
 	}
 }
 
-func WithModelRepository(repo llmgw.ModelRepository) Option {
+func WithModelRepository(repo trustedai.ModelRepository) Option {
 	return func(mr *ModelRouter) {
 		mr.modelRepo = repo
 	}
 }
 
-func WithCredentialRepository(repo llmgw.CredentialRepository) Option {
+func WithCredentialRepository(repo trustedai.CredentialRepository) Option {
 	return func(mr *ModelRouter) {
 		mr.credentialRepo = repo
 	}
@@ -108,9 +108,9 @@ func New(opts ...Option) *ModelRouter {
 	return mr
 }
 
-func (mr *ModelRouter) createProviderClient(ctx context.Context, modelWithCreds *llmgw.ModelWithCredentials) (gai.ProviderClient, error) {
+func (mr *ModelRouter) createProviderClient(ctx context.Context, modelWithCreds *trustedai.ModelWithCredentials) (gai.ProviderClient, error) {
 	switch modelWithCreds.CredentialType {
-	case llmgwv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER:
+	case trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER:
 		creds, err := mr.credentialRepo.GetOpenRouterCredential(ctx, modelWithCreds.CredentialID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get OpenRouter credentials: %w", err)

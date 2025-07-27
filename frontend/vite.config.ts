@@ -20,7 +20,7 @@ export default defineConfig({
         changeOrigin: true,
       },
       // Proxy gRPC/Connect endpoints to backend
-      "/llmgw.v1": {
+      "/trustedai.v1": {
         target: "http://localhost:9999",
         changeOrigin: true,
       },

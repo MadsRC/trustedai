@@ -11,9 +11,9 @@ import (
 	"net/http"
 	"strings"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/auth"
 	"connectrpc.com/connect"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/auth"
 )
 
 // TokenInterceptor is a connect interceptor that handles API token authentication
@@ -115,7 +115,7 @@ func extractTokenFromHeader(header http.Header) string {
 type userContextKey struct{}
 
 // UserFromContext extracts the user from the context
-func UserFromContext(ctx context.Context) *llmgw.User {
-	user, _ := ctx.Value(userContextKey{}).(*llmgw.User)
+func UserFromContext(ctx context.Context) *trustedai.User {
+	user, _ := ctx.Value(userContextKey{}).(*trustedai.User)
 	return user
 }

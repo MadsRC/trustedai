@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/interfaces"
 )
 
 func TestNewDataPlaneServer(t *testing.T) {
@@ -176,7 +176,7 @@ func TestDataPlaneServer_HandleHello(t *testing.T) {
 		t.Fatalf("Failed to read response body: %v", err)
 	}
 
-	expectedBody := `{"message":"Hello, World!","server":"llmgw-dataplane"}`
+	expectedBody := `{"message":"Hello, World!","server":"trustedai-dataplane"}`
 	if string(body) != expectedBody {
 		t.Errorf("Expected body %s, got %s", expectedBody, string(body))
 	}

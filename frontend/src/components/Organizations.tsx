@@ -12,7 +12,7 @@ import {
   IAMServiceListOrganizationsRequestSchema,
   IAMServiceCreateOrganizationRequestSchema,
   OrganizationSchema,
-} from "../gen/proto/madsrc/llmgw/v1/iam_pb";
+} from "../gen/proto/madsrc/trustedai/v1/iam_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { useAuth } from "../hooks/useAuth";

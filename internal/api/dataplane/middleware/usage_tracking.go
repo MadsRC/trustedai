@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"codeberg.org/MadsRC/llmgw"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/auth"
-	"codeberg.org/MadsRC/llmgw/internal/api/dataplane/interfaces"
-	"codeberg.org/MadsRC/llmgw/internal/monitoring"
+	"github.com/MadsRC/trustedai"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/auth"
+	"github.com/MadsRC/trustedai/internal/api/dataplane/interfaces"
+	"github.com/MadsRC/trustedai/internal/monitoring"
 	"github.com/google/uuid"
 )
 
@@ -29,7 +29,7 @@ const (
 
 // PendingEvent represents an event waiting for provider data
 type PendingEvent struct {
-	Event     *llmgw.UsageEvent
+	Event     *trustedai.UsageEvent
 	CreatedAt time.Time
 	Updated   bool
 }
@@ -75,9 +75,9 @@ func WithChannelBuffer(buffer int) UsageTrackingOption {
 
 // UsageTrackingMiddleware captures usage events for all LLM requests
 type UsageTrackingMiddleware struct {
-	usageRepo     llmgw.UsageRepository
+	usageRepo     trustedai.UsageRepository
 	logger        *slog.Logger
-	eventsCh      chan *llmgw.UsageEvent
+	eventsCh      chan *trustedai.UsageEvent
 	done          chan struct{}
 	metrics       *monitoring.UsageMetrics
 	config        *UsageTrackingConfig
@@ -86,7 +86,7 @@ type UsageTrackingMiddleware struct {
 }
 
 // NewUsageTrackingMiddleware creates a new usage tracking middleware
-func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Logger, metrics *monitoring.UsageMetrics, opts ...UsageTrackingOption) *UsageTrackingMiddleware {
+func NewUsageTrackingMiddleware(usageRepo trustedai.UsageRepository, logger *slog.Logger, metrics *monitoring.UsageMetrics, opts ...UsageTrackingOption) *UsageTrackingMiddleware {
 	// Default configuration
 	config := &UsageTrackingConfig{
 		PendingEventTimeout: 5 * time.Minute,
@@ -103,7 +103,7 @@ func NewUsageTrackingMiddleware(usageRepo llmgw.UsageRepository, logger *slog.Lo
 	middleware := &UsageTrackingMiddleware{
 		usageRepo:     usageRepo,
 		logger:        logger,
-		eventsCh:      make(chan *llmgw.UsageEvent, config.ChannelBuffer),
+		eventsCh:      make(chan *trustedai.UsageEvent, config.ChannelBuffer),
 		done:          make(chan struct{}),
 		metrics:       metrics,
 		config:        config,
@@ -139,7 +139,7 @@ func (m *UsageTrackingMiddleware) Track(next http.Handler) http.Handler {
 		requestID := func() string { id, _ := uuid.NewV7(); return id.String() }()
 
 		// Create basic usage event (without token data) - will be updated later
-		event := &llmgw.UsageEvent{
+		event := &trustedai.UsageEvent{
 			ID:              func() string { id, _ := uuid.NewV7(); return id.String() }(),
 			RequestID:       requestID,
 			UserID:          userID,

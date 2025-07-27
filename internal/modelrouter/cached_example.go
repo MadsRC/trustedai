@@ -7,7 +7,7 @@ package modelrouter
 import (
 	"time"
 
-	"codeberg.org/MadsRC/llmgw/internal/postgres"
+	"github.com/MadsRC/trustedai/internal/postgres"
 )
 
 // ExampleUsage demonstrates how to create a ModelRouter with caching enabled
