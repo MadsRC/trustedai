@@ -2,10 +2,4 @@
 # SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run unit tests for the project"
-#MISE depends=["build:react"]
-
-# Run Go unit tests
-go test -count=1 "$@" ./...
-
-# Run frontend unit tests
-cd frontend && npm run test:unit
+#MISE depends=["test:unit:api", "test:unit:frontend"]

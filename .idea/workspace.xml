@@ -5,93 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8882fa6e-0f09-454f-b6ea-e359c824c5de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/p42-25-usage-tracking-cost-management.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/llmgw/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/llmgw/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/iam.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/iam.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/embed.go" beforeDir="false" afterPath="$PROJECT_DIR$/embed.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/errors.go" beforeDir="false" afterPath="$PROJECT_DIR$/errors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/APIKeys.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/APIKeys.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Analytics.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Analytics.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Credentials.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Credentials.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/MainArea.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MainArea.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Models.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Models.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Organizations.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Organizations.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/SSOConfigModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/SSOConfigModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Users.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Users.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/contexts/AuthContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/contexts/AuthContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/llmgw/v1/iam_pb.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/llmgw/v1/model_management_pb.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/llmgw/v1/usage_analytics_pb.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/types/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/types/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/iam.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/llmgwv1connect/iam.connect.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/llmgwv1connect/model_management.connect.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/llmgwv1connect/usage_analytics.connect.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/model_management.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/proto/madsrc/llmgw/v1/usage_analytics.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/iam.go" beforeDir="false" afterPath="$PROJECT_DIR$/iam.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/auth/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/auth/session.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/auth/token_authenticator.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/auth/token_authenticator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/auth/interceptor.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/auth/interceptor.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/auth/token_interceptor.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/auth/token_interceptor.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/iam.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/iam.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/iam_setup.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/iam_setup.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/iam_setup_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/iam_setup_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/model_management.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/model_management.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_setup.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_setup.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/ssocallback.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/ssocallback.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/ssocallback_setup.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/ssocallback_setup.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics_setup.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics_setup.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics_setup_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/usage_analytics_setup_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/auth/bearer_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/auth/bearer_middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/auth/combined_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/auth/combined_middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/auth/x_api_key_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/auth/x_api_key_middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/auth_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/auth_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/middleware/usage_tracking.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/middleware/usage_tracking.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/middleware/usage_tracking_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/middleware/usage_tracking_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/anthropic.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/anthropic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/anthropic_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/anthropic_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/openai.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/openai.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/server_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/server_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/tracked_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/tracked_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/bootstrap/bootstrap.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/bootstrap/bootstrap.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/modelrouter/cached_example.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/modelrouter/cached_example.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/modelrouter/modelrouter.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/modelrouter/modelrouter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/monitoring/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/monitoring/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/oidc/oidcprovider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/oidc/oidcprovider.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/billingrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/billingrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/cached_credential_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/cached_credential_repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/cached_model_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/cached_model_repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/credentialrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/credentialrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/migrate/migration_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/migrate/migration_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/modelrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/modelrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/organizationrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/organizationrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/organizationrepository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/organizationrepository_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/tokenrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/tokenrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/usagerepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/usagerepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/userrepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/userrepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/postgres/userrepository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/postgres/userrepository_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/cost_calculator.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/cost_calculator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/cost_calculator_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/cost_calculator_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proto/madsrc/llmgw/v1/iam.proto" beforeDir="false" afterPath="$PROJECT_DIR$/proto/madsrc/trustedai/v1/iam.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proto/madsrc/llmgw/v1/model_management.proto" beforeDir="false" afterPath="$PROJECT_DIR$/proto/madsrc/trustedai/v1/model_management.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proto/madsrc/llmgw/v1/usage_analytics.proto" beforeDir="false" afterPath="$PROJECT_DIR$/proto/madsrc/trustedai/v1/usage_analytics.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/build/go.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/build/go.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/dev/bootstrap.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dev/bootstrap.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sso.go" beforeDir="false" afterPath="$PROJECT_DIR$/sso.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usage.go" beforeDir="false" afterPath="$PROJECT_DIR$/usage.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/test/unit/api.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/test/unit/frontend.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/iam_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/iam_pb.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/model_management_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/model_management_pb.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/usage_analytics_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/usage_analytics_pb.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/test/unit/_default" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/test/unit/_default" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,14 +56,20 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "SHELLCHECK.PATH": "I do mind",
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/Users/user",
+    "last_opened_file_path": "/Users/user/git/trustedai/main/scripts/test/unit",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/test/unit" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
