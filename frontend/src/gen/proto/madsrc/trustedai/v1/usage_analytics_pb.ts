@@ -6,8 +6,16 @@
 // @generated from file proto/madsrc/trustedai/v1/usage_analytics.proto (package trustedai.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type {
+  GenFile,
+  GenMessage,
+  GenService,
+} from "@bufbuild/protobuf/codegenv2";
+import {
+  fileDesc,
+  messageDesc,
+  serviceDesc,
+} from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
@@ -15,8 +23,12 @@ import type { Message } from "@bufbuild/protobuf";
 /**
  * Describes the file proto/madsrc/trustedai/v1/usage_analytics.proto.
  */
-export const file_proto_madsrc_trustedai_v1_usage_analytics: GenFile = /*@__PURE__*/
-  fileDesc("Ci9wcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxL3VzYWdlX2FuYWx5dGljcy5wcm90bxIMdHJ1c3RlZGFpLnYxImEKC1VzYWdlUGVyaW9kEikKBXN0YXJ0GAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIqMBCgxVc2FnZVN1bW1hcnkSFgoOdG90YWxfcmVxdWVzdHMYASABKAUSGgoSdG90YWxfaW5wdXRfdG9rZW5zGAIgASgDEhsKE3RvdGFsX291dHB1dF90b2tlbnMYAyABKAMSGAoQdG90YWxfY29zdF9jZW50cxgEIAEoARIoCgZtb2RlbHMYBSADKAsyGC50cnVzdGVkYWkudjEuTW9kZWxVc2FnZSJxCgpNb2RlbFVzYWdlEhAKCG1vZGVsX2lkGAEgASgJEhAKCHJlcXVlc3RzGAIgASgFEhQKDGlucHV0X3Rva2VucxgDIAEoAxIVCg1vdXRwdXRfdG9rZW5zGAQgASgDEhIKCmNvc3RfY2VudHMYBSABKAEiyAUKClVzYWdlRXZlbnQSCgoCaWQYASABKAkSEgoKcmVxdWVzdF9pZBgCIAEoCRIPCgd1c2VyX2lkGAMgASgJEhAKCG1vZGVsX2lkGAQgASgJEhkKDGlucHV0X3Rva2VucxgFIAEoBUgAiAEBEhoKDW91dHB1dF90b2tlbnMYBiABKAVIAYgBARIaCg1jYWNoZWRfdG9rZW5zGAcgASgFSAKIAQESHQoQcmVhc29uaW5nX3Rva2VucxgIIAEoBUgDiAEBEg4KBnN0YXR1cxgJIAEoCRIaCg1mYWlsdXJlX3N0YWdlGAogASgJSASIAQESFwoKZXJyb3JfdHlwZRgLIAEoCUgFiAEBEhoKDWVycm9yX21lc3NhZ2UYDCABKAlIBogBARIZChF1c2FnZV9kYXRhX3NvdXJjZRgNIAEoCRIVCg1kYXRhX2NvbXBsZXRlGA4gASgIEi0KCXRpbWVzdGFtcBgPIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASGAoLZHVyYXRpb25fbXMYECABKAVIB4gBARIdChBpbnB1dF9jb3N0X2NlbnRzGBEgASgBSAiIAQESHgoRb3V0cHV0X2Nvc3RfY2VudHMYEiABKAFICYgBARIdChB0b3RhbF9jb3N0X2NlbnRzGBMgASgBSAqIAQFCDwoNX2lucHV0X3Rva2Vuc0IQCg5fb3V0cHV0X3Rva2Vuc0IQCg5fY2FjaGVkX3Rva2Vuc0ITChFfcmVhc29uaW5nX3Rva2Vuc0IQCg5fZmFpbHVyZV9zdGFnZUINCgtfZXJyb3JfdHlwZUIQCg5fZXJyb3JfbWVzc2FnZUIOCgxfZHVyYXRpb25fbXNCEwoRX2lucHV0X2Nvc3RfY2VudHNCFAoSX291dHB1dF9jb3N0X2NlbnRzQhMKEV90b3RhbF9jb3N0X2NlbnRzIncKEFVzZXJVc2FnZVN1bW1hcnkSDwoHdXNlcl9pZBgBIAEoCRISCgp1c2VyX2VtYWlsGAIgASgJEhEKCXVzZXJfbmFtZRgDIAEoCRIrCgdzdW1tYXJ5GAQgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeSK1AQorVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VTdW1tYXJ5UmVxdWVzdBIOCgZwZXJpb2QYASABKAkSKQoFc3RhcnQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoIbW9kZWxfaWQYBCABKAlIAIgBAUILCglfbW9kZWxfaWQihgEKLFVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlU3VtbWFyeVJlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIrCgdzdW1tYXJ5GAIgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeSLEAQorVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVxdWVzdBIpCgVzdGFydBgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCghtb2RlbF9pZBgDIAEoCUgAiAEBEg0KBWxpbWl0GAQgASgFEg4KBm9mZnNldBgFIAEoBUILCglfbW9kZWxfaWQibQosVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVzcG9uc2USKAoGZXZlbnRzGAEgAygLMhgudHJ1c3RlZGFpLnYxLlVzYWdlRXZlbnQSEwoLdG90YWxfY291bnQYAiABKAUiswEKKVVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlQ29zdHNSZXF1ZXN0Eg4KBnBlcmlvZBgBIAEoCRIpCgVzdGFydBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCghtb2RlbF9pZBgEIAEoCUgAiAEBQgsKCV9tb2RlbF9pZCKmAQoqVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1Jlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIzCg5jb3N0X2JyZWFrZG93bhgCIAMoCzIbLnRydXN0ZWRhaS52MS5Db3N0QnJlYWtkb3duEhgKEHRvdGFsX2Nvc3RfY2VudHMYAyABKAEiggEKDUNvc3RCcmVha2Rvd24SEAoIbW9kZWxfaWQYASABKAkSGAoQaW5wdXRfY29zdF9jZW50cxgCIAEoARIZChFvdXRwdXRfY29zdF9jZW50cxgDIAEoARIYChB0b3RhbF9jb3N0X2NlbnRzGAQgASgBEhAKCHJlcXVlc3RzGAUgASgFItoBCjdVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnlSZXF1ZXN0EhcKD29yZ2FuaXphdGlvbl9pZBgBIAEoCRIOCgZwZXJpb2QYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoIbW9kZWxfaWQYBSABKAlIAIgBAUILCglfbW9kZWxfaWQiygEKOFVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlU3VtbWFyeVJlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIrCgdzdW1tYXJ5GAIgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeRI2Cg51c2VyX3N1bW1hcmllcxgDIAMoCzIeLnRydXN0ZWRhaS52MS5Vc2VyVXNhZ2VTdW1tYXJ5IsQBCjZVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5VXNlclJlcXVlc3QSFwoPb3JnYW5pemF0aW9uX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEg0KBWxpbWl0GAQgASgFEg4KBm9mZnNldBgFIAEoBSKGAQo3VXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXJSZXNwb25zZRI2Cg51c2VyX3N1bW1hcmllcxgBIAMoCzIeLnRydXN0ZWRhaS52MS5Vc2VyVXNhZ2VTdW1tYXJ5EhMKC3RvdGFsX2NvdW50GAIgASgFIsUBCjdVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5TW9kZWxSZXF1ZXN0EhcKD29yZ2FuaXphdGlvbl9pZBgBIAEoCRIpCgVzdGFydBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBINCgVsaW1pdBgEIAEoBRIOCgZvZmZzZXQYBSABKAUifgo4VXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeU1vZGVsUmVzcG9uc2USLQoLbW9kZWxfdXNhZ2UYASADKAsyGC50cnVzdGVkYWkudjEuTW9kZWxVc2FnZRITCgt0b3RhbF9jb3VudBgCIAEoBTK8BwoVVXNhZ2VBbmFseXRpY3NTZXJ2aWNlEogBCg9HZXRVc2FnZVN1bW1hcnkSOS50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VTdW1tYXJ5UmVxdWVzdBo6LnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRVc2FnZVN1bW1hcnlSZXNwb25zZRKIAQoPR2V0VXNhZ2VEZXRhaWxzEjkudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlRGV0YWlsc1JlcXVlc3QaOi50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVzcG9uc2USggEKDUdldFVzYWdlQ29zdHMSNy50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1JlcXVlc3QaOC50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1Jlc3BvbnNlEqwBChtHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnkSRS50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VTdW1tYXJ5UmVxdWVzdBpGLnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnlSZXNwb25zZRKpAQoaR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXISRC50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXJSZXF1ZXN0GkUudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlQnlVc2VyUmVzcG9uc2USrAEKG0dldE9yZ2FuaXphdGlvblVzYWdlQnlNb2RlbBJFLnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5TW9kZWxSZXF1ZXN0GkYudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlQnlNb2RlbFJlc3BvbnNlQkdaRWdpdGh1Yi5jb20vTWFkc1JDL3RydXN0ZWRhaS9nZW4vcHJvdG8vbWFkc3JjL3RydXN0ZWRhaS92MTt0cnVzdGVkYWl2MWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+export const file_proto_madsrc_trustedai_v1_usage_analytics: GenFile =
+  /*@__PURE__*/
+  fileDesc(
+    "Ci9wcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxL3VzYWdlX2FuYWx5dGljcy5wcm90bxIMdHJ1c3RlZGFpLnYxImEKC1VzYWdlUGVyaW9kEikKBXN0YXJ0GAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIqMBCgxVc2FnZVN1bW1hcnkSFgoOdG90YWxfcmVxdWVzdHMYASABKAUSGgoSdG90YWxfaW5wdXRfdG9rZW5zGAIgASgDEhsKE3RvdGFsX291dHB1dF90b2tlbnMYAyABKAMSGAoQdG90YWxfY29zdF9jZW50cxgEIAEoARIoCgZtb2RlbHMYBSADKAsyGC50cnVzdGVkYWkudjEuTW9kZWxVc2FnZSJxCgpNb2RlbFVzYWdlEhAKCG1vZGVsX2lkGAEgASgJEhAKCHJlcXVlc3RzGAIgASgFEhQKDGlucHV0X3Rva2VucxgDIAEoAxIVCg1vdXRwdXRfdG9rZW5zGAQgASgDEhIKCmNvc3RfY2VudHMYBSABKAEiyAUKClVzYWdlRXZlbnQSCgoCaWQYASABKAkSEgoKcmVxdWVzdF9pZBgCIAEoCRIPCgd1c2VyX2lkGAMgASgJEhAKCG1vZGVsX2lkGAQgASgJEhkKDGlucHV0X3Rva2VucxgFIAEoBUgAiAEBEhoKDW91dHB1dF90b2tlbnMYBiABKAVIAYgBARIaCg1jYWNoZWRfdG9rZW5zGAcgASgFSAKIAQESHQoQcmVhc29uaW5nX3Rva2VucxgIIAEoBUgDiAEBEg4KBnN0YXR1cxgJIAEoCRIaCg1mYWlsdXJlX3N0YWdlGAogASgJSASIAQESFwoKZXJyb3JfdHlwZRgLIAEoCUgFiAEBEhoKDWVycm9yX21lc3NhZ2UYDCABKAlIBogBARIZChF1c2FnZV9kYXRhX3NvdXJjZRgNIAEoCRIVCg1kYXRhX2NvbXBsZXRlGA4gASgIEi0KCXRpbWVzdGFtcBgPIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASGAoLZHVyYXRpb25fbXMYECABKAVIB4gBARIdChBpbnB1dF9jb3N0X2NlbnRzGBEgASgBSAiIAQESHgoRb3V0cHV0X2Nvc3RfY2VudHMYEiABKAFICYgBARIdChB0b3RhbF9jb3N0X2NlbnRzGBMgASgBSAqIAQFCDwoNX2lucHV0X3Rva2Vuc0IQCg5fb3V0cHV0X3Rva2Vuc0IQCg5fY2FjaGVkX3Rva2Vuc0ITChFfcmVhc29uaW5nX3Rva2Vuc0IQCg5fZmFpbHVyZV9zdGFnZUINCgtfZXJyb3JfdHlwZUIQCg5fZXJyb3JfbWVzc2FnZUIOCgxfZHVyYXRpb25fbXNCEwoRX2lucHV0X2Nvc3RfY2VudHNCFAoSX291dHB1dF9jb3N0X2NlbnRzQhMKEV90b3RhbF9jb3N0X2NlbnRzIncKEFVzZXJVc2FnZVN1bW1hcnkSDwoHdXNlcl9pZBgBIAEoCRISCgp1c2VyX2VtYWlsGAIgASgJEhEKCXVzZXJfbmFtZRgDIAEoCRIrCgdzdW1tYXJ5GAQgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeSK1AQorVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VTdW1tYXJ5UmVxdWVzdBIOCgZwZXJpb2QYASABKAkSKQoFc3RhcnQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoIbW9kZWxfaWQYBCABKAlIAIgBAUILCglfbW9kZWxfaWQihgEKLFVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlU3VtbWFyeVJlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIrCgdzdW1tYXJ5GAIgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeSLEAQorVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVxdWVzdBIpCgVzdGFydBgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCghtb2RlbF9pZBgDIAEoCUgAiAEBEg0KBWxpbWl0GAQgASgFEg4KBm9mZnNldBgFIAEoBUILCglfbW9kZWxfaWQibQosVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVzcG9uc2USKAoGZXZlbnRzGAEgAygLMhgudHJ1c3RlZGFpLnYxLlVzYWdlRXZlbnQSEwoLdG90YWxfY291bnQYAiABKAUiswEKKVVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlQ29zdHNSZXF1ZXN0Eg4KBnBlcmlvZBgBIAEoCRIpCgVzdGFydBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCghtb2RlbF9pZBgEIAEoCUgAiAEBQgsKCV9tb2RlbF9pZCKmAQoqVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1Jlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIzCg5jb3N0X2JyZWFrZG93bhgCIAMoCzIbLnRydXN0ZWRhaS52MS5Db3N0QnJlYWtkb3duEhgKEHRvdGFsX2Nvc3RfY2VudHMYAyABKAEiggEKDUNvc3RCcmVha2Rvd24SEAoIbW9kZWxfaWQYASABKAkSGAoQaW5wdXRfY29zdF9jZW50cxgCIAEoARIZChFvdXRwdXRfY29zdF9jZW50cxgDIAEoARIYChB0b3RhbF9jb3N0X2NlbnRzGAQgASgBEhAKCHJlcXVlc3RzGAUgASgFItoBCjdVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnlSZXF1ZXN0EhcKD29yZ2FuaXphdGlvbl9pZBgBIAEoCRIOCgZwZXJpb2QYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoIbW9kZWxfaWQYBSABKAlIAIgBAUILCglfbW9kZWxfaWQiygEKOFVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlU3VtbWFyeVJlc3BvbnNlEikKBnBlcmlvZBgBIAEoCzIZLnRydXN0ZWRhaS52MS5Vc2FnZVBlcmlvZBIrCgdzdW1tYXJ5GAIgASgLMhoudHJ1c3RlZGFpLnYxLlVzYWdlU3VtbWFyeRI2Cg51c2VyX3N1bW1hcmllcxgDIAMoCzIeLnRydXN0ZWRhaS52MS5Vc2VyVXNhZ2VTdW1tYXJ5IsQBCjZVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5VXNlclJlcXVlc3QSFwoPb3JnYW5pemF0aW9uX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEg0KBWxpbWl0GAQgASgFEg4KBm9mZnNldBgFIAEoBSKGAQo3VXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXJSZXNwb25zZRI2Cg51c2VyX3N1bW1hcmllcxgBIAMoCzIeLnRydXN0ZWRhaS52MS5Vc2VyVXNhZ2VTdW1tYXJ5EhMKC3RvdGFsX2NvdW50GAIgASgFIsUBCjdVc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5TW9kZWxSZXF1ZXN0EhcKD29yZ2FuaXphdGlvbl9pZBgBIAEoCRIpCgVzdGFydBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBINCgVsaW1pdBgEIAEoBRIOCgZvZmZzZXQYBSABKAUifgo4VXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeU1vZGVsUmVzcG9uc2USLQoLbW9kZWxfdXNhZ2UYASADKAsyGC50cnVzdGVkYWkudjEuTW9kZWxVc2FnZRITCgt0b3RhbF9jb3VudBgCIAEoBTK8BwoVVXNhZ2VBbmFseXRpY3NTZXJ2aWNlEogBCg9HZXRVc2FnZVN1bW1hcnkSOS50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VTdW1tYXJ5UmVxdWVzdBo6LnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRVc2FnZVN1bW1hcnlSZXNwb25zZRKIAQoPR2V0VXNhZ2VEZXRhaWxzEjkudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldFVzYWdlRGV0YWlsc1JlcXVlc3QaOi50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VEZXRhaWxzUmVzcG9uc2USggEKDUdldFVzYWdlQ29zdHMSNy50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1JlcXVlc3QaOC50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0VXNhZ2VDb3N0c1Jlc3BvbnNlEqwBChtHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnkSRS50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VTdW1tYXJ5UmVxdWVzdBpGLnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZVN1bW1hcnlSZXNwb25zZRKpAQoaR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXISRC50cnVzdGVkYWkudjEuVXNhZ2VBbmFseXRpY3NTZXJ2aWNlR2V0T3JnYW5pemF0aW9uVXNhZ2VCeVVzZXJSZXF1ZXN0GkUudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlQnlVc2VyUmVzcG9uc2USrAEKG0dldE9yZ2FuaXphdGlvblVzYWdlQnlNb2RlbBJFLnRydXN0ZWRhaS52MS5Vc2FnZUFuYWx5dGljc1NlcnZpY2VHZXRPcmdhbml6YXRpb25Vc2FnZUJ5TW9kZWxSZXF1ZXN0GkYudHJ1c3RlZGFpLnYxLlVzYWdlQW5hbHl0aWNzU2VydmljZUdldE9yZ2FuaXphdGlvblVzYWdlQnlNb2RlbFJlc3BvbnNlQkdaRWdpdGh1Yi5jb20vTWFkc1JDL3RydXN0ZWRhaS9nZW4vcHJvdG8vbWFkc3JjL3RydXN0ZWRhaS92MTt0cnVzdGVkYWl2MWIGcHJvdG8z",
+    [file_google_protobuf_timestamp],
+  );
 
 /**
  * Core data structures
@@ -39,7 +51,8 @@ export type UsagePeriod = Message<"trustedai.v1.UsagePeriod"> & {
  * Describes the message trustedai.v1.UsagePeriod.
  * Use `create(UsagePeriodSchema)` to create a new message.
  */
-export const UsagePeriodSchema: GenMessage<UsagePeriod> = /*@__PURE__*/
+export const UsagePeriodSchema: GenMessage<UsagePeriod> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 0);
 
 /**
@@ -76,7 +89,8 @@ export type UsageSummary = Message<"trustedai.v1.UsageSummary"> & {
  * Describes the message trustedai.v1.UsageSummary.
  * Use `create(UsageSummarySchema)` to create a new message.
  */
-export const UsageSummarySchema: GenMessage<UsageSummary> = /*@__PURE__*/
+export const UsageSummarySchema: GenMessage<UsageSummary> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 1);
 
 /**
@@ -113,7 +127,8 @@ export type ModelUsage = Message<"trustedai.v1.ModelUsage"> & {
  * Describes the message trustedai.v1.ModelUsage.
  * Use `create(ModelUsageSchema)` to create a new message.
  */
-export const ModelUsageSchema: GenMessage<ModelUsage> = /*@__PURE__*/
+export const ModelUsageSchema: GenMessage<ModelUsage> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 2);
 
 /**
@@ -220,7 +235,8 @@ export type UsageEvent = Message<"trustedai.v1.UsageEvent"> & {
  * Describes the message trustedai.v1.UsageEvent.
  * Use `create(UsageEventSchema)` to create a new message.
  */
-export const UsageEventSchema: GenMessage<UsageEvent> = /*@__PURE__*/
+export const UsageEventSchema: GenMessage<UsageEvent> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 3);
 
 /**
@@ -252,7 +268,8 @@ export type UserUsageSummary = Message<"trustedai.v1.UserUsageSummary"> & {
  * Describes the message trustedai.v1.UserUsageSummary.
  * Use `create(UserUsageSummarySchema)` to create a new message.
  */
-export const UserUsageSummarySchema: GenMessage<UserUsageSummary> = /*@__PURE__*/
+export const UserUsageSummarySchema: GenMessage<UserUsageSummary> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 4);
 
 /**
@@ -260,59 +277,63 @@ export const UserUsageSummarySchema: GenMessage<UserUsageSummary> = /*@__PURE__*
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest
  */
-export type UsageAnalyticsServiceGetUsageSummaryRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest"> & {
-  /**
-   * "day", "week", "month"
-   *
-   * @generated from field: string period = 1;
-   */
-  period: string;
+export type UsageAnalyticsServiceGetUsageSummaryRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest"> & {
+    /**
+     * "day", "week", "month"
+     *
+     * @generated from field: string period = 1;
+     */
+    period: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 2;
-   */
-  start?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 2;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 3;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 3;
+     */
+    end?: Timestamp;
 
-  /**
-   * filter by specific model
-   *
-   * @generated from field: optional string model_id = 4;
-   */
-  modelId?: string;
-};
+    /**
+     * filter by specific model
+     *
+     * @generated from field: optional string model_id = 4;
+     */
+    modelId?: string;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageSummaryRequest.
  * Use `create(UsageAnalyticsServiceGetUsageSummaryRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageSummaryRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageSummaryRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageSummaryRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageSummaryRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 5);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse
  */
-export type UsageAnalyticsServiceGetUsageSummaryResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.UsagePeriod period = 1;
-   */
-  period?: UsagePeriod;
+export type UsageAnalyticsServiceGetUsageSummaryResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.UsagePeriod period = 1;
+     */
+    period?: UsagePeriod;
 
-  /**
-   * @generated from field: trustedai.v1.UsageSummary summary = 2;
-   */
-  summary?: UsageSummary;
-};
+    /**
+     * @generated from field: trustedai.v1.UsageSummary summary = 2;
+     */
+    summary?: UsageSummary;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageSummaryResponse.
  * Use `create(UsageAnalyticsServiceGetUsageSummaryResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageSummaryResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageSummaryResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageSummaryResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageSummaryResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 6);
 
 /**
@@ -320,62 +341,66 @@ export const UsageAnalyticsServiceGetUsageSummaryResponseSchema: GenMessage<Usag
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest
  */
-export type UsageAnalyticsServiceGetUsageDetailsRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest"> & {
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 1;
-   */
-  start?: Timestamp;
+export type UsageAnalyticsServiceGetUsageDetailsRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest"> & {
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 1;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 2;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 2;
+     */
+    end?: Timestamp;
 
-  /**
-   * filter by specific model
-   *
-   * @generated from field: optional string model_id = 3;
-   */
-  modelId?: string;
+    /**
+     * filter by specific model
+     *
+     * @generated from field: optional string model_id = 3;
+     */
+    modelId?: string;
 
-  /**
-   * @generated from field: int32 limit = 4;
-   */
-  limit: number;
+    /**
+     * @generated from field: int32 limit = 4;
+     */
+    limit: number;
 
-  /**
-   * @generated from field: int32 offset = 5;
-   */
-  offset: number;
-};
+    /**
+     * @generated from field: int32 offset = 5;
+     */
+    offset: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageDetailsRequest.
  * Use `create(UsageAnalyticsServiceGetUsageDetailsRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageDetailsRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageDetailsRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageDetailsRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageDetailsRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 7);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse
  */
-export type UsageAnalyticsServiceGetUsageDetailsResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.UsageEvent events = 1;
-   */
-  events: UsageEvent[];
+export type UsageAnalyticsServiceGetUsageDetailsResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.UsageEvent events = 1;
+     */
+    events: UsageEvent[];
 
-  /**
-   * @generated from field: int32 total_count = 2;
-   */
-  totalCount: number;
-};
+    /**
+     * @generated from field: int32 total_count = 2;
+     */
+    totalCount: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageDetailsResponse.
  * Use `create(UsageAnalyticsServiceGetUsageDetailsResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageDetailsResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageDetailsResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageDetailsResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageDetailsResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 8);
 
 /**
@@ -383,64 +408,68 @@ export const UsageAnalyticsServiceGetUsageDetailsResponseSchema: GenMessage<Usag
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest
  */
-export type UsageAnalyticsServiceGetUsageCostsRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest"> & {
-  /**
-   * "day", "week", "month"
-   *
-   * @generated from field: string period = 1;
-   */
-  period: string;
+export type UsageAnalyticsServiceGetUsageCostsRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest"> & {
+    /**
+     * "day", "week", "month"
+     *
+     * @generated from field: string period = 1;
+     */
+    period: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 2;
-   */
-  start?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 2;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 3;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 3;
+     */
+    end?: Timestamp;
 
-  /**
-   * filter by specific model
-   *
-   * @generated from field: optional string model_id = 4;
-   */
-  modelId?: string;
-};
+    /**
+     * filter by specific model
+     *
+     * @generated from field: optional string model_id = 4;
+     */
+    modelId?: string;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageCostsRequest.
  * Use `create(UsageAnalyticsServiceGetUsageCostsRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageCostsRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageCostsRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageCostsRequestSchema: GenMessage<UsageAnalyticsServiceGetUsageCostsRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 9);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse
  */
-export type UsageAnalyticsServiceGetUsageCostsResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.UsagePeriod period = 1;
-   */
-  period?: UsagePeriod;
+export type UsageAnalyticsServiceGetUsageCostsResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.UsagePeriod period = 1;
+     */
+    period?: UsagePeriod;
 
-  /**
-   * @generated from field: repeated trustedai.v1.CostBreakdown cost_breakdown = 2;
-   */
-  costBreakdown: CostBreakdown[];
+    /**
+     * @generated from field: repeated trustedai.v1.CostBreakdown cost_breakdown = 2;
+     */
+    costBreakdown: CostBreakdown[];
 
-  /**
-   * @generated from field: double total_cost_cents = 3;
-   */
-  totalCostCents: number;
-};
+    /**
+     * @generated from field: double total_cost_cents = 3;
+     */
+    totalCostCents: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetUsageCostsResponse.
  * Use `create(UsageAnalyticsServiceGetUsageCostsResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetUsageCostsResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageCostsResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetUsageCostsResponseSchema: GenMessage<UsageAnalyticsServiceGetUsageCostsResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 10);
 
 /**
@@ -477,7 +506,8 @@ export type CostBreakdown = Message<"trustedai.v1.CostBreakdown"> & {
  * Describes the message trustedai.v1.CostBreakdown.
  * Use `create(CostBreakdownSchema)` to create a new message.
  */
-export const CostBreakdownSchema: GenMessage<CostBreakdown> = /*@__PURE__*/
+export const CostBreakdownSchema: GenMessage<CostBreakdown> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 11);
 
 /**
@@ -485,69 +515,73 @@ export const CostBreakdownSchema: GenMessage<CostBreakdown> = /*@__PURE__*/
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest
  */
-export type UsageAnalyticsServiceGetOrganizationUsageSummaryRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest"> & {
-  /**
-   * @generated from field: string organization_id = 1;
-   */
-  organizationId: string;
+export type UsageAnalyticsServiceGetOrganizationUsageSummaryRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest"> & {
+    /**
+     * @generated from field: string organization_id = 1;
+     */
+    organizationId: string;
 
-  /**
-   * "day", "week", "month"
-   *
-   * @generated from field: string period = 2;
-   */
-  period: string;
+    /**
+     * "day", "week", "month"
+     *
+     * @generated from field: string period = 2;
+     */
+    period: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 3;
-   */
-  start?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 3;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 4;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 4;
+     */
+    end?: Timestamp;
 
-  /**
-   * filter by specific model
-   *
-   * @generated from field: optional string model_id = 5;
-   */
-  modelId?: string;
-};
+    /**
+     * filter by specific model
+     *
+     * @generated from field: optional string model_id = 5;
+     */
+    modelId?: string;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryRequest.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageSummaryRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageSummaryRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageSummaryRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageSummaryRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageSummaryRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 12);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse
  */
-export type UsageAnalyticsServiceGetOrganizationUsageSummaryResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.UsagePeriod period = 1;
-   */
-  period?: UsagePeriod;
+export type UsageAnalyticsServiceGetOrganizationUsageSummaryResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.UsagePeriod period = 1;
+     */
+    period?: UsagePeriod;
 
-  /**
-   * @generated from field: trustedai.v1.UsageSummary summary = 2;
-   */
-  summary?: UsageSummary;
+    /**
+     * @generated from field: trustedai.v1.UsageSummary summary = 2;
+     */
+    summary?: UsageSummary;
 
-  /**
-   * @generated from field: repeated trustedai.v1.UserUsageSummary user_summaries = 3;
-   */
-  userSummaries: UserUsageSummary[];
-};
+    /**
+     * @generated from field: repeated trustedai.v1.UserUsageSummary user_summaries = 3;
+     */
+    userSummaries: UserUsageSummary[];
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageSummaryResponse.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageSummaryResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageSummaryResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageSummaryResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageSummaryResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageSummaryResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 13);
 
 /**
@@ -555,60 +589,64 @@ export const UsageAnalyticsServiceGetOrganizationUsageSummaryResponseSchema: Gen
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest
  */
-export type UsageAnalyticsServiceGetOrganizationUsageByUserRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest"> & {
-  /**
-   * @generated from field: string organization_id = 1;
-   */
-  organizationId: string;
+export type UsageAnalyticsServiceGetOrganizationUsageByUserRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest"> & {
+    /**
+     * @generated from field: string organization_id = 1;
+     */
+    organizationId: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 2;
-   */
-  start?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 2;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 3;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 3;
+     */
+    end?: Timestamp;
 
-  /**
-   * @generated from field: int32 limit = 4;
-   */
-  limit: number;
+    /**
+     * @generated from field: int32 limit = 4;
+     */
+    limit: number;
 
-  /**
-   * @generated from field: int32 offset = 5;
-   */
-  offset: number;
-};
+    /**
+     * @generated from field: int32 offset = 5;
+     */
+    offset: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserRequest.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageByUserRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageByUserRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByUserRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageByUserRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 14);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse
  */
-export type UsageAnalyticsServiceGetOrganizationUsageByUserResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.UserUsageSummary user_summaries = 1;
-   */
-  userSummaries: UserUsageSummary[];
+export type UsageAnalyticsServiceGetOrganizationUsageByUserResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.UserUsageSummary user_summaries = 1;
+     */
+    userSummaries: UserUsageSummary[];
 
-  /**
-   * @generated from field: int32 total_count = 2;
-   */
-  totalCount: number;
-};
+    /**
+     * @generated from field: int32 total_count = 2;
+     */
+    totalCount: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByUserResponse.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageByUserResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageByUserResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByUserResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageByUserResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 15);
 
 /**
@@ -616,60 +654,64 @@ export const UsageAnalyticsServiceGetOrganizationUsageByUserResponseSchema: GenM
  *
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest
  */
-export type UsageAnalyticsServiceGetOrganizationUsageByModelRequest = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest"> & {
-  /**
-   * @generated from field: string organization_id = 1;
-   */
-  organizationId: string;
+export type UsageAnalyticsServiceGetOrganizationUsageByModelRequest =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest"> & {
+    /**
+     * @generated from field: string organization_id = 1;
+     */
+    organizationId: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp start = 2;
-   */
-  start?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp start = 2;
+     */
+    start?: Timestamp;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp end = 3;
-   */
-  end?: Timestamp;
+    /**
+     * @generated from field: google.protobuf.Timestamp end = 3;
+     */
+    end?: Timestamp;
 
-  /**
-   * @generated from field: int32 limit = 4;
-   */
-  limit: number;
+    /**
+     * @generated from field: int32 limit = 4;
+     */
+    limit: number;
 
-  /**
-   * @generated from field: int32 offset = 5;
-   */
-  offset: number;
-};
+    /**
+     * @generated from field: int32 offset = 5;
+     */
+    offset: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelRequest.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageByModelRequestSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageByModelRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByModelRequest> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageByModelRequestSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByModelRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 16);
 
 /**
  * @generated from message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse
  */
-export type UsageAnalyticsServiceGetOrganizationUsageByModelResponse = Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.ModelUsage model_usage = 1;
-   */
-  modelUsage: ModelUsage[];
+export type UsageAnalyticsServiceGetOrganizationUsageByModelResponse =
+  Message<"trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.ModelUsage model_usage = 1;
+     */
+    modelUsage: ModelUsage[];
 
-  /**
-   * @generated from field: int32 total_count = 2;
-   */
-  totalCount: number;
-};
+    /**
+     * @generated from field: int32 total_count = 2;
+     */
+    totalCount: number;
+  };
 
 /**
  * Describes the message trustedai.v1.UsageAnalyticsServiceGetOrganizationUsageByModelResponse.
  * Use `create(UsageAnalyticsServiceGetOrganizationUsageByModelResponseSchema)` to create a new message.
  */
-export const UsageAnalyticsServiceGetOrganizationUsageByModelResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByModelResponse> = /*@__PURE__*/
+export const UsageAnalyticsServiceGetOrganizationUsageByModelResponseSchema: GenMessage<UsageAnalyticsServiceGetOrganizationUsageByModelResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 17);
 
 /**
@@ -685,7 +727,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetUsageSummaryRequestSchema;
     output: typeof UsageAnalyticsServiceGetUsageSummaryResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.UsageAnalyticsService.GetUsageDetails
    */
@@ -693,7 +735,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetUsageDetailsRequestSchema;
     output: typeof UsageAnalyticsServiceGetUsageDetailsResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.UsageAnalyticsService.GetUsageCosts
    */
@@ -701,7 +743,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetUsageCostsRequestSchema;
     output: typeof UsageAnalyticsServiceGetUsageCostsResponseSchema;
-  },
+  };
   /**
    * Organization reporting (admin only)
    *
@@ -711,7 +753,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetOrganizationUsageSummaryRequestSchema;
     output: typeof UsageAnalyticsServiceGetOrganizationUsageSummaryResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByUser
    */
@@ -719,7 +761,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetOrganizationUsageByUserRequestSchema;
     output: typeof UsageAnalyticsServiceGetOrganizationUsageByUserResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.UsageAnalyticsService.GetOrganizationUsageByModel
    */
@@ -727,7 +769,7 @@ export const UsageAnalyticsService: GenService<{
     methodKind: "unary";
     input: typeof UsageAnalyticsServiceGetOrganizationUsageByModelRequestSchema;
     output: typeof UsageAnalyticsServiceGetOrganizationUsageByModelResponseSchema;
-  },
-}> = /*@__PURE__*/
+  };
+}> =
+  /*@__PURE__*/
   serviceDesc(file_proto_madsrc_trustedai_v1_usage_analytics, 0);
-

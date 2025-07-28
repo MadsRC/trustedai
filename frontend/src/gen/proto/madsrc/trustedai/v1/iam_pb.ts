@@ -6,8 +6,16 @@
 // @generated from file proto/madsrc/trustedai/v1/iam.proto (package trustedai.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type {
+  GenFile,
+  GenMessage,
+  GenService,
+} from "@bufbuild/protobuf/codegenv2";
+import {
+  fileDesc,
+  messageDesc,
+  serviceDesc,
+} from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
@@ -15,8 +23,12 @@ import type { Message } from "@bufbuild/protobuf";
 /**
  * Describes the file proto/madsrc/trustedai/v1/iam.proto.
  */
-export const file_proto_madsrc_trustedai_v1_iam: GenFile = /*@__PURE__*/
-  fileDesc("CiNwcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxL2lhbS5wcm90bxIMdHJ1c3RlZGFpLnYxIuUBCgRVc2VyEgoKAmlkGAEgASgJEg0KBWVtYWlsGAIgASgJEgwKBG5hbWUYAyABKAkSFwoPb3JnYW5pemF0aW9uX2lkGAQgASgJEhMKC2V4dGVybmFsX2lkGAUgASgJEhAKCHByb3ZpZGVyGAYgASgJEhQKDHN5c3RlbV9hZG1pbhgHIAEoCBIuCgpjcmVhdGVkX2F0GAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIuCgpsYXN0X2xvZ2luGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKnAQoMT3JnYW5pemF0aW9uEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSFAoMZGlzcGxheV9uYW1lGAMgASgJEhEKCWlzX3N5c3RlbRgEIAEoCBIuCgpjcmVhdGVkX2F0GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIQCghzc29fdHlwZRgGIAEoCRISCgpzc29fY29uZmlnGAcgASgJIs4BCghBUElUb2tlbhIKCgJpZBgBIAEoCRIPCgd1c2VyX2lkGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEi4KCmNyZWF0ZWRfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCmV4cGlyZXNfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjAKDGxhc3RfdXNlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiPwobSUFNU2VydmljZUNyZWF0ZVVzZXJSZXF1ZXN0EiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlciJAChxJQU1TZXJ2aWNlQ3JlYXRlVXNlclJlc3BvbnNlEiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlciImChhJQU1TZXJ2aWNlR2V0VXNlclJlcXVlc3QSCgoCaWQYASABKAkiPQoZSUFNU2VydmljZUdldFVzZXJSZXNwb25zZRIgCgR1c2VyGAEgASgLMhIudHJ1c3RlZGFpLnYxLlVzZXIiMAofSUFNU2VydmljZUdldFVzZXJCeUVtYWlsUmVxdWVzdBINCgVlbWFpbBgBIAEoCSJECiBJQU1TZXJ2aWNlR2V0VXNlckJ5RW1haWxSZXNwb25zZRIgCgR1c2VyGAEgASgLMhIudHJ1c3RlZGFpLnYxLlVzZXIiTQokSUFNU2VydmljZUdldFVzZXJCeUV4dGVybmFsSURSZXF1ZXN0EhAKCHByb3ZpZGVyGAEgASgJEhMKC2V4dGVybmFsX2lkGAIgASgJIkkKJUlBTVNlcnZpY2VHZXRVc2VyQnlFeHRlcm5hbElEUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIiEKH0lBTVNlcnZpY2VHZXRDdXJyZW50VXNlclJlcXVlc3QiRAogSUFNU2VydmljZUdldEN1cnJlbnRVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIkMKKElBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlcXVlc3QSFwoPb3JnYW5pemF0aW9uX2lkGAEgASgJIk4KKUlBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlc3BvbnNlEiEKBXVzZXJzGAEgAygLMhIudHJ1c3RlZGFpLnYxLlVzZXIiWQobSUFNU2VydmljZVVwZGF0ZVVzZXJSZXF1ZXN0EiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlchIYChBoYXNfc3lzdGVtX2FkbWluGAIgASgIIkAKHElBTVNlcnZpY2VVcGRhdGVVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIikKG0lBTVNlcnZpY2VEZWxldGVVc2VyUmVxdWVzdBIKCgJpZBgBIAEoCSIvChxJQU1TZXJ2aWNlRGVsZXRlVXNlclJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgiVwojSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlcXVlc3QSMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiJYCiRJQU1TZXJ2aWNlQ3JlYXRlT3JnYW5pemF0aW9uUmVzcG9uc2USMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiIuCiBJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJVCiFJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVzcG9uc2USMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiI2CiZJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVxdWVzdBIMCgRuYW1lGAEgASgJIlsKJ0lBTVNlcnZpY2VHZXRPcmdhbml6YXRpb25CeU5hbWVSZXNwb25zZRIwCgxvcmdhbml6YXRpb24YASABKAsyGi50cnVzdGVkYWkudjEuT3JnYW5pemF0aW9uIiQKIklBTVNlcnZpY2VMaXN0T3JnYW5pemF0aW9uc1JlcXVlc3QiWAojSUFNU2VydmljZUxpc3RPcmdhbml6YXRpb25zUmVzcG9uc2USMQoNb3JnYW5pemF0aW9ucxgBIAMoCzIaLnRydXN0ZWRhaS52MS5Pcmdhbml6YXRpb24ibgojSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlcXVlc3QSMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbhIVCg1oYXNfaXNfc3lzdGVtGAIgASgIIlgKJElBTVNlcnZpY2VVcGRhdGVPcmdhbml6YXRpb25SZXNwb25zZRIwCgxvcmdhbml6YXRpb24YASABKAsyGi50cnVzdGVkYWkudjEuT3JnYW5pemF0aW9uIkAKI0lBTVNlcnZpY2VEZWxldGVPcmdhbml6YXRpb25SZXF1ZXN0EgoKAmlkGAEgASgJEg0KBWZvcmNlGAIgASgIIjcKJElBTVNlcnZpY2VEZWxldGVPcmdhbml6YXRpb25SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIInQKHElBTVNlcnZpY2VDcmVhdGVUb2tlblJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRIuCgpleHBpcmVzX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJZCh1JQU1TZXJ2aWNlQ3JlYXRlVG9rZW5SZXNwb25zZRIlCgV0b2tlbhgBIAEoCzIWLnRydXN0ZWRhaS52MS5BUElUb2tlbhIRCglyYXdfdG9rZW4YAiABKAkiMgofSUFNU2VydmljZUxpc3RVc2VyVG9rZW5zUmVxdWVzdBIPCgd1c2VyX2lkGAEgASgJIkoKIElBTVNlcnZpY2VMaXN0VXNlclRva2Vuc1Jlc3BvbnNlEiYKBnRva2VucxgBIAMoCzIWLnRydXN0ZWRhaS52MS5BUElUb2tlbiIwChxJQU1TZXJ2aWNlUmV2b2tlVG9rZW5SZXF1ZXN0EhAKCHRva2VuX2lkGAEgASgJIjAKHUlBTVNlcnZpY2VSZXZva2VUb2tlblJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgysw8KCklBTVNlcnZpY2USYwoKQ3JlYXRlVXNlchIpLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlQ3JlYXRlVXNlclJlcXVlc3QaKi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZVVzZXJSZXNwb25zZRJaCgdHZXRVc2VyEiYudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRVc2VyUmVxdWVzdBonLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0VXNlclJlc3BvbnNlEm8KDkdldFVzZXJCeUVtYWlsEi0udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRVc2VyQnlFbWFpbFJlcXVlc3QaLi50cnVzdGVkYWkudjEuSUFNU2VydmljZUdldFVzZXJCeUVtYWlsUmVzcG9uc2USfgoTR2V0VXNlckJ5RXh0ZXJuYWxJRBIyLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0VXNlckJ5RXh0ZXJuYWxJRFJlcXVlc3QaMy50cnVzdGVkYWkudjEuSUFNU2VydmljZUdldFVzZXJCeUV4dGVybmFsSURSZXNwb25zZRJvCg5HZXRDdXJyZW50VXNlchItLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0Q3VycmVudFVzZXJSZXF1ZXN0Gi4udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRDdXJyZW50VXNlclJlc3BvbnNlEooBChdMaXN0VXNlcnNCeU9yZ2FuaXphdGlvbhI2LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdFVzZXJzQnlPcmdhbml6YXRpb25SZXF1ZXN0GjcudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlc3BvbnNlEmMKClVwZGF0ZVVzZXISKS50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZVVzZXJSZXF1ZXN0GioudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VVcGRhdGVVc2VyUmVzcG9uc2USYwoKRGVsZXRlVXNlchIpLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlVXNlclJlcXVlc3QaKi50cnVzdGVkYWkudjEuSUFNU2VydmljZURlbGV0ZVVzZXJSZXNwb25zZRJ7ChJDcmVhdGVPcmdhbml6YXRpb24SMS50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlcXVlc3QaMi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlc3BvbnNlEnIKD0dldE9yZ2FuaXphdGlvbhIuLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVxdWVzdBovLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVzcG9uc2UShAEKFUdldE9yZ2FuaXphdGlvbkJ5TmFtZRI0LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVxdWVzdBo1LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVzcG9uc2USeAoRTGlzdE9yZ2FuaXphdGlvbnMSMC50cnVzdGVkYWkudjEuSUFNU2VydmljZUxpc3RPcmdhbml6YXRpb25zUmVxdWVzdBoxLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdE9yZ2FuaXphdGlvbnNSZXNwb25zZRJ7ChJVcGRhdGVPcmdhbml6YXRpb24SMS50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlcXVlc3QaMi50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlc3BvbnNlEnsKEkRlbGV0ZU9yZ2FuaXphdGlvbhIxLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlT3JnYW5pemF0aW9uUmVxdWVzdBoyLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlT3JnYW5pemF0aW9uUmVzcG9uc2USZgoLQ3JlYXRlVG9rZW4SKi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZVRva2VuUmVxdWVzdBorLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlQ3JlYXRlVG9rZW5SZXNwb25zZRJvCg5MaXN0VXNlclRva2VucxItLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdFVzZXJUb2tlbnNSZXF1ZXN0Gi4udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VMaXN0VXNlclRva2Vuc1Jlc3BvbnNlEmYKC1Jldm9rZVRva2VuEioudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VSZXZva2VUb2tlblJlcXVlc3QaKy50cnVzdGVkYWkudjEuSUFNU2VydmljZVJldm9rZVRva2VuUmVzcG9uc2VCR1pFZ2l0aHViLmNvbS9NYWRzUkMvdHJ1c3RlZGFpL2dlbi9wcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxO3RydXN0ZWRhaXYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+export const file_proto_madsrc_trustedai_v1_iam: GenFile =
+  /*@__PURE__*/
+  fileDesc(
+    "CiNwcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxL2lhbS5wcm90bxIMdHJ1c3RlZGFpLnYxIuUBCgRVc2VyEgoKAmlkGAEgASgJEg0KBWVtYWlsGAIgASgJEgwKBG5hbWUYAyABKAkSFwoPb3JnYW5pemF0aW9uX2lkGAQgASgJEhMKC2V4dGVybmFsX2lkGAUgASgJEhAKCHByb3ZpZGVyGAYgASgJEhQKDHN5c3RlbV9hZG1pbhgHIAEoCBIuCgpjcmVhdGVkX2F0GAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIuCgpsYXN0X2xvZ2luGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKnAQoMT3JnYW5pemF0aW9uEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSFAoMZGlzcGxheV9uYW1lGAMgASgJEhEKCWlzX3N5c3RlbRgEIAEoCBIuCgpjcmVhdGVkX2F0GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIQCghzc29fdHlwZRgGIAEoCRISCgpzc29fY29uZmlnGAcgASgJIs4BCghBUElUb2tlbhIKCgJpZBgBIAEoCRIPCgd1c2VyX2lkGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEi4KCmNyZWF0ZWRfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCmV4cGlyZXNfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjAKDGxhc3RfdXNlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiPwobSUFNU2VydmljZUNyZWF0ZVVzZXJSZXF1ZXN0EiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlciJAChxJQU1TZXJ2aWNlQ3JlYXRlVXNlclJlc3BvbnNlEiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlciImChhJQU1TZXJ2aWNlR2V0VXNlclJlcXVlc3QSCgoCaWQYASABKAkiPQoZSUFNU2VydmljZUdldFVzZXJSZXNwb25zZRIgCgR1c2VyGAEgASgLMhIudHJ1c3RlZGFpLnYxLlVzZXIiMAofSUFNU2VydmljZUdldFVzZXJCeUVtYWlsUmVxdWVzdBINCgVlbWFpbBgBIAEoCSJECiBJQU1TZXJ2aWNlR2V0VXNlckJ5RW1haWxSZXNwb25zZRIgCgR1c2VyGAEgASgLMhIudHJ1c3RlZGFpLnYxLlVzZXIiTQokSUFNU2VydmljZUdldFVzZXJCeUV4dGVybmFsSURSZXF1ZXN0EhAKCHByb3ZpZGVyGAEgASgJEhMKC2V4dGVybmFsX2lkGAIgASgJIkkKJUlBTVNlcnZpY2VHZXRVc2VyQnlFeHRlcm5hbElEUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIiEKH0lBTVNlcnZpY2VHZXRDdXJyZW50VXNlclJlcXVlc3QiRAogSUFNU2VydmljZUdldEN1cnJlbnRVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIkMKKElBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlcXVlc3QSFwoPb3JnYW5pemF0aW9uX2lkGAEgASgJIk4KKUlBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlc3BvbnNlEiEKBXVzZXJzGAEgAygLMhIudHJ1c3RlZGFpLnYxLlVzZXIiWQobSUFNU2VydmljZVVwZGF0ZVVzZXJSZXF1ZXN0EiAKBHVzZXIYASABKAsyEi50cnVzdGVkYWkudjEuVXNlchIYChBoYXNfc3lzdGVtX2FkbWluGAIgASgIIkAKHElBTVNlcnZpY2VVcGRhdGVVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLnRydXN0ZWRhaS52MS5Vc2VyIikKG0lBTVNlcnZpY2VEZWxldGVVc2VyUmVxdWVzdBIKCgJpZBgBIAEoCSIvChxJQU1TZXJ2aWNlRGVsZXRlVXNlclJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgiVwojSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlcXVlc3QSMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiJYCiRJQU1TZXJ2aWNlQ3JlYXRlT3JnYW5pemF0aW9uUmVzcG9uc2USMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiIuCiBJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJVCiFJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVzcG9uc2USMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbiI2CiZJQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVxdWVzdBIMCgRuYW1lGAEgASgJIlsKJ0lBTVNlcnZpY2VHZXRPcmdhbml6YXRpb25CeU5hbWVSZXNwb25zZRIwCgxvcmdhbml6YXRpb24YASABKAsyGi50cnVzdGVkYWkudjEuT3JnYW5pemF0aW9uIiQKIklBTVNlcnZpY2VMaXN0T3JnYW5pemF0aW9uc1JlcXVlc3QiWAojSUFNU2VydmljZUxpc3RPcmdhbml6YXRpb25zUmVzcG9uc2USMQoNb3JnYW5pemF0aW9ucxgBIAMoCzIaLnRydXN0ZWRhaS52MS5Pcmdhbml6YXRpb24ibgojSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlcXVlc3QSMAoMb3JnYW5pemF0aW9uGAEgASgLMhoudHJ1c3RlZGFpLnYxLk9yZ2FuaXphdGlvbhIVCg1oYXNfaXNfc3lzdGVtGAIgASgIIlgKJElBTVNlcnZpY2VVcGRhdGVPcmdhbml6YXRpb25SZXNwb25zZRIwCgxvcmdhbml6YXRpb24YASABKAsyGi50cnVzdGVkYWkudjEuT3JnYW5pemF0aW9uIkAKI0lBTVNlcnZpY2VEZWxldGVPcmdhbml6YXRpb25SZXF1ZXN0EgoKAmlkGAEgASgJEg0KBWZvcmNlGAIgASgIIjcKJElBTVNlcnZpY2VEZWxldGVPcmdhbml6YXRpb25SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIInQKHElBTVNlcnZpY2VDcmVhdGVUb2tlblJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRIuCgpleHBpcmVzX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJZCh1JQU1TZXJ2aWNlQ3JlYXRlVG9rZW5SZXNwb25zZRIlCgV0b2tlbhgBIAEoCzIWLnRydXN0ZWRhaS52MS5BUElUb2tlbhIRCglyYXdfdG9rZW4YAiABKAkiMgofSUFNU2VydmljZUxpc3RVc2VyVG9rZW5zUmVxdWVzdBIPCgd1c2VyX2lkGAEgASgJIkoKIElBTVNlcnZpY2VMaXN0VXNlclRva2Vuc1Jlc3BvbnNlEiYKBnRva2VucxgBIAMoCzIWLnRydXN0ZWRhaS52MS5BUElUb2tlbiIwChxJQU1TZXJ2aWNlUmV2b2tlVG9rZW5SZXF1ZXN0EhAKCHRva2VuX2lkGAEgASgJIjAKHUlBTVNlcnZpY2VSZXZva2VUb2tlblJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgysw8KCklBTVNlcnZpY2USYwoKQ3JlYXRlVXNlchIpLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlQ3JlYXRlVXNlclJlcXVlc3QaKi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZVVzZXJSZXNwb25zZRJaCgdHZXRVc2VyEiYudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRVc2VyUmVxdWVzdBonLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0VXNlclJlc3BvbnNlEm8KDkdldFVzZXJCeUVtYWlsEi0udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRVc2VyQnlFbWFpbFJlcXVlc3QaLi50cnVzdGVkYWkudjEuSUFNU2VydmljZUdldFVzZXJCeUVtYWlsUmVzcG9uc2USfgoTR2V0VXNlckJ5RXh0ZXJuYWxJRBIyLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0VXNlckJ5RXh0ZXJuYWxJRFJlcXVlc3QaMy50cnVzdGVkYWkudjEuSUFNU2VydmljZUdldFVzZXJCeUV4dGVybmFsSURSZXNwb25zZRJvCg5HZXRDdXJyZW50VXNlchItLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0Q3VycmVudFVzZXJSZXF1ZXN0Gi4udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VHZXRDdXJyZW50VXNlclJlc3BvbnNlEooBChdMaXN0VXNlcnNCeU9yZ2FuaXphdGlvbhI2LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdFVzZXJzQnlPcmdhbml6YXRpb25SZXF1ZXN0GjcudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VMaXN0VXNlcnNCeU9yZ2FuaXphdGlvblJlc3BvbnNlEmMKClVwZGF0ZVVzZXISKS50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZVVzZXJSZXF1ZXN0GioudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VVcGRhdGVVc2VyUmVzcG9uc2USYwoKRGVsZXRlVXNlchIpLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlVXNlclJlcXVlc3QaKi50cnVzdGVkYWkudjEuSUFNU2VydmljZURlbGV0ZVVzZXJSZXNwb25zZRJ7ChJDcmVhdGVPcmdhbml6YXRpb24SMS50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlcXVlc3QaMi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZU9yZ2FuaXphdGlvblJlc3BvbnNlEnIKD0dldE9yZ2FuaXphdGlvbhIuLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVxdWVzdBovLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uUmVzcG9uc2UShAEKFUdldE9yZ2FuaXphdGlvbkJ5TmFtZRI0LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVxdWVzdBo1LnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlR2V0T3JnYW5pemF0aW9uQnlOYW1lUmVzcG9uc2USeAoRTGlzdE9yZ2FuaXphdGlvbnMSMC50cnVzdGVkYWkudjEuSUFNU2VydmljZUxpc3RPcmdhbml6YXRpb25zUmVxdWVzdBoxLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdE9yZ2FuaXphdGlvbnNSZXNwb25zZRJ7ChJVcGRhdGVPcmdhbml6YXRpb24SMS50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlcXVlc3QaMi50cnVzdGVkYWkudjEuSUFNU2VydmljZVVwZGF0ZU9yZ2FuaXphdGlvblJlc3BvbnNlEnsKEkRlbGV0ZU9yZ2FuaXphdGlvbhIxLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlT3JnYW5pemF0aW9uUmVxdWVzdBoyLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlRGVsZXRlT3JnYW5pemF0aW9uUmVzcG9uc2USZgoLQ3JlYXRlVG9rZW4SKi50cnVzdGVkYWkudjEuSUFNU2VydmljZUNyZWF0ZVRva2VuUmVxdWVzdBorLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlQ3JlYXRlVG9rZW5SZXNwb25zZRJvCg5MaXN0VXNlclRva2VucxItLnRydXN0ZWRhaS52MS5JQU1TZXJ2aWNlTGlzdFVzZXJUb2tlbnNSZXF1ZXN0Gi4udHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VMaXN0VXNlclRva2Vuc1Jlc3BvbnNlEmYKC1Jldm9rZVRva2VuEioudHJ1c3RlZGFpLnYxLklBTVNlcnZpY2VSZXZva2VUb2tlblJlcXVlc3QaKy50cnVzdGVkYWkudjEuSUFNU2VydmljZVJldm9rZVRva2VuUmVzcG9uc2VCR1pFZ2l0aHViLmNvbS9NYWRzUkMvdHJ1c3RlZGFpL2dlbi9wcm90by9tYWRzcmMvdHJ1c3RlZGFpL3YxO3RydXN0ZWRhaXYxYgZwcm90bzM",
+    [file_google_protobuf_timestamp],
+  );
 
 /**
  * @generated from message trustedai.v1.User
@@ -72,7 +84,8 @@ export type User = Message<"trustedai.v1.User"> & {
  * Describes the message trustedai.v1.User.
  * Use `create(UserSchema)` to create a new message.
  */
-export const UserSchema: GenMessage<User> = /*@__PURE__*/
+export const UserSchema: GenMessage<User> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 0);
 
 /**
@@ -121,7 +134,8 @@ export type Organization = Message<"trustedai.v1.Organization"> & {
  * Describes the message trustedai.v1.Organization.
  * Use `create(OrganizationSchema)` to create a new message.
  */
-export const OrganizationSchema: GenMessage<Organization> = /*@__PURE__*/
+export const OrganizationSchema: GenMessage<Organization> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 1);
 
 /**
@@ -163,7 +177,8 @@ export type APIToken = Message<"trustedai.v1.APIToken"> & {
  * Describes the message trustedai.v1.APIToken.
  * Use `create(APITokenSchema)` to create a new message.
  */
-export const APITokenSchema: GenMessage<APIToken> = /*@__PURE__*/
+export const APITokenSchema: GenMessage<APIToken> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 2);
 
 /**
@@ -171,279 +186,310 @@ export const APITokenSchema: GenMessage<APIToken> = /*@__PURE__*/
  *
  * @generated from message trustedai.v1.IAMServiceCreateUserRequest
  */
-export type IAMServiceCreateUserRequest = Message<"trustedai.v1.IAMServiceCreateUserRequest"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceCreateUserRequest =
+  Message<"trustedai.v1.IAMServiceCreateUserRequest"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateUserRequest.
  * Use `create(IAMServiceCreateUserRequestSchema)` to create a new message.
  */
-export const IAMServiceCreateUserRequestSchema: GenMessage<IAMServiceCreateUserRequest> = /*@__PURE__*/
+export const IAMServiceCreateUserRequestSchema: GenMessage<IAMServiceCreateUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 3);
 
 /**
  * @generated from message trustedai.v1.IAMServiceCreateUserResponse
  */
-export type IAMServiceCreateUserResponse = Message<"trustedai.v1.IAMServiceCreateUserResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceCreateUserResponse =
+  Message<"trustedai.v1.IAMServiceCreateUserResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateUserResponse.
  * Use `create(IAMServiceCreateUserResponseSchema)` to create a new message.
  */
-export const IAMServiceCreateUserResponseSchema: GenMessage<IAMServiceCreateUserResponse> = /*@__PURE__*/
+export const IAMServiceCreateUserResponseSchema: GenMessage<IAMServiceCreateUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 4);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserRequest
  */
-export type IAMServiceGetUserRequest = Message<"trustedai.v1.IAMServiceGetUserRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type IAMServiceGetUserRequest =
+  Message<"trustedai.v1.IAMServiceGetUserRequest"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserRequest.
  * Use `create(IAMServiceGetUserRequestSchema)` to create a new message.
  */
-export const IAMServiceGetUserRequestSchema: GenMessage<IAMServiceGetUserRequest> = /*@__PURE__*/
+export const IAMServiceGetUserRequestSchema: GenMessage<IAMServiceGetUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 5);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserResponse
  */
-export type IAMServiceGetUserResponse = Message<"trustedai.v1.IAMServiceGetUserResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceGetUserResponse =
+  Message<"trustedai.v1.IAMServiceGetUserResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserResponse.
  * Use `create(IAMServiceGetUserResponseSchema)` to create a new message.
  */
-export const IAMServiceGetUserResponseSchema: GenMessage<IAMServiceGetUserResponse> = /*@__PURE__*/
+export const IAMServiceGetUserResponseSchema: GenMessage<IAMServiceGetUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 6);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserByEmailRequest
  */
-export type IAMServiceGetUserByEmailRequest = Message<"trustedai.v1.IAMServiceGetUserByEmailRequest"> & {
-  /**
-   * @generated from field: string email = 1;
-   */
-  email: string;
-};
+export type IAMServiceGetUserByEmailRequest =
+  Message<"trustedai.v1.IAMServiceGetUserByEmailRequest"> & {
+    /**
+     * @generated from field: string email = 1;
+     */
+    email: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserByEmailRequest.
  * Use `create(IAMServiceGetUserByEmailRequestSchema)` to create a new message.
  */
-export const IAMServiceGetUserByEmailRequestSchema: GenMessage<IAMServiceGetUserByEmailRequest> = /*@__PURE__*/
+export const IAMServiceGetUserByEmailRequestSchema: GenMessage<IAMServiceGetUserByEmailRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 7);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserByEmailResponse
  */
-export type IAMServiceGetUserByEmailResponse = Message<"trustedai.v1.IAMServiceGetUserByEmailResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceGetUserByEmailResponse =
+  Message<"trustedai.v1.IAMServiceGetUserByEmailResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserByEmailResponse.
  * Use `create(IAMServiceGetUserByEmailResponseSchema)` to create a new message.
  */
-export const IAMServiceGetUserByEmailResponseSchema: GenMessage<IAMServiceGetUserByEmailResponse> = /*@__PURE__*/
+export const IAMServiceGetUserByEmailResponseSchema: GenMessage<IAMServiceGetUserByEmailResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 8);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserByExternalIDRequest
  */
-export type IAMServiceGetUserByExternalIDRequest = Message<"trustedai.v1.IAMServiceGetUserByExternalIDRequest"> & {
-  /**
-   * @generated from field: string provider = 1;
-   */
-  provider: string;
+export type IAMServiceGetUserByExternalIDRequest =
+  Message<"trustedai.v1.IAMServiceGetUserByExternalIDRequest"> & {
+    /**
+     * @generated from field: string provider = 1;
+     */
+    provider: string;
 
-  /**
-   * @generated from field: string external_id = 2;
-   */
-  externalId: string;
-};
+    /**
+     * @generated from field: string external_id = 2;
+     */
+    externalId: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserByExternalIDRequest.
  * Use `create(IAMServiceGetUserByExternalIDRequestSchema)` to create a new message.
  */
-export const IAMServiceGetUserByExternalIDRequestSchema: GenMessage<IAMServiceGetUserByExternalIDRequest> = /*@__PURE__*/
+export const IAMServiceGetUserByExternalIDRequestSchema: GenMessage<IAMServiceGetUserByExternalIDRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 9);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetUserByExternalIDResponse
  */
-export type IAMServiceGetUserByExternalIDResponse = Message<"trustedai.v1.IAMServiceGetUserByExternalIDResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceGetUserByExternalIDResponse =
+  Message<"trustedai.v1.IAMServiceGetUserByExternalIDResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetUserByExternalIDResponse.
  * Use `create(IAMServiceGetUserByExternalIDResponseSchema)` to create a new message.
  */
-export const IAMServiceGetUserByExternalIDResponseSchema: GenMessage<IAMServiceGetUserByExternalIDResponse> = /*@__PURE__*/
+export const IAMServiceGetUserByExternalIDResponseSchema: GenMessage<IAMServiceGetUserByExternalIDResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 10);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetCurrentUserRequest
  */
-export type IAMServiceGetCurrentUserRequest = Message<"trustedai.v1.IAMServiceGetCurrentUserRequest"> & {
-};
+export type IAMServiceGetCurrentUserRequest =
+  Message<"trustedai.v1.IAMServiceGetCurrentUserRequest"> & {};
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetCurrentUserRequest.
  * Use `create(IAMServiceGetCurrentUserRequestSchema)` to create a new message.
  */
-export const IAMServiceGetCurrentUserRequestSchema: GenMessage<IAMServiceGetCurrentUserRequest> = /*@__PURE__*/
+export const IAMServiceGetCurrentUserRequestSchema: GenMessage<IAMServiceGetCurrentUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 11);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetCurrentUserResponse
  */
-export type IAMServiceGetCurrentUserResponse = Message<"trustedai.v1.IAMServiceGetCurrentUserResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceGetCurrentUserResponse =
+  Message<"trustedai.v1.IAMServiceGetCurrentUserResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetCurrentUserResponse.
  * Use `create(IAMServiceGetCurrentUserResponseSchema)` to create a new message.
  */
-export const IAMServiceGetCurrentUserResponseSchema: GenMessage<IAMServiceGetCurrentUserResponse> = /*@__PURE__*/
+export const IAMServiceGetCurrentUserResponseSchema: GenMessage<IAMServiceGetCurrentUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 12);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListUsersByOrganizationRequest
  */
-export type IAMServiceListUsersByOrganizationRequest = Message<"trustedai.v1.IAMServiceListUsersByOrganizationRequest"> & {
-  /**
-   * @generated from field: string organization_id = 1;
-   */
-  organizationId: string;
-};
+export type IAMServiceListUsersByOrganizationRequest =
+  Message<"trustedai.v1.IAMServiceListUsersByOrganizationRequest"> & {
+    /**
+     * @generated from field: string organization_id = 1;
+     */
+    organizationId: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceListUsersByOrganizationRequest.
  * Use `create(IAMServiceListUsersByOrganizationRequestSchema)` to create a new message.
  */
-export const IAMServiceListUsersByOrganizationRequestSchema: GenMessage<IAMServiceListUsersByOrganizationRequest> = /*@__PURE__*/
+export const IAMServiceListUsersByOrganizationRequestSchema: GenMessage<IAMServiceListUsersByOrganizationRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 13);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListUsersByOrganizationResponse
  */
-export type IAMServiceListUsersByOrganizationResponse = Message<"trustedai.v1.IAMServiceListUsersByOrganizationResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.User users = 1;
-   */
-  users: User[];
-};
+export type IAMServiceListUsersByOrganizationResponse =
+  Message<"trustedai.v1.IAMServiceListUsersByOrganizationResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.User users = 1;
+     */
+    users: User[];
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceListUsersByOrganizationResponse.
  * Use `create(IAMServiceListUsersByOrganizationResponseSchema)` to create a new message.
  */
-export const IAMServiceListUsersByOrganizationResponseSchema: GenMessage<IAMServiceListUsersByOrganizationResponse> = /*@__PURE__*/
+export const IAMServiceListUsersByOrganizationResponseSchema: GenMessage<IAMServiceListUsersByOrganizationResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 14);
 
 /**
  * @generated from message trustedai.v1.IAMServiceUpdateUserRequest
  */
-export type IAMServiceUpdateUserRequest = Message<"trustedai.v1.IAMServiceUpdateUserRequest"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
+export type IAMServiceUpdateUserRequest =
+  Message<"trustedai.v1.IAMServiceUpdateUserRequest"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
 
-  /**
-   * @generated from field: bool has_system_admin = 2;
-   */
-  hasSystemAdmin: boolean;
-};
+    /**
+     * @generated from field: bool has_system_admin = 2;
+     */
+    hasSystemAdmin: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceUpdateUserRequest.
  * Use `create(IAMServiceUpdateUserRequestSchema)` to create a new message.
  */
-export const IAMServiceUpdateUserRequestSchema: GenMessage<IAMServiceUpdateUserRequest> = /*@__PURE__*/
+export const IAMServiceUpdateUserRequestSchema: GenMessage<IAMServiceUpdateUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 15);
 
 /**
  * @generated from message trustedai.v1.IAMServiceUpdateUserResponse
  */
-export type IAMServiceUpdateUserResponse = Message<"trustedai.v1.IAMServiceUpdateUserResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.User user = 1;
-   */
-  user?: User;
-};
+export type IAMServiceUpdateUserResponse =
+  Message<"trustedai.v1.IAMServiceUpdateUserResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.User user = 1;
+     */
+    user?: User;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceUpdateUserResponse.
  * Use `create(IAMServiceUpdateUserResponseSchema)` to create a new message.
  */
-export const IAMServiceUpdateUserResponseSchema: GenMessage<IAMServiceUpdateUserResponse> = /*@__PURE__*/
+export const IAMServiceUpdateUserResponseSchema: GenMessage<IAMServiceUpdateUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 16);
 
 /**
  * @generated from message trustedai.v1.IAMServiceDeleteUserRequest
  */
-export type IAMServiceDeleteUserRequest = Message<"trustedai.v1.IAMServiceDeleteUserRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type IAMServiceDeleteUserRequest =
+  Message<"trustedai.v1.IAMServiceDeleteUserRequest"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceDeleteUserRequest.
  * Use `create(IAMServiceDeleteUserRequestSchema)` to create a new message.
  */
-export const IAMServiceDeleteUserRequestSchema: GenMessage<IAMServiceDeleteUserRequest> = /*@__PURE__*/
+export const IAMServiceDeleteUserRequestSchema: GenMessage<IAMServiceDeleteUserRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 17);
 
 /**
  * @generated from message trustedai.v1.IAMServiceDeleteUserResponse
  */
-export type IAMServiceDeleteUserResponse = Message<"trustedai.v1.IAMServiceDeleteUserResponse"> & {
-  /**
-   * @generated from field: bool success = 1;
-   */
-  success: boolean;
-};
+export type IAMServiceDeleteUserResponse =
+  Message<"trustedai.v1.IAMServiceDeleteUserResponse"> & {
+    /**
+     * @generated from field: bool success = 1;
+     */
+    success: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceDeleteUserResponse.
  * Use `create(IAMServiceDeleteUserResponseSchema)` to create a new message.
  */
-export const IAMServiceDeleteUserResponseSchema: GenMessage<IAMServiceDeleteUserResponse> = /*@__PURE__*/
+export const IAMServiceDeleteUserResponseSchema: GenMessage<IAMServiceDeleteUserResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 18);
 
 /**
@@ -451,211 +497,234 @@ export const IAMServiceDeleteUserResponseSchema: GenMessage<IAMServiceDeleteUser
  *
  * @generated from message trustedai.v1.IAMServiceCreateOrganizationRequest
  */
-export type IAMServiceCreateOrganizationRequest = Message<"trustedai.v1.IAMServiceCreateOrganizationRequest"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
-};
+export type IAMServiceCreateOrganizationRequest =
+  Message<"trustedai.v1.IAMServiceCreateOrganizationRequest"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateOrganizationRequest.
  * Use `create(IAMServiceCreateOrganizationRequestSchema)` to create a new message.
  */
-export const IAMServiceCreateOrganizationRequestSchema: GenMessage<IAMServiceCreateOrganizationRequest> = /*@__PURE__*/
+export const IAMServiceCreateOrganizationRequestSchema: GenMessage<IAMServiceCreateOrganizationRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 19);
 
 /**
  * @generated from message trustedai.v1.IAMServiceCreateOrganizationResponse
  */
-export type IAMServiceCreateOrganizationResponse = Message<"trustedai.v1.IAMServiceCreateOrganizationResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
-};
+export type IAMServiceCreateOrganizationResponse =
+  Message<"trustedai.v1.IAMServiceCreateOrganizationResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateOrganizationResponse.
  * Use `create(IAMServiceCreateOrganizationResponseSchema)` to create a new message.
  */
-export const IAMServiceCreateOrganizationResponseSchema: GenMessage<IAMServiceCreateOrganizationResponse> = /*@__PURE__*/
+export const IAMServiceCreateOrganizationResponseSchema: GenMessage<IAMServiceCreateOrganizationResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 20);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetOrganizationRequest
  */
-export type IAMServiceGetOrganizationRequest = Message<"trustedai.v1.IAMServiceGetOrganizationRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type IAMServiceGetOrganizationRequest =
+  Message<"trustedai.v1.IAMServiceGetOrganizationRequest"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetOrganizationRequest.
  * Use `create(IAMServiceGetOrganizationRequestSchema)` to create a new message.
  */
-export const IAMServiceGetOrganizationRequestSchema: GenMessage<IAMServiceGetOrganizationRequest> = /*@__PURE__*/
+export const IAMServiceGetOrganizationRequestSchema: GenMessage<IAMServiceGetOrganizationRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 21);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetOrganizationResponse
  */
-export type IAMServiceGetOrganizationResponse = Message<"trustedai.v1.IAMServiceGetOrganizationResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
-};
+export type IAMServiceGetOrganizationResponse =
+  Message<"trustedai.v1.IAMServiceGetOrganizationResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetOrganizationResponse.
  * Use `create(IAMServiceGetOrganizationResponseSchema)` to create a new message.
  */
-export const IAMServiceGetOrganizationResponseSchema: GenMessage<IAMServiceGetOrganizationResponse> = /*@__PURE__*/
+export const IAMServiceGetOrganizationResponseSchema: GenMessage<IAMServiceGetOrganizationResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 22);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetOrganizationByNameRequest
  */
-export type IAMServiceGetOrganizationByNameRequest = Message<"trustedai.v1.IAMServiceGetOrganizationByNameRequest"> & {
-  /**
-   * @generated from field: string name = 1;
-   */
-  name: string;
-};
+export type IAMServiceGetOrganizationByNameRequest =
+  Message<"trustedai.v1.IAMServiceGetOrganizationByNameRequest"> & {
+    /**
+     * @generated from field: string name = 1;
+     */
+    name: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetOrganizationByNameRequest.
  * Use `create(IAMServiceGetOrganizationByNameRequestSchema)` to create a new message.
  */
-export const IAMServiceGetOrganizationByNameRequestSchema: GenMessage<IAMServiceGetOrganizationByNameRequest> = /*@__PURE__*/
+export const IAMServiceGetOrganizationByNameRequestSchema: GenMessage<IAMServiceGetOrganizationByNameRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 23);
 
 /**
  * @generated from message trustedai.v1.IAMServiceGetOrganizationByNameResponse
  */
-export type IAMServiceGetOrganizationByNameResponse = Message<"trustedai.v1.IAMServiceGetOrganizationByNameResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
-};
+export type IAMServiceGetOrganizationByNameResponse =
+  Message<"trustedai.v1.IAMServiceGetOrganizationByNameResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceGetOrganizationByNameResponse.
  * Use `create(IAMServiceGetOrganizationByNameResponseSchema)` to create a new message.
  */
-export const IAMServiceGetOrganizationByNameResponseSchema: GenMessage<IAMServiceGetOrganizationByNameResponse> = /*@__PURE__*/
+export const IAMServiceGetOrganizationByNameResponseSchema: GenMessage<IAMServiceGetOrganizationByNameResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 24);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListOrganizationsRequest
  */
-export type IAMServiceListOrganizationsRequest = Message<"trustedai.v1.IAMServiceListOrganizationsRequest"> & {
-};
+export type IAMServiceListOrganizationsRequest =
+  Message<"trustedai.v1.IAMServiceListOrganizationsRequest"> & {};
 
 /**
  * Describes the message trustedai.v1.IAMServiceListOrganizationsRequest.
  * Use `create(IAMServiceListOrganizationsRequestSchema)` to create a new message.
  */
-export const IAMServiceListOrganizationsRequestSchema: GenMessage<IAMServiceListOrganizationsRequest> = /*@__PURE__*/
+export const IAMServiceListOrganizationsRequestSchema: GenMessage<IAMServiceListOrganizationsRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 25);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListOrganizationsResponse
  */
-export type IAMServiceListOrganizationsResponse = Message<"trustedai.v1.IAMServiceListOrganizationsResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.Organization organizations = 1;
-   */
-  organizations: Organization[];
-};
+export type IAMServiceListOrganizationsResponse =
+  Message<"trustedai.v1.IAMServiceListOrganizationsResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.Organization organizations = 1;
+     */
+    organizations: Organization[];
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceListOrganizationsResponse.
  * Use `create(IAMServiceListOrganizationsResponseSchema)` to create a new message.
  */
-export const IAMServiceListOrganizationsResponseSchema: GenMessage<IAMServiceListOrganizationsResponse> = /*@__PURE__*/
+export const IAMServiceListOrganizationsResponseSchema: GenMessage<IAMServiceListOrganizationsResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 26);
 
 /**
  * @generated from message trustedai.v1.IAMServiceUpdateOrganizationRequest
  */
-export type IAMServiceUpdateOrganizationRequest = Message<"trustedai.v1.IAMServiceUpdateOrganizationRequest"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
+export type IAMServiceUpdateOrganizationRequest =
+  Message<"trustedai.v1.IAMServiceUpdateOrganizationRequest"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
 
-  /**
-   * @generated from field: bool has_is_system = 2;
-   */
-  hasIsSystem: boolean;
-};
+    /**
+     * @generated from field: bool has_is_system = 2;
+     */
+    hasIsSystem: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceUpdateOrganizationRequest.
  * Use `create(IAMServiceUpdateOrganizationRequestSchema)` to create a new message.
  */
-export const IAMServiceUpdateOrganizationRequestSchema: GenMessage<IAMServiceUpdateOrganizationRequest> = /*@__PURE__*/
+export const IAMServiceUpdateOrganizationRequestSchema: GenMessage<IAMServiceUpdateOrganizationRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 27);
 
 /**
  * @generated from message trustedai.v1.IAMServiceUpdateOrganizationResponse
  */
-export type IAMServiceUpdateOrganizationResponse = Message<"trustedai.v1.IAMServiceUpdateOrganizationResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.Organization organization = 1;
-   */
-  organization?: Organization;
-};
+export type IAMServiceUpdateOrganizationResponse =
+  Message<"trustedai.v1.IAMServiceUpdateOrganizationResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.Organization organization = 1;
+     */
+    organization?: Organization;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceUpdateOrganizationResponse.
  * Use `create(IAMServiceUpdateOrganizationResponseSchema)` to create a new message.
  */
-export const IAMServiceUpdateOrganizationResponseSchema: GenMessage<IAMServiceUpdateOrganizationResponse> = /*@__PURE__*/
+export const IAMServiceUpdateOrganizationResponseSchema: GenMessage<IAMServiceUpdateOrganizationResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 28);
 
 /**
  * @generated from message trustedai.v1.IAMServiceDeleteOrganizationRequest
  */
-export type IAMServiceDeleteOrganizationRequest = Message<"trustedai.v1.IAMServiceDeleteOrganizationRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
+export type IAMServiceDeleteOrganizationRequest =
+  Message<"trustedai.v1.IAMServiceDeleteOrganizationRequest"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
 
-  /**
-   * @generated from field: bool force = 2;
-   */
-  force: boolean;
-};
+    /**
+     * @generated from field: bool force = 2;
+     */
+    force: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceDeleteOrganizationRequest.
  * Use `create(IAMServiceDeleteOrganizationRequestSchema)` to create a new message.
  */
-export const IAMServiceDeleteOrganizationRequestSchema: GenMessage<IAMServiceDeleteOrganizationRequest> = /*@__PURE__*/
+export const IAMServiceDeleteOrganizationRequestSchema: GenMessage<IAMServiceDeleteOrganizationRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 29);
 
 /**
  * @generated from message trustedai.v1.IAMServiceDeleteOrganizationResponse
  */
-export type IAMServiceDeleteOrganizationResponse = Message<"trustedai.v1.IAMServiceDeleteOrganizationResponse"> & {
-  /**
-   * @generated from field: bool success = 1;
-   */
-  success: boolean;
-};
+export type IAMServiceDeleteOrganizationResponse =
+  Message<"trustedai.v1.IAMServiceDeleteOrganizationResponse"> & {
+    /**
+     * @generated from field: bool success = 1;
+     */
+    success: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceDeleteOrganizationResponse.
  * Use `create(IAMServiceDeleteOrganizationResponseSchema)` to create a new message.
  */
-export const IAMServiceDeleteOrganizationResponseSchema: GenMessage<IAMServiceDeleteOrganizationResponse> = /*@__PURE__*/
+export const IAMServiceDeleteOrganizationResponseSchema: GenMessage<IAMServiceDeleteOrganizationResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 30);
 
 /**
@@ -663,118 +732,130 @@ export const IAMServiceDeleteOrganizationResponseSchema: GenMessage<IAMServiceDe
  *
  * @generated from message trustedai.v1.IAMServiceCreateTokenRequest
  */
-export type IAMServiceCreateTokenRequest = Message<"trustedai.v1.IAMServiceCreateTokenRequest"> & {
-  /**
-   * @generated from field: string user_id = 1;
-   */
-  userId: string;
+export type IAMServiceCreateTokenRequest =
+  Message<"trustedai.v1.IAMServiceCreateTokenRequest"> & {
+    /**
+     * @generated from field: string user_id = 1;
+     */
+    userId: string;
 
-  /**
-   * @generated from field: string description = 2;
-   */
-  description: string;
+    /**
+     * @generated from field: string description = 2;
+     */
+    description: string;
 
-  /**
-   * @generated from field: google.protobuf.Timestamp expires_at = 3;
-   */
-  expiresAt?: Timestamp;
-};
+    /**
+     * @generated from field: google.protobuf.Timestamp expires_at = 3;
+     */
+    expiresAt?: Timestamp;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateTokenRequest.
  * Use `create(IAMServiceCreateTokenRequestSchema)` to create a new message.
  */
-export const IAMServiceCreateTokenRequestSchema: GenMessage<IAMServiceCreateTokenRequest> = /*@__PURE__*/
+export const IAMServiceCreateTokenRequestSchema: GenMessage<IAMServiceCreateTokenRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 31);
 
 /**
  * @generated from message trustedai.v1.IAMServiceCreateTokenResponse
  */
-export type IAMServiceCreateTokenResponse = Message<"trustedai.v1.IAMServiceCreateTokenResponse"> & {
-  /**
-   * @generated from field: trustedai.v1.APIToken token = 1;
-   */
-  token?: APIToken;
+export type IAMServiceCreateTokenResponse =
+  Message<"trustedai.v1.IAMServiceCreateTokenResponse"> & {
+    /**
+     * @generated from field: trustedai.v1.APIToken token = 1;
+     */
+    token?: APIToken;
 
-  /**
-   * @generated from field: string raw_token = 2;
-   */
-  rawToken: string;
-};
+    /**
+     * @generated from field: string raw_token = 2;
+     */
+    rawToken: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceCreateTokenResponse.
  * Use `create(IAMServiceCreateTokenResponseSchema)` to create a new message.
  */
-export const IAMServiceCreateTokenResponseSchema: GenMessage<IAMServiceCreateTokenResponse> = /*@__PURE__*/
+export const IAMServiceCreateTokenResponseSchema: GenMessage<IAMServiceCreateTokenResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 32);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListUserTokensRequest
  */
-export type IAMServiceListUserTokensRequest = Message<"trustedai.v1.IAMServiceListUserTokensRequest"> & {
-  /**
-   * @generated from field: string user_id = 1;
-   */
-  userId: string;
-};
+export type IAMServiceListUserTokensRequest =
+  Message<"trustedai.v1.IAMServiceListUserTokensRequest"> & {
+    /**
+     * @generated from field: string user_id = 1;
+     */
+    userId: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceListUserTokensRequest.
  * Use `create(IAMServiceListUserTokensRequestSchema)` to create a new message.
  */
-export const IAMServiceListUserTokensRequestSchema: GenMessage<IAMServiceListUserTokensRequest> = /*@__PURE__*/
+export const IAMServiceListUserTokensRequestSchema: GenMessage<IAMServiceListUserTokensRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 33);
 
 /**
  * @generated from message trustedai.v1.IAMServiceListUserTokensResponse
  */
-export type IAMServiceListUserTokensResponse = Message<"trustedai.v1.IAMServiceListUserTokensResponse"> & {
-  /**
-   * @generated from field: repeated trustedai.v1.APIToken tokens = 1;
-   */
-  tokens: APIToken[];
-};
+export type IAMServiceListUserTokensResponse =
+  Message<"trustedai.v1.IAMServiceListUserTokensResponse"> & {
+    /**
+     * @generated from field: repeated trustedai.v1.APIToken tokens = 1;
+     */
+    tokens: APIToken[];
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceListUserTokensResponse.
  * Use `create(IAMServiceListUserTokensResponseSchema)` to create a new message.
  */
-export const IAMServiceListUserTokensResponseSchema: GenMessage<IAMServiceListUserTokensResponse> = /*@__PURE__*/
+export const IAMServiceListUserTokensResponseSchema: GenMessage<IAMServiceListUserTokensResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 34);
 
 /**
  * @generated from message trustedai.v1.IAMServiceRevokeTokenRequest
  */
-export type IAMServiceRevokeTokenRequest = Message<"trustedai.v1.IAMServiceRevokeTokenRequest"> & {
-  /**
-   * @generated from field: string token_id = 1;
-   */
-  tokenId: string;
-};
+export type IAMServiceRevokeTokenRequest =
+  Message<"trustedai.v1.IAMServiceRevokeTokenRequest"> & {
+    /**
+     * @generated from field: string token_id = 1;
+     */
+    tokenId: string;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceRevokeTokenRequest.
  * Use `create(IAMServiceRevokeTokenRequestSchema)` to create a new message.
  */
-export const IAMServiceRevokeTokenRequestSchema: GenMessage<IAMServiceRevokeTokenRequest> = /*@__PURE__*/
+export const IAMServiceRevokeTokenRequestSchema: GenMessage<IAMServiceRevokeTokenRequest> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 35);
 
 /**
  * @generated from message trustedai.v1.IAMServiceRevokeTokenResponse
  */
-export type IAMServiceRevokeTokenResponse = Message<"trustedai.v1.IAMServiceRevokeTokenResponse"> & {
-  /**
-   * @generated from field: bool success = 1;
-   */
-  success: boolean;
-};
+export type IAMServiceRevokeTokenResponse =
+  Message<"trustedai.v1.IAMServiceRevokeTokenResponse"> & {
+    /**
+     * @generated from field: bool success = 1;
+     */
+    success: boolean;
+  };
 
 /**
  * Describes the message trustedai.v1.IAMServiceRevokeTokenResponse.
  * Use `create(IAMServiceRevokeTokenResponseSchema)` to create a new message.
  */
-export const IAMServiceRevokeTokenResponseSchema: GenMessage<IAMServiceRevokeTokenResponse> = /*@__PURE__*/
+export const IAMServiceRevokeTokenResponseSchema: GenMessage<IAMServiceRevokeTokenResponse> =
+  /*@__PURE__*/
   messageDesc(file_proto_madsrc_trustedai_v1_iam, 36);
 
 /**
@@ -790,7 +871,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceCreateUserRequestSchema;
     output: typeof IAMServiceCreateUserResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetUser
    */
@@ -798,7 +879,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetUserRequestSchema;
     output: typeof IAMServiceGetUserResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetUserByEmail
    */
@@ -806,7 +887,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetUserByEmailRequestSchema;
     output: typeof IAMServiceGetUserByEmailResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetUserByExternalID
    */
@@ -814,7 +895,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetUserByExternalIDRequestSchema;
     output: typeof IAMServiceGetUserByExternalIDResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetCurrentUser
    */
@@ -822,7 +903,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetCurrentUserRequestSchema;
     output: typeof IAMServiceGetCurrentUserResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.ListUsersByOrganization
    */
@@ -830,7 +911,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceListUsersByOrganizationRequestSchema;
     output: typeof IAMServiceListUsersByOrganizationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.UpdateUser
    */
@@ -838,7 +919,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceUpdateUserRequestSchema;
     output: typeof IAMServiceUpdateUserResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.DeleteUser
    */
@@ -846,7 +927,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceDeleteUserRequestSchema;
     output: typeof IAMServiceDeleteUserResponseSchema;
-  },
+  };
   /**
    * Organization operations
    *
@@ -856,7 +937,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceCreateOrganizationRequestSchema;
     output: typeof IAMServiceCreateOrganizationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetOrganization
    */
@@ -864,7 +945,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetOrganizationRequestSchema;
     output: typeof IAMServiceGetOrganizationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.GetOrganizationByName
    */
@@ -872,7 +953,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceGetOrganizationByNameRequestSchema;
     output: typeof IAMServiceGetOrganizationByNameResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.ListOrganizations
    */
@@ -880,7 +961,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceListOrganizationsRequestSchema;
     output: typeof IAMServiceListOrganizationsResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.UpdateOrganization
    */
@@ -888,7 +969,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceUpdateOrganizationRequestSchema;
     output: typeof IAMServiceUpdateOrganizationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.DeleteOrganization
    */
@@ -896,7 +977,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceDeleteOrganizationRequestSchema;
     output: typeof IAMServiceDeleteOrganizationResponseSchema;
-  },
+  };
   /**
    * Token operations
    *
@@ -906,7 +987,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceCreateTokenRequestSchema;
     output: typeof IAMServiceCreateTokenResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.ListUserTokens
    */
@@ -914,7 +995,7 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceListUserTokensRequestSchema;
     output: typeof IAMServiceListUserTokensResponseSchema;
-  },
+  };
   /**
    * @generated from rpc trustedai.v1.IAMService.RevokeToken
    */
@@ -922,7 +1003,5 @@ export const IAMService: GenService<{
     methodKind: "unary";
     input: typeof IAMServiceRevokeTokenRequestSchema;
     output: typeof IAMServiceRevokeTokenResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_proto_madsrc_trustedai_v1_iam, 0);
-
+  };
+}> = /*@__PURE__*/ serviceDesc(file_proto_madsrc_trustedai_v1_iam, 0);
