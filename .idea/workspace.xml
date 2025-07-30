@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8882fa6e-0f09-454f-b6ea-e359c824c5de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mise.toml" beforeDir="false" afterPath="$PROJECT_DIR$/mise.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/build/_default" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/build/_default" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/build/go.sh" beforeDir="false" />
-    </list>
+    <list default="true" id="8882fa6e-0f09-454f-b6ea-e359c824c5de" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
