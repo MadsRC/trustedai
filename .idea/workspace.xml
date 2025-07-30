@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8882fa6e-0f09-454f-b6ea-e359c824c5de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/test/unit/api.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/test/unit/frontend.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/iam_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/iam_pb.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/model_management_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/model_management_pb.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/usage_analytics_pb.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/gen/proto/madsrc/trustedai/v1/usage_analytics_pb.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/test/unit/_default" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/test/unit/_default" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mise.toml" beforeDir="false" afterPath="$PROJECT_DIR$/mise.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/build/_default" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/build/_default" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/build/go.sh" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,49 +20,49 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "MadsRC"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MadsRC&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:MadsRC/trustedai.git",
-    "accountId": "8ff3d1b7-3524-43de-8c73-4487cf3c9fc6"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:MadsRC/trustedai.git&quot;,
+    &quot;accountId&quot;: &quot;8ff3d1b7-3524-43de-8c73-4487cf3c9fc6&quot;
   }
-}]]></component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="30S2Pt7Rn7jFW3sT5NhccBQFW1u" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.GoLinterPluginOnboarding": "true",
-    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "SHELLCHECK.PATH": "I do mind",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/Users/user/git/trustedai/main/scripts/test/unit",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginOnboarding&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/user/git/trustedai/main/scripts/test/unit&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/scripts/test/unit" />

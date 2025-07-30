@@ -6,7 +6,4 @@
 
 set -e
 
-mise run build:react
-mise run build:go
-
-exit 0
+goreleaser release --snapshot --clean
