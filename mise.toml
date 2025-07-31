@@ -23,6 +23,7 @@ python = "3.12.11"
 "npm:prettier" = "3.6.2"
 goreleaser = "2.11.1"
 cosign = "2.5.3"
+jq = "1.8.0"
 
 [task_config]
 includes = ["scripts"]

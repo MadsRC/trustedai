@@ -39,43 +39,63 @@ import (
 func main() {
 	cmd := &cli.Command{
 		Name:    "trustedai",
-		Usage:   "LLM Gateway Control Plane Server",
+		Usage:   "TrustedAI Server",
 		Version: "0.1.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "control-plane-listen",
-				Value:   "localhost:9999",
+				Value:   "0.0.0.0:9999",
 				Usage:   "Address for control plane to listen on",
-				Sources: cli.EnvVars("LLMGW_CONTROL_PLANE_LISTEN"),
+				Sources: cli.EnvVars("TRUSTEDAI_CONTROL_PLANE_LISTEN"),
 			},
 			&cli.StringFlag{
 				Name:    "data-plane-listen",
-				Value:   "localhost:8081",
+				Value:   "0.0.0.0:8081",
 				Usage:   "Address for data plane to listen on",
-				Sources: cli.EnvVars("LLMGW_DATA_PLANE_LISTEN"),
+				Sources: cli.EnvVars("TRUSTEDAI_DATA_PLANE_LISTEN"),
 			},
 			&cli.StringFlag{
 				Name:     "database-url",
 				Usage:    "PostgreSQL database connection URL",
-				Sources:  cli.EnvVars("DATABASE_URL"),
+				Sources:  cli.EnvVars("TRUSTEDAI_DATABASE_URL"),
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:    "base-url",
 				Value:   "http://localhost:9999",
 				Usage:   "Base URL for the server (used for OIDC redirects)",
-				Sources: cli.EnvVars("LLMGW_BASE_URL"),
+				Sources: cli.EnvVars("TRUSTEDAI_BASE_URL"),
 			},
-			&cli.BoolFlag{
-				Name:    "debug",
-				Usage:   "Enable debug logging",
-				Sources: cli.EnvVars("LLMGW_DEBUG"),
+			&cli.StringFlag{
+				Name:    "log-level",
+				Usage:   "Set log level, one of: debug, info, warn, error",
+				Sources: cli.EnvVars("TRUSTEDAI_LOG_LEVEL"),
+				Action: func(ctx context.Context, cmd *cli.Command, v string) error {
+					if v != "debug" && v != "info" && v != "warn" && v != "error" {
+						return errors.New("invalid log level")
+					}
+
+					return nil
+				},
+			},
+			&cli.StringFlag{
+				Name:    "log-format",
+				Value:   "text",
+				Usage:   "Log format, one of: text, json",
+				Sources: cli.EnvVars("TRUSTEDAI_LOG_FORMAT"),
+				Action: func(ctx context.Context, cmd *cli.Command, v string) error {
+					if v != "text" && v != "json" {
+						return errors.New("invalid log format")
+					}
+
+					return nil
+				},
 			},
 			&cli.StringFlag{
 				Name:    "otlp-endpoint",
 				Value:   "localhost:4317",
 				Usage:   "gRPC OTLP endpoint for metrics export",
-				Sources: cli.EnvVars("LLMGW_OTLP_ENDPOINT"),
+				Sources: cli.EnvVars("TRUSTEDAI_OTLP_ENDPOINT"),
 			},
 		},
 		Action: runServer,
@@ -90,12 +110,28 @@ func main() {
 func runServer(ctx context.Context, c *cli.Command) error {
 	// Setup logger
 	logLevel := slog.LevelInfo
-	if c.Bool("debug") {
+	switch c.String("log-level") {
+	case "debug":
 		logLevel = slog.LevelDebug
+	case "info":
+		logLevel = slog.LevelInfo
+	case "warn":
+		logLevel = slog.LevelWarn
+	case "error":
+		logLevel = slog.LevelError
 	}
-	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+	handlerOptions := &slog.HandlerOptions{
 		Level: logLevel,
-	}))
+	}
+	var logger *slog.Logger
+	switch c.String("log-format") {
+	case "text":
+		logger = slog.New(slog.NewTextHandler(os.Stdout, handlerOptions))
+	case "json":
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, handlerOptions))
+	default:
+		logger = slog.New(slog.NewTextHandler(os.Stdout, handlerOptions))
+	}
 	slog.SetDefault(logger)
 
 	// Connect to database

@@ -1,3 +1,5 @@
+//go:build !integration && !acceptance
+
 // SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
 //
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -6,6 +8,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"testing"
@@ -329,4 +332,142 @@ func (m *MockModelRepository) UpdateModel(ctx context.Context, model *gai.Model,
 func (m *MockModelRepository) DeleteModel(ctx context.Context, modelID string) error {
 	args := m.Called(ctx, modelID)
 	return args.Error(0)
+}
+
+func TestModelManagement_GetModel_MissingCredentialInformationIssue(t *testing.T) {
+	discardLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	mockModelRepo := new(MockModelRepository)
+
+	service, err := NewModelManagement(
+		WithModelManagementLogger(discardLogger),
+		WithModelRepository(mockModelRepo),
+	)
+	require.NoError(t, err)
+
+	// Test data
+	testModelID := "test-model-id"
+	testCredentialID := uuid.New()
+	testCredentialType := trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER
+
+	// Current implementation uses GetModelByIDWithReference which doesn't include credential info
+	mockModelRepo.On("GetModelByIDWithReference", mock.Anything, testModelID).Return(&trustedai.ModelWithReference{
+		Model: gai.Model{
+			ID:       testModelID,
+			Name:     "Test Model",
+			Provider: "openrouter",
+			Metadata: map[string]any{
+				"model_reference": "google-gemini-2.5-flash-lite",
+			},
+			Pricing: gai.ModelPricing{
+				InputTokenPrice:  0.01,
+				OutputTokenPrice: 0.02,
+			},
+			Capabilities: gai.ModelCapabilities{
+				SupportsStreaming: true,
+				SupportsJSON:      true,
+				MaxInputTokens:    100000,
+				MaxOutputTokens:   4096,
+			},
+		},
+	}, nil)
+
+	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceGetModelRequest{
+		Id: testModelID,
+	})
+
+	resp, err := service.GetModel(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+
+	model := resp.Msg.GetModel()
+	require.NotNil(t, model)
+
+	assert.NotEmpty(t, model.GetCredentialId(), "Expected credential_id to be populated, but got empty string")
+	assert.NotEqual(t, trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, model.GetCredentialType(), "Expected credential_type to be specified, but got UNSPECIFIED")
+
+	assert.Equal(t, testCredentialID.String(), model.GetCredentialId())
+	assert.Equal(t, testCredentialType, model.GetCredentialType())
+
+	mockModelRepo.AssertExpectations(t)
+}
+
+func TestModelManagement_ListModels_MissingCredentialInformationIssue(t *testing.T) {
+	discardLogger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	mockModelRepo := new(MockModelRepository)
+
+	service, err := NewModelManagement(
+		WithModelManagementLogger(discardLogger),
+		WithModelRepository(mockModelRepo),
+	)
+	require.NoError(t, err)
+
+	// Test data
+	testCredentialID := uuid.New()
+	testCredentialType := trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER
+
+	mockModelRepo.On("GetAllModelsWithReference", mock.Anything).Return([]trustedai.ModelWithReference{
+		{
+			Model: gai.Model{
+				ID:       "model-1",
+				Name:     "Test Model 1",
+				Provider: "openrouter",
+				Metadata: map[string]any{
+					"model_reference": "google-gemini-2.5-flash-lite",
+				},
+				Pricing: gai.ModelPricing{
+					InputTokenPrice:  0.01,
+					OutputTokenPrice: 0.02,
+				},
+				Capabilities: gai.ModelCapabilities{
+					SupportsStreaming: true,
+					SupportsJSON:      true,
+					MaxInputTokens:    100000,
+					MaxOutputTokens:   4096,
+				},
+			},
+		},
+		{
+			Model: gai.Model{
+				ID:       "model-2",
+				Name:     "Test Model 2",
+				Provider: "openrouter",
+				Metadata: map[string]any{
+					"model_reference": "google-gemini-2.5-pro",
+				},
+				Pricing: gai.ModelPricing{
+					InputTokenPrice:  0.05,
+					OutputTokenPrice: 0.10,
+				},
+				Capabilities: gai.ModelCapabilities{
+					SupportsStreaming: true,
+					SupportsJSON:      true,
+					MaxInputTokens:    200000,
+					MaxOutputTokens:   8192,
+				},
+			},
+		},
+	}, nil)
+
+	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceListModelsRequest{
+		IncludeDisabled: false,
+	})
+
+	resp, err := service.ListModels(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+
+	models := resp.Msg.GetModels()
+	require.Len(t, models, 2)
+
+	for i, model := range models {
+		t.Run(fmt.Sprintf("Model_%d", i), func(t *testing.T) {
+			assert.NotEmpty(t, model.GetCredentialId(), "Expected credential_id to be populated, but got empty string")
+			assert.NotEqual(t, trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, model.GetCredentialType(), "Expected credential_type to be specified, but got UNSPECIFIED")
+
+			assert.Equal(t, testCredentialID.String(), model.GetCredentialId())
+			assert.Equal(t, testCredentialType, model.GetCredentialType())
+		})
+	}
+
+	mockModelRepo.AssertExpectations(t)
 }

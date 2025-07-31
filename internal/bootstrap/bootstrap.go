@@ -66,14 +66,11 @@ func CheckAndBootstrap(
 	}
 
 	// Perform bootstrap
-	logger.Warn("🚀 BOOTSTRAPPING SYSTEM - This will create initial admin credentials")
-	token, err := performBootstrap(ctx, logger, orgRepo, userRepo, tokenRepo, systemOrg)
+	logger.Warn("BOOTSTRAPPING SYSTEM - This will create initial admin credentials")
+	_, err = performBootstrap(ctx, logger, orgRepo, userRepo, tokenRepo, systemOrg)
 	if err != nil {
 		return fmt.Errorf("bootstrap failed: %w", err)
 	}
-
-	// Print credentials to console
-	printBootstrapCredentials(logger, token)
 	return nil
 }
 
@@ -170,36 +167,6 @@ func performBootstrap(
 		return "", fmt.Errorf("failed to create initial token: %w", err)
 	}
 
-	logger.Info("Bootstrap completed successfully")
+	logger.Warn("Bootstrap completed successfully", "token", token, "expires_at", expiresAt)
 	return token, nil
-}
-
-// printBootstrapCredentials outputs the initial credentials to the console
-func printBootstrapCredentials(logger *slog.Logger, token string) {
-	logger.Warn("╔══════════════════════════════════════════════════════════════════════════════╗")
-	logger.Warn("║                          🔐 BOOTSTRAP CREDENTIALS 🔐                        ║")
-	logger.Warn("║                                                                              ║")
-	logger.Warn("║  IMPORTANT: Your system has been bootstrapped with initial credentials.     ║")
-	logger.Warn("║  Please save these credentials and REPLACE THEM IMMEDIATELY for security.   ║")
-	logger.Warn("║                                                                              ║")
-	logger.Warn("╠══════════════════════════════════════════════════════════════════════════════╣")
-	logger.Warn("║                                                                              ║")
-	logger.Warn(fmt.Sprintf("║  Admin Email: %-58s ║", DefaultAdminEmail))
-	logger.Warn("║  Organization: system                                                        ║")
-	logger.Warn("║                                                                              ║")
-	logger.Warn("║  API Token (expires in 24 hours):                                           ║")
-	logger.Warn(fmt.Sprintf("║  %s ║", token))
-	logger.Warn("║                                                                              ║")
-	logger.Warn("║  Use this token in the Authorization header:                                ║")
-	logger.Warn(fmt.Sprintf("║  Authorization: Bearer %s ║", token[:20]+"..."))
-	logger.Warn("║                                                                              ║")
-	logger.Warn("╠══════════════════════════════════════════════════════════════════════════════╣")
-	logger.Warn("║                                                                              ║")
-	logger.Warn("║  🚨 SECURITY NOTICE:                                                        ║")
-	logger.Warn("║  1. This token expires in 24 hours                                          ║")
-	logger.Warn("║  2. Create a new long-term token immediately                                ║")
-	logger.Warn("║  3. Update the admin email from the default                                 ║")
-	logger.Warn("║  4. Set up proper SSO authentication for your organization                  ║")
-	logger.Warn("║                                                                              ║")
-	logger.Warn("╚══════════════════════════════════════════════════════════════════════════════╝")
 }

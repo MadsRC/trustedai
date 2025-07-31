@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2025 Mads R. Havmand <mads@v42.dk>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+services:
+  trustedai:
+    image: goreleaser.ko.local/github.com/madsrc/trustedai/cmd/trustedai
+    ports:
+      - "8081:8081"
+      - "9999:9999"
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    environment:
+      TRUSTEDAI_DATABASE_URL: postgres://postgres:postgres@db:5432
+      TRUSTEDAI_LOG_LEVEL: debug
+      TRUSTEDAI_LOG_FORMAT: json
+      TRUSTEDAI_OTLP_ENDPOINT: otel-collector:4317
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.0
+    command:
+      - start-dev
+      - --import-realm
+      - -Dkeycloak.import=/opt/keycloak/data/import/
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../keycloak:/opt/keycloak/data/import:rw
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    volumes:
+      - ../../otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - 4317:4317 # OTLP gRPC receiver
+

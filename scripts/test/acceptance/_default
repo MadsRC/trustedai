@@ -3,8 +3,49 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 #MISE description="Run end-to-end tests for the project"
 
-# Run Go acceptance tests
-go test -count=1 --tags=acceptance "$@" ./cmd/aigent/...
+# Parse test name argument
+TEST_NAME=""
+if [ $# -gt 0 ]; then
+    TEST_NAME="$1"
+    shift  # Remove first argument so remaining args can be passed to go test
+fi
 
-# Run frontend acceptance tests
-cd frontend && npm run test:acceptance
+# Change to acceptance test directory
+cd testing/acceptance
+
+# Extract bootstrap token from docker-compose logs
+echo "Extracting bootstrap token from logs..."
+BOOTSTRAP_TOKEN=$(docker-compose logs --no-color --no-log-prefix trustedai | grep "Bootstrap completed successfully" | jq -r .token)
+
+if [ -z "$BOOTSTRAP_TOKEN" ]; then
+    echo "Error: Could not extract bootstrap token from logs"
+    echo "Make sure the TrustedAI service has started and completed bootstrapping"
+    exit 1
+fi
+
+echo "Found bootstrap token: ${BOOTSTRAP_TOKEN:0:20}..."
+
+# Set environment variables
+export TRUSTEDAI_BOOTSTRAP_TOKEN="$BOOTSTRAP_TOKEN"
+export TRUSTEDAI_CONTROLPLANE_URL="http://localhost:9999"
+export TRUSTEDAI_DATAPLANE_URL="http://localhost:8081"
+
+# Return to project root
+cd ../..
+
+# Build go test command
+GO_TEST_CMD="go test -count=1 --tags=acceptance"
+
+# Add -run flag if test name is provided
+if [ -n "$TEST_NAME" ]; then
+    echo "Running specific test: $TEST_NAME"
+    GO_TEST_CMD="$GO_TEST_CMD -run $TEST_NAME"
+else
+    echo "Running all acceptance tests"
+fi
+
+# Add any remaining arguments and test path
+GO_TEST_CMD="$GO_TEST_CMD $* ./testing/acceptance/..."
+
+# Run Go acceptance tests
+eval $GO_TEST_CMD
