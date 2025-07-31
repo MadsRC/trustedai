@@ -182,11 +182,6 @@ type ModelWithCredentials struct {
 	CredentialType trustedaiv1.CredentialType
 }
 
-// ModelWithReference represents a model with its model reference for aliasing
-type ModelWithReference struct {
-	Model gai.Model
-}
-
 // ProviderRepository defines persistence operations for Providers
 type ProviderRepository interface {
 	GetAllProviders(ctx context.Context) ([]ProviderConfig, error)
@@ -207,11 +202,8 @@ type CredentialRepository interface {
 
 // ModelRepository defines persistence operations for Models
 type ModelRepository interface {
-	GetAllModels(ctx context.Context) ([]gai.Model, error)
-	GetAllModelsWithReference(ctx context.Context) ([]ModelWithReference, error)
-	GetModelByID(ctx context.Context, modelID string) (*gai.Model, error)
-	GetModelByIDWithReference(ctx context.Context, modelID string) (*ModelWithReference, error)
-	GetModelWithCredentials(ctx context.Context, modelID string) (*ModelWithCredentials, error)
+	GetAllModels(ctx context.Context) ([]ModelWithCredentials, error)
+	GetModelByID(ctx context.Context, modelID string) (*ModelWithCredentials, error)
 	CreateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error
 	UpdateModel(ctx context.Context, model *gai.Model, credentialID uuid.UUID, credentialType trustedaiv1.CredentialType) error
 	DeleteModel(ctx context.Context, modelID string) error

@@ -401,8 +401,8 @@ func (s *ModelManagement) GetModel(
 		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("model management service: model ID is required"))
 	}
 
-	// Get model with reference from repository
-	modelWithRef, err := s.options.ModelRepository.GetModelByIDWithReference(ctx, req.Msg.GetId())
+	// Get model with credentials from repository
+	modelWithCreds, err := s.options.ModelRepository.GetModelByID(ctx, req.Msg.GetId())
 	if err != nil {
 		s.options.Logger.Error("Failed to get model", "error", err, "id", req.Msg.GetId())
 		return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("model management service: model not found: %w", err))
@@ -410,34 +410,34 @@ func (s *ModelManagement) GetModel(
 
 	// Convert to proto model
 	protoModel := &trustedaiv1.Model{
-		Id:             modelWithRef.Model.ID,
-		Name:           modelWithRef.Model.Name,
-		ProviderId:     modelWithRef.Model.Provider,
-		CredentialId:   "",                                                     // Not available in current model structure
-		CredentialType: trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
-		Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
+		Id:             modelWithCreds.Model.ID,
+		Name:           modelWithCreds.Model.Name,
+		ProviderId:     modelWithCreds.Model.Provider,
+		CredentialId:   modelWithCreds.CredentialID.String(),
+		CredentialType: modelWithCreds.CredentialType,
+		Metadata:       convertGaiMetadataToProto(modelWithCreds.Model.Metadata),
 		Enabled:        true,
 		CreatedAt:      timestamppb.New(time.Now()),
 		UpdatedAt:      timestamppb.New(time.Now()),
 	}
 
 	// Add pricing if available
-	if modelWithRef.Model.Pricing.InputTokenPrice > 0 || modelWithRef.Model.Pricing.OutputTokenPrice > 0 {
+	if modelWithCreds.Model.Pricing.InputTokenPrice > 0 || modelWithCreds.Model.Pricing.OutputTokenPrice > 0 {
 		protoModel.Pricing = &trustedaiv1.ModelPricing{
-			InputTokenPrice:  modelWithRef.Model.Pricing.InputTokenPrice,
-			OutputTokenPrice: modelWithRef.Model.Pricing.OutputTokenPrice,
+			InputTokenPrice:  modelWithCreds.Model.Pricing.InputTokenPrice,
+			OutputTokenPrice: modelWithCreds.Model.Pricing.OutputTokenPrice,
 		}
 	}
 
 	// Add capabilities
 	protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
-		SupportsStreaming: modelWithRef.Model.Capabilities.SupportsStreaming,
-		SupportsJson:      modelWithRef.Model.Capabilities.SupportsJSON,
-		SupportsTools:     modelWithRef.Model.Capabilities.SupportsTools,
-		SupportsVision:    modelWithRef.Model.Capabilities.SupportsVision,
-		SupportsReasoning: modelWithRef.Model.Capabilities.SupportsReasoning,
-		MaxInputTokens:    int32(modelWithRef.Model.Capabilities.MaxInputTokens),
-		MaxOutputTokens:   int32(modelWithRef.Model.Capabilities.MaxOutputTokens),
+		SupportsStreaming: modelWithCreds.Model.Capabilities.SupportsStreaming,
+		SupportsJson:      modelWithCreds.Model.Capabilities.SupportsJSON,
+		SupportsTools:     modelWithCreds.Model.Capabilities.SupportsTools,
+		SupportsVision:    modelWithCreds.Model.Capabilities.SupportsVision,
+		SupportsReasoning: modelWithCreds.Model.Capabilities.SupportsReasoning,
+		MaxInputTokens:    int32(modelWithCreds.Model.Capabilities.MaxInputTokens),
+		MaxOutputTokens:   int32(modelWithCreds.Model.Capabilities.MaxOutputTokens),
 	}
 
 	// Return response
@@ -455,45 +455,45 @@ func (s *ModelManagement) ListModels(
 ) (*connect.Response[trustedaiv1.ModelManagementServiceListModelsResponse], error) {
 	s.options.Logger.Debug("[ModelManagementService] ListModels invoked", "includeDisabled", req.Msg.GetIncludeDisabled())
 
-	// Get models with references from repository (existing repo only returns enabled models)
-	modelsWithRef, err := s.options.ModelRepository.GetAllModelsWithReference(ctx)
+	// Get models with credentials from repository (existing repo only returns enabled models)
+	modelsWithCreds, err := s.options.ModelRepository.GetAllModels(ctx)
 	if err != nil {
 		s.options.Logger.Error("Failed to list models", "error", err)
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("model management service: failed to list models: %w", err))
 	}
 
 	// Convert models to proto
-	protoModels := make([]*trustedaiv1.Model, 0, len(modelsWithRef))
-	for _, modelWithRef := range modelsWithRef {
+	protoModels := make([]*trustedaiv1.Model, 0, len(modelsWithCreds))
+	for _, modelWithCreds := range modelsWithCreds {
 		protoModel := &trustedaiv1.Model{
-			Id:             modelWithRef.Model.ID,
-			Name:           modelWithRef.Model.Name,
-			ProviderId:     modelWithRef.Model.Provider,
-			CredentialId:   "",                                                     // Not available in current model structure
-			CredentialType: trustedaiv1.CredentialType_CREDENTIAL_TYPE_UNSPECIFIED, // Not available in current model structure
-			Metadata:       convertGaiMetadataToProto(modelWithRef.Model.Metadata),
+			Id:             modelWithCreds.Model.ID,
+			Name:           modelWithCreds.Model.Name,
+			ProviderId:     modelWithCreds.Model.Provider,
+			CredentialId:   modelWithCreds.CredentialID.String(),
+			CredentialType: modelWithCreds.CredentialType,
+			Metadata:       convertGaiMetadataToProto(modelWithCreds.Model.Metadata),
 			Enabled:        true,
 			CreatedAt:      timestamppb.New(time.Now()),
 			UpdatedAt:      timestamppb.New(time.Now()),
 		}
 
 		// Add pricing if available
-		if modelWithRef.Model.Pricing.InputTokenPrice > 0 || modelWithRef.Model.Pricing.OutputTokenPrice > 0 {
+		if modelWithCreds.Model.Pricing.InputTokenPrice > 0 || modelWithCreds.Model.Pricing.OutputTokenPrice > 0 {
 			protoModel.Pricing = &trustedaiv1.ModelPricing{
-				InputTokenPrice:  modelWithRef.Model.Pricing.InputTokenPrice,
-				OutputTokenPrice: modelWithRef.Model.Pricing.OutputTokenPrice,
+				InputTokenPrice:  modelWithCreds.Model.Pricing.InputTokenPrice,
+				OutputTokenPrice: modelWithCreds.Model.Pricing.OutputTokenPrice,
 			}
 		}
 
 		// Add capabilities
 		protoModel.Capabilities = &trustedaiv1.ModelCapabilities{
-			SupportsStreaming: modelWithRef.Model.Capabilities.SupportsStreaming,
-			SupportsJson:      modelWithRef.Model.Capabilities.SupportsJSON,
-			SupportsTools:     modelWithRef.Model.Capabilities.SupportsTools,
-			SupportsVision:    modelWithRef.Model.Capabilities.SupportsVision,
-			SupportsReasoning: modelWithRef.Model.Capabilities.SupportsReasoning,
-			MaxInputTokens:    int32(modelWithRef.Model.Capabilities.MaxInputTokens),
-			MaxOutputTokens:   int32(modelWithRef.Model.Capabilities.MaxOutputTokens),
+			SupportsStreaming: modelWithCreds.Model.Capabilities.SupportsStreaming,
+			SupportsJson:      modelWithCreds.Model.Capabilities.SupportsJSON,
+			SupportsTools:     modelWithCreds.Model.Capabilities.SupportsTools,
+			SupportsVision:    modelWithCreds.Model.Capabilities.SupportsVision,
+			SupportsReasoning: modelWithCreds.Model.Capabilities.SupportsReasoning,
+			MaxInputTokens:    int32(modelWithCreds.Model.Capabilities.MaxInputTokens),
+			MaxOutputTokens:   int32(modelWithCreds.Model.Capabilities.MaxOutputTokens),
 		}
 
 		protoModels = append(protoModels, protoModel)

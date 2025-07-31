@@ -17,30 +17,24 @@ import (
 
 // CachedModelRepository wraps a ModelRepository with caching
 type CachedModelRepository struct {
-	underlying            trustedai.ModelRepository
-	modelCache            *cache.Cache[string, *gai.Model]
-	modelWithCredsCache   *cache.Cache[string, *trustedai.ModelWithCredentials]
-	modelWithRefCache     *cache.Cache[string, *trustedai.ModelWithReference]
-	allModelsCache        *cache.Cache[string, []gai.Model]
-	allModelsWithRefCache *cache.Cache[string, []trustedai.ModelWithReference]
-	cacheTTL              time.Duration
+	underlying          trustedai.ModelRepository
+	modelWithCredsCache *cache.Cache[string, *trustedai.ModelWithCredentials]
+	allModelsCache      *cache.Cache[string, []trustedai.ModelWithCredentials]
+	cacheTTL            time.Duration
 }
 
 // NewCachedModelRepository creates a new cached model repository
 func NewCachedModelRepository(underlying trustedai.ModelRepository, cacheTTL time.Duration) *CachedModelRepository {
 	return &CachedModelRepository{
-		underlying:            underlying,
-		modelCache:            cache.New[string, *gai.Model](cacheTTL),
-		modelWithCredsCache:   cache.New[string, *trustedai.ModelWithCredentials](cacheTTL),
-		modelWithRefCache:     cache.New[string, *trustedai.ModelWithReference](cacheTTL),
-		allModelsCache:        cache.New[string, []gai.Model](cacheTTL),
-		allModelsWithRefCache: cache.New[string, []trustedai.ModelWithReference](cacheTTL),
-		cacheTTL:              cacheTTL,
+		underlying:          underlying,
+		modelWithCredsCache: cache.New[string, *trustedai.ModelWithCredentials](cacheTTL),
+		allModelsCache:      cache.New[string, []trustedai.ModelWithCredentials](cacheTTL),
+		cacheTTL:            cacheTTL,
 	}
 }
 
 // GetAllModels retrieves all models with caching
-func (r *CachedModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error) {
+func (r *CachedModelRepository) GetAllModels(ctx context.Context) ([]trustedai.ModelWithCredentials, error) {
 	cacheKey := "all_models"
 
 	// Try cache first
@@ -59,43 +53,16 @@ func (r *CachedModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, 
 
 	// Also cache individual models
 	for _, model := range models {
-		r.modelCache.Set(model.ID, &model)
-	}
-
-	return models, nil
-}
-
-// GetAllModelsWithReference retrieves all models with references with caching
-func (r *CachedModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
-	cacheKey := "all_models_with_ref"
-
-	// Try cache first
-	if cached, found := r.allModelsWithRefCache.Get(cacheKey); found {
-		return cached, nil
-	}
-
-	// Cache miss - fetch from underlying repository
-	models, err := r.underlying.GetAllModelsWithReference(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// Store in cache
-	r.allModelsWithRefCache.Set(cacheKey, models)
-
-	// Also cache individual models
-	for _, model := range models {
-		r.modelCache.Set(model.Model.ID, &model.Model)
-		r.modelWithRefCache.Set(model.Model.ID, &model)
+		r.modelWithCredsCache.Set(model.Model.ID, &model)
 	}
 
 	return models, nil
 }
 
 // GetModelByID retrieves a model by ID with caching
-func (r *CachedModelRepository) GetModelByID(ctx context.Context, modelID string) (*gai.Model, error) {
+func (r *CachedModelRepository) GetModelByID(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	// Try cache first
-	if cached, found := r.modelCache.Get(modelID); found {
+	if cached, found := r.modelWithCredsCache.Get(modelID); found {
 		return cached, nil
 	}
 
@@ -106,47 +73,7 @@ func (r *CachedModelRepository) GetModelByID(ctx context.Context, modelID string
 	}
 
 	// Store in cache
-	r.modelCache.Set(modelID, model)
-
-	return model, nil
-}
-
-// GetModelByIDWithReference retrieves a model with reference by ID with caching
-func (r *CachedModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
-	// Try cache first
-	if cached, found := r.modelWithRefCache.Get(modelID); found {
-		return cached, nil
-	}
-
-	// Cache miss - fetch from underlying repository
-	model, err := r.underlying.GetModelByIDWithReference(ctx, modelID)
-	if err != nil {
-		return nil, err
-	}
-
-	// Store in cache
-	r.modelWithRefCache.Set(modelID, model)
-	r.modelCache.Set(modelID, &model.Model)
-
-	return model, nil
-}
-
-// GetModelWithCredentials retrieves a model with credentials by ID with caching
-func (r *CachedModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
-	// Try cache first
-	if cached, found := r.modelWithCredsCache.Get(modelID); found {
-		return cached, nil
-	}
-
-	// Cache miss - fetch from underlying repository
-	model, err := r.underlying.GetModelWithCredentials(ctx, modelID)
-	if err != nil {
-		return nil, err
-	}
-
-	// Store in cache
 	r.modelWithCredsCache.Set(modelID, model)
-	r.modelCache.Set(modelID, &model.Model)
 
 	return model, nil
 }
@@ -160,17 +87,12 @@ func (r *CachedModelRepository) CreateModel(ctx context.Context, model *gai.Mode
 
 	// Invalidate list caches since we added a new model
 	r.allModelsCache.Clear()
-	r.allModelsWithRefCache.Clear()
 
-	// Cache the new model entries
-	r.modelCache.Set(model.ID, model)
+	// Cache the new model entry
 	r.modelWithCredsCache.Set(model.ID, &trustedai.ModelWithCredentials{
 		Model:          *model,
 		CredentialID:   credentialID,
 		CredentialType: credentialType,
-	})
-	r.modelWithRefCache.Set(model.ID, &trustedai.ModelWithReference{
-		Model: *model,
 	})
 
 	return nil
@@ -184,11 +106,8 @@ func (r *CachedModelRepository) UpdateModel(ctx context.Context, model *gai.Mode
 	}
 
 	// Invalidate caches for this model
-	r.modelCache.Delete(model.ID)
 	r.modelWithCredsCache.Delete(model.ID)
-	r.modelWithRefCache.Delete(model.ID)
 	r.allModelsCache.Clear()
-	r.allModelsWithRefCache.Clear()
 
 	return nil
 }
@@ -201,32 +120,23 @@ func (r *CachedModelRepository) DeleteModel(ctx context.Context, modelID string)
 	}
 
 	// Invalidate caches
-	r.modelCache.Delete(modelID)
 	r.modelWithCredsCache.Delete(modelID)
-	r.modelWithRefCache.Delete(modelID)
 	r.allModelsCache.Clear()
-	r.allModelsWithRefCache.Clear()
 
 	return nil
 }
 
 // Close stops the cache cleanup goroutines
 func (r *CachedModelRepository) Close() {
-	r.modelCache.Close()
 	r.modelWithCredsCache.Close()
-	r.modelWithRefCache.Close()
 	r.allModelsCache.Close()
-	r.allModelsWithRefCache.Close()
 }
 
 // CacheStats returns cache statistics for monitoring
 func (r *CachedModelRepository) CacheStats() map[string]any {
 	return map[string]any{
-		"model_cache_size":               r.modelCache.Size(),
-		"model_with_creds_cache_size":    r.modelWithCredsCache.Size(),
-		"model_with_ref_cache_size":      r.modelWithRefCache.Size(),
-		"all_models_cache_size":          r.allModelsCache.Size(),
-		"all_models_with_ref_cache_size": r.allModelsWithRefCache.Size(),
-		"cache_ttl_seconds":              r.cacheTTL.Seconds(),
+		"model_with_creds_cache_size": r.modelWithCredsCache.Size(),
+		"all_models_cache_size":       r.allModelsCache.Size(),
+		"cache_ttl_seconds":           r.cacheTTL.Seconds(),
 	}
 }

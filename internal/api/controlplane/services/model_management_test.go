@@ -279,39 +279,15 @@ type MockModelRepository struct {
 	mock.Mock
 }
 
-func (m *MockModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error) {
+func (m *MockModelRepository) GetAllModels(ctx context.Context) ([]trustedai.ModelWithCredentials, error) {
 	args := m.Called(ctx)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]gai.Model), args.Error(1)
+	return args.Get(0).([]trustedai.ModelWithCredentials), args.Error(1)
 }
 
-func (m *MockModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
-	args := m.Called(ctx)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).([]trustedai.ModelWithReference), args.Error(1)
-}
-
-func (m *MockModelRepository) GetModelByID(ctx context.Context, modelID string) (*gai.Model, error) {
-	args := m.Called(ctx, modelID)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*gai.Model), args.Error(1)
-}
-
-func (m *MockModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
-	args := m.Called(ctx, modelID)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*trustedai.ModelWithReference), args.Error(1)
-}
-
-func (m *MockModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
+func (m *MockModelRepository) GetModelByID(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	args := m.Called(ctx, modelID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -349,8 +325,8 @@ func TestModelManagement_GetModel_MissingCredentialInformationIssue(t *testing.T
 	testCredentialID := uuid.New()
 	testCredentialType := trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER
 
-	// Current implementation uses GetModelByIDWithReference which doesn't include credential info
-	mockModelRepo.On("GetModelByIDWithReference", mock.Anything, testModelID).Return(&trustedai.ModelWithReference{
+	// Updated implementation uses GetModelByID which includes credential info
+	mockModelRepo.On("GetModelByID", mock.Anything, testModelID).Return(&trustedai.ModelWithCredentials{
 		Model: gai.Model{
 			ID:       testModelID,
 			Name:     "Test Model",
@@ -369,6 +345,8 @@ func TestModelManagement_GetModel_MissingCredentialInformationIssue(t *testing.T
 				MaxOutputTokens:   4096,
 			},
 		},
+		CredentialID:   testCredentialID,
+		CredentialType: testCredentialType,
 	}, nil)
 
 	req := connect.NewRequest(&trustedaiv1.ModelManagementServiceGetModelRequest{
@@ -405,7 +383,7 @@ func TestModelManagement_ListModels_MissingCredentialInformationIssue(t *testing
 	testCredentialID := uuid.New()
 	testCredentialType := trustedaiv1.CredentialType_CREDENTIAL_TYPE_OPENROUTER
 
-	mockModelRepo.On("GetAllModelsWithReference", mock.Anything).Return([]trustedai.ModelWithReference{
+	mockModelRepo.On("GetAllModels", mock.Anything).Return([]trustedai.ModelWithCredentials{
 		{
 			Model: gai.Model{
 				ID:       "model-1",
@@ -425,6 +403,8 @@ func TestModelManagement_ListModels_MissingCredentialInformationIssue(t *testing
 					MaxOutputTokens:   4096,
 				},
 			},
+			CredentialID:   testCredentialID,
+			CredentialType: testCredentialType,
 		},
 		{
 			Model: gai.Model{
@@ -445,6 +425,8 @@ func TestModelManagement_ListModels_MissingCredentialInformationIssue(t *testing
 					MaxOutputTokens:   8192,
 				},
 			},
+			CredentialID:   testCredentialID,
+			CredentialType: testCredentialType,
 		},
 	}, nil)
 

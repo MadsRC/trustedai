@@ -127,13 +127,13 @@ func (c *CostCalculator) ProcessUsageEvents(ctx context.Context) error {
 // processEvent calculates the cost for a single usage event
 func (c *CostCalculator) processEvent(ctx context.Context, event *trustedai.UsageEvent) error {
 	// Get model pricing information
-	model, err := c.modelRepo.GetModelByID(ctx, event.ModelID)
+	modelWithCreds, err := c.modelRepo.GetModelByID(ctx, event.ModelID)
 	if err != nil {
 		return fmt.Errorf("failed to get model %s: %w", event.ModelID, err)
 	}
 
 	// Calculate cost based on token usage
-	cost := c.calculateCost(*event, model.Pricing)
+	cost := c.calculateCost(*event, modelWithCreds.Model.Pricing)
 
 	// Update the usage event with calculated costs
 	if err := c.usageRepo.UpdateUsageEventCost(ctx, event.ID, cost); err != nil {

@@ -23,9 +23,9 @@ func NewModelRepository(pool PgxPoolInterface) *ModelRepository {
 	return &ModelRepository{pool: pool}
 }
 
-func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error) {
+func (r *ModelRepository) GetAllModels(ctx context.Context) ([]trustedai.ModelWithCredentials, error) {
 	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
+		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.credential_id, m.credential_type, m.metadata
 		FROM models m
 		WHERE m.enabled = true
 	`
@@ -36,36 +36,42 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 	}
 	defer rows.Close()
 
-	var modelList []gai.Model
+	var modelList []trustedai.ModelWithCredentials
 	for rows.Next() {
-		var model gai.Model
+		var modelWithCreds trustedai.ModelWithCredentials
 		var pricingJSON, capabilitiesJSON, metadataJSON []byte
+		var credentialTypeInt int
 
 		err := rows.Scan(
-			&model.ID,
-			&model.Name,
-			&model.Provider,
+			&modelWithCreds.Model.ID,
+			&modelWithCreds.Model.Name,
+			&modelWithCreds.Model.Provider,
 			&pricingJSON,
 			&capabilitiesJSON,
+			&modelWithCreds.CredentialID,
+			&credentialTypeInt,
 			&metadataJSON,
 		)
 		if err != nil {
 			return nil, err
 		}
 
-		if err := json.Unmarshal(pricingJSON, &model.Pricing); err != nil {
+		// Convert integer credential type to CredentialType
+		modelWithCreds.CredentialType = trustedaiv1.CredentialType(credentialTypeInt)
+
+		if err := json.Unmarshal(pricingJSON, &modelWithCreds.Model.Pricing); err != nil {
 			return nil, err
 		}
 
-		if err := json.Unmarshal(capabilitiesJSON, &model.Capabilities); err != nil {
+		if err := json.Unmarshal(capabilitiesJSON, &modelWithCreds.Model.Capabilities); err != nil {
 			return nil, err
 		}
 
-		if err := json.Unmarshal(metadataJSON, &model.Metadata); err != nil {
+		if err := json.Unmarshal(metadataJSON, &modelWithCreds.Model.Metadata); err != nil {
 			return nil, err
 		}
 
-		modelList = append(modelList, model)
+		modelList = append(modelList, modelWithCreds)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -75,137 +81,7 @@ func (r *ModelRepository) GetAllModels(ctx context.Context) ([]gai.Model, error)
 	return modelList, nil
 }
 
-func (r *ModelRepository) GetAllModelsWithReference(ctx context.Context) ([]trustedai.ModelWithReference, error) {
-	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
-		FROM models m
-		WHERE m.enabled = true
-	`
-
-	rows, err := r.pool.Query(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var modelList []trustedai.ModelWithReference
-	for rows.Next() {
-		var modelWithRef trustedai.ModelWithReference
-		var pricingJSON, capabilitiesJSON, metadataJSON []byte
-
-		err := rows.Scan(
-			&modelWithRef.Model.ID,
-			&modelWithRef.Model.Name,
-			&modelWithRef.Model.Provider,
-			&pricingJSON,
-			&capabilitiesJSON,
-			&metadataJSON,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := json.Unmarshal(pricingJSON, &modelWithRef.Model.Pricing); err != nil {
-			return nil, err
-		}
-
-		if err := json.Unmarshal(capabilitiesJSON, &modelWithRef.Model.Capabilities); err != nil {
-			return nil, err
-		}
-
-		if err := json.Unmarshal(metadataJSON, &modelWithRef.Model.Metadata); err != nil {
-			return nil, err
-		}
-
-		modelList = append(modelList, modelWithRef)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return modelList, nil
-}
-
-func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*gai.Model, error) {
-	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
-		FROM models m
-		WHERE m.id = $1 AND m.enabled = true
-	`
-
-	row := r.pool.QueryRow(ctx, query, modelID)
-
-	var model gai.Model
-	var pricingJSON, capabilitiesJSON, metadataJSON []byte
-
-	err := row.Scan(
-		&model.ID,
-		&model.Name,
-		&model.Provider,
-		&pricingJSON,
-		&capabilitiesJSON,
-		&metadataJSON,
-	)
-	if err != nil {
-		return nil, models.ErrModelNotFound
-	}
-
-	if err := json.Unmarshal(pricingJSON, &model.Pricing); err != nil {
-		return nil, err
-	}
-
-	if err := json.Unmarshal(capabilitiesJSON, &model.Capabilities); err != nil {
-		return nil, err
-	}
-
-	if err := json.Unmarshal(metadataJSON, &model.Metadata); err != nil {
-		return nil, err
-	}
-
-	return &model, nil
-}
-
-func (r *ModelRepository) GetModelByIDWithReference(ctx context.Context, modelID string) (*trustedai.ModelWithReference, error) {
-	query := `
-		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.metadata
-		FROM models m
-		WHERE m.id = $1 AND m.enabled = true
-	`
-
-	row := r.pool.QueryRow(ctx, query, modelID)
-
-	var modelWithRef trustedai.ModelWithReference
-	var pricingJSON, capabilitiesJSON, metadataJSON []byte
-
-	err := row.Scan(
-		&modelWithRef.Model.ID,
-		&modelWithRef.Model.Name,
-		&modelWithRef.Model.Provider,
-		&pricingJSON,
-		&capabilitiesJSON,
-		&metadataJSON,
-	)
-	if err != nil {
-		return nil, models.ErrModelNotFound
-	}
-
-	if err := json.Unmarshal(pricingJSON, &modelWithRef.Model.Pricing); err != nil {
-		return nil, err
-	}
-
-	if err := json.Unmarshal(capabilitiesJSON, &modelWithRef.Model.Capabilities); err != nil {
-		return nil, err
-	}
-
-	if err := json.Unmarshal(metadataJSON, &modelWithRef.Model.Metadata); err != nil {
-		return nil, err
-	}
-
-	return &modelWithRef, nil
-}
-
-func (r *ModelRepository) GetModelWithCredentials(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
+func (r *ModelRepository) GetModelByID(ctx context.Context, modelID string) (*trustedai.ModelWithCredentials, error) {
 	query := `
 		SELECT m.id, m.name, m.provider_id, m.pricing, m.capabilities, m.credential_id, m.credential_type, m.metadata
 		FROM models m

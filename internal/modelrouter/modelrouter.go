@@ -144,7 +144,7 @@ func (mr *ModelRouter) RouteModel(ctx context.Context, modelID string) (gai.Prov
 		return nil, errors.New("database repositories not configured")
 	}
 
-	modelWithCreds, err := mr.modelRepo.GetModelWithCredentials(ctx, modelID)
+	modelWithCreds, err := mr.modelRepo.GetModelByID(ctx, modelID)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +187,18 @@ func (mr *ModelRouter) ListModels(ctx context.Context) ([]gai.Model, error) {
 		return nil, errors.New("model repository not configured")
 	}
 
-	return mr.modelRepo.GetAllModels(ctx)
+	modelsWithCreds, err := mr.modelRepo.GetAllModels(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Extract just the gai.Model part for backwards compatibility
+	models := make([]gai.Model, len(modelsWithCreds))
+	for i, modelWithCreds := range modelsWithCreds {
+		models[i] = modelWithCreds.Model
+	}
+
+	return models, nil
 }
 
 func (mr *ModelRouter) ListProviders() []gai.ProviderClient {
