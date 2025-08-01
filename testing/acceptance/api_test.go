@@ -19,6 +19,9 @@ import (
 	"connectrpc.com/connect"
 	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
 	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
+	"github.com/openai/openai-go/responses"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -46,12 +49,12 @@ func setupTestConfig(t *testing.T) *TestConfig {
 
 	controlPlaneURL := os.Getenv("TRUSTEDAI_CONTROLPLANE_URL")
 	if controlPlaneURL == "" {
-		controlPlaneURL = "http://localhost:8081" // Default from docker-compose
+		controlPlaneURL = "http://localhost:9999" // Default from docker-compose
 	}
 
 	dataPlaneURL := os.Getenv("TRUSTEDAI_DATAPLANE_URL")
 	if dataPlaneURL == "" {
-		dataPlaneURL = "http://localhost:9999" // Default from docker-compose
+		dataPlaneURL = "http://localhost:8081" // Default from docker-compose
 	}
 
 	bootstrapToken := os.Getenv("TRUSTEDAI_BOOTSTRAP_TOKEN")
@@ -416,7 +419,108 @@ func testOpenAICompatibility(t *testing.T, config *TestConfig) {
 	if config.CreatedToken == "" {
 		t.Skip("Skipping OpenAI compatibility tests - no created token available")
 	}
-	t.Skip("Not yet implemented")
+
+	t.Run("ChatCompletions", func(t *testing.T) {
+		testOpenAIChatCompletions(t, config)
+	})
+
+	t.Run("Responses", func(t *testing.T) {
+		testOpenAIResponses(t, config)
+	})
+}
+
+// testOpenAIChatCompletions tests the OpenAI chat completions API endpoint using the official OpenAI SDK
+func testOpenAIChatCompletions(t *testing.T, config *TestConfig) {
+	// Create OpenAI client configured to use our DataPlane URL
+	client := openai.NewClient(
+		option.WithAPIKey(config.CreatedToken),
+		option.WithBaseURL(config.DataPlaneURL+"/openai/v1"),
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create chat completion request
+	chatCompletion, err := client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage("You are a helpful assistant."),
+			openai.UserMessage("Who won the world series in 2020?"),
+			openai.AssistantMessage("The Los Angeles Dodgers won the World Series in 2020."),
+			openai.UserMessage("Where was it played?"),
+		},
+		Model: "gemini-2.5-flash-lite",
+	})
+	require.NoError(t, err, "Failed to create chat completion")
+
+	// Verify response structure
+	assert.NotEmpty(t, chatCompletion.ID, "Response should have an ID")
+	assert.Equal(t, "chat.completion", string(chatCompletion.Object), "Object should be 'chat.completion'")
+	assert.NotZero(t, chatCompletion.Created, "Response should have a created timestamp")
+	assert.Equal(t, "gemini-2.5-flash-lite", chatCompletion.Model, "Model should match the requested model")
+	assert.Greater(t, len(chatCompletion.Choices), 0, "Should have at least one choice")
+
+	// Verify first choice
+	choice := chatCompletion.Choices[0]
+	assert.Equal(t, int64(0), choice.Index, "First choice should have index 0")
+	assert.NotEmpty(t, choice.Message.Content, "Message content should not be empty")
+	assert.Equal(t, "assistant", string(choice.Message.Role), "Message role should be assistant")
+	assert.NotEmpty(t, choice.FinishReason, "Choice should have a finish reason")
+
+	// Verify usage information if present
+	if chatCompletion.Usage.TotalTokens > 0 {
+		assert.GreaterOrEqual(t, chatCompletion.Usage.PromptTokens, int64(0), "Prompt tokens should be non-negative")
+		assert.GreaterOrEqual(t, chatCompletion.Usage.CompletionTokens, int64(0), "Completion tokens should be non-negative")
+		assert.GreaterOrEqual(t, chatCompletion.Usage.TotalTokens, int64(0), "Total tokens should be non-negative")
+		assert.Equal(t, chatCompletion.Usage.PromptTokens+chatCompletion.Usage.CompletionTokens, chatCompletion.Usage.TotalTokens, "Total tokens should equal prompt + completion tokens")
+	}
+}
+
+// testOpenAIResponses tests the OpenAI responses API endpoint using the official OpenAI SDK
+func testOpenAIResponses(t *testing.T, config *TestConfig) {
+	// Create OpenAI client configured to use our DataPlane URL
+	client := openai.NewClient(
+		option.WithAPIKey(config.CreatedToken),
+		option.WithBaseURL(config.DataPlaneURL+"/openai/v1"),
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create responses request
+	response, err := client.Responses.New(ctx, responses.ResponseNewParams{
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: []responses.ResponseInputItemUnionParam{
+				responses.ResponseInputItemParamOfMessage("Who won the world series in 2020?", responses.EasyInputMessageRoleUser),
+			},
+		},
+		Model: "gemini-2.5-flash-lite",
+	})
+	require.NoError(t, err, "Failed to create response")
+
+	// Verify response structure
+	assert.NotEmpty(t, response.ID, "Response should have an ID")
+	assert.Equal(t, "response", response.Object, "Object should be 'response'")
+	assert.NotZero(t, response.CreatedAt, "Response should have a created timestamp")
+	assert.Equal(t, "gemini-2.5-flash-lite", response.Model, "Model should match the requested model")
+	assert.Greater(t, len(response.Output), 0, "Should have at least one output item")
+
+	// Verify first output item is a message
+	if len(response.Output) > 0 {
+		outputItem := response.Output[0]
+		if outputMsg := outputItem.AsMessage(); outputMsg.ID != "" {
+			assert.NotEmpty(t, outputMsg.Content, "Message content should not be empty")
+			assert.Equal(t, "assistant", string(outputMsg.Role), "Message role should be assistant")
+			assert.Equal(t, responses.ResponseOutputMessageStatusCompleted, outputMsg.Status, "Message should be completed")
+		}
+	}
+
+	// Verify usage information if present
+	if response.Usage.TotalTokens > 0 {
+		assert.GreaterOrEqual(t, response.Usage.InputTokens, int64(0), "Input tokens should be non-negative")
+		assert.GreaterOrEqual(t, response.Usage.OutputTokens, int64(0), "Output tokens should be non-negative")
+		assert.GreaterOrEqual(t, response.Usage.TotalTokens, int64(0), "Total tokens should be non-negative")
+		assert.Equal(t, response.Usage.InputTokens+response.Usage.OutputTokens, response.Usage.TotalTokens, "Total tokens should equal input + output tokens")
+	}
 }
 
 // testAnthropicCompatibility tests Anthropic-compatible endpoints
@@ -539,7 +643,7 @@ func testCreateModel(t *testing.T, config *TestConfig) {
 	// Create a new model
 	modelReq := &trustedaiv1.ModelManagementServiceCreateModelRequest{
 		Model: &trustedaiv1.Model{
-			Id:             "google-gemini-2.5-flash-lite", // Set model ID
+			Id:             "gemini-2.5-flash-lite", // Set model ID
 			Name:           "gemini-2.5-flash-lite",
 			ProviderId:     openRouterProviderID,
 			CredentialId:   config.CreatedCredentialID,

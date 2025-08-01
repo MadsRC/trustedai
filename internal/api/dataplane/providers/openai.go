@@ -691,11 +691,13 @@ func (p *OpenAIProvider) convertCreateResponseToGaiRequest(req CreateResponseReq
 		instructions = req.Instructions
 	}
 
-	if req.Input != "" {
-		input = gai.TextInput{Text: req.Input}
-	} else if len(req.InputItems) > 0 {
+	if req.Input.IsString() {
+		if str, err := req.Input.String(); err == nil && str != "" {
+			input = gai.TextInput{Text: str}
+		}
+	} else if arr, err := req.Input.Array(); err == nil && len(arr) > 0 {
 		var messages []gai.Message
-		for _, item := range req.InputItems {
+		for _, item := range arr {
 			if item.Type == InputItemTypeMessage {
 				var msgContent map[string]any
 				if err := json.Unmarshal(item.Content, &msgContent); err == nil {

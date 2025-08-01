@@ -6,11 +6,85 @@ package providers
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
+// InputUnion represents a union type that can be either a string or a slice of InputItem
+type InputUnion struct {
+	StringValue string      `json:"-"`
+	ArrayValue  []InputItem `json:"-"`
+	isString    bool
+}
+
+// NewInputUnionFromString creates an InputUnion from a string
+func NewInputUnionFromString(s string) InputUnion {
+	return InputUnion{
+		StringValue: s,
+		isString:    true,
+	}
+}
+
+// NewInputUnionFromArray creates an InputUnion from a slice of InputItem
+func NewInputUnionFromArray(items []InputItem) InputUnion {
+	return InputUnion{
+		ArrayValue: items,
+		isString:   false,
+	}
+}
+
+// IsString returns true if the union contains a string value
+func (u InputUnion) IsString() bool {
+	return u.isString
+}
+
+// String returns the string value if the union contains a string
+func (u InputUnion) String() (string, error) {
+	if !u.isString {
+		return "", fmt.Errorf("union does not contain a string value")
+	}
+	return u.StringValue, nil
+}
+
+// Array returns the array value if the union contains an array
+func (u InputUnion) Array() ([]InputItem, error) {
+	if u.isString {
+		return nil, fmt.Errorf("union does not contain an array value")
+	}
+	return u.ArrayValue, nil
+}
+
+// MarshalJSON implements json.Marshaler for InputUnion
+func (u InputUnion) MarshalJSON() ([]byte, error) {
+	if u.isString {
+		return json.Marshal(u.StringValue)
+	}
+	return json.Marshal(u.ArrayValue)
+}
+
+// UnmarshalJSON implements json.Unmarshaler for InputUnion
+func (u *InputUnion) UnmarshalJSON(data []byte) error {
+	// Try to unmarshal as string first
+	var str string
+	if err := json.Unmarshal(data, &str); err == nil {
+		u.StringValue = str
+		u.isString = true
+		return nil
+	}
+
+	// Try to unmarshal as array
+	var items []InputItem
+	if err := json.Unmarshal(data, &items); err == nil {
+		u.ArrayValue = items
+		u.isString = false
+		return nil
+	}
+
+	return fmt.Errorf("input must be either a string or an array of input items")
+}
+
 type CreateResponseRequest struct {
-	Input              string              `json:"input,omitempty"`
+	Input              InputUnion          `json:"input"`
 	InputItems         []InputItem         `json:"input_items,omitempty"`
 	Include            []Includable        `json:"include,omitempty"`
 	ParallelToolCalls  *bool               `json:"parallel_tool_calls,omitempty"`

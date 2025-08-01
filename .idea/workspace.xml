@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8882fa6e-0f09-454f-b6ea-e359c824c5de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/testing/acceptance/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.goreleaser.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.goreleaser.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/trustedai/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/trustedai/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/controlplane/services/model_management_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/openai.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/openai.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_responses.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_responses.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_responses_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/dataplane/providers/openai_responses_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/bootstrap/bootstrap.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/bootstrap/bootstrap.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mise.toml" beforeDir="false" afterPath="$PROJECT_DIR$/mise.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/test/acceptance/_default" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/test/acceptance/_default" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing/acceptance/api_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/testing/acceptance/api_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

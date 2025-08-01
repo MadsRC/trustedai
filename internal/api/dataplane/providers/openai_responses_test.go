@@ -28,7 +28,7 @@ func TestOpenAIProvider_CreateResponse_NonStreaming(t *testing.T) {
 
 	reqBody := CreateResponseRequest{
 		Model:           "gpt-4",
-		Input:           "Hello, how are you?",
+		Input:           NewInputUnionFromString("Hello, how are you?"),
 		Instructions:    "Be helpful and friendly",
 		Temperature:     toPtr(0.7),
 		MaxOutputTokens: toPtr(100),
@@ -79,12 +79,12 @@ func TestOpenAIProvider_CreateResponse_WithInputItems(t *testing.T) {
 
 	reqBody := CreateResponseRequest{
 		Model: "gpt-4",
-		InputItems: []InputItem{
+		Input: NewInputUnionFromArray([]InputItem{
 			{
 				Type:    InputItemTypeMessage,
 				Content: messageContent,
 			},
-		},
+		}),
 		Instructions: "Be helpful",
 	}
 
@@ -117,7 +117,7 @@ func TestOpenAIProvider_CreateResponse_Streaming(t *testing.T) {
 
 	reqBody := CreateResponseRequest{
 		Model:  "gpt-4",
-		Input:  "Tell me a story",
+		Input:  NewInputUnionFromString("Tell me a story"),
 		Stream: toPtr(true),
 	}
 
@@ -176,7 +176,7 @@ func TestOpenAIProvider_CreateResponse_NoLLMClient(t *testing.T) {
 
 	reqBody := CreateResponseRequest{
 		Model: "gpt-4",
-		Input: "Hello",
+		Input: NewInputUnionFromString("Hello"),
 	}
 
 	body, err := json.Marshal(reqBody)
@@ -203,7 +203,7 @@ func TestConvertCreateResponseToGaiRequest(t *testing.T) {
 			name: "simple text input",
 			request: CreateResponseRequest{
 				Model:           "gpt-4",
-				Input:           "Hello world",
+				Input:           NewInputUnionFromString("Hello world"),
 				Instructions:    "Be helpful",
 				Temperature:     toPtr(0.8),
 				TopP:            toPtr(0.9),
@@ -223,7 +223,7 @@ func TestConvertCreateResponseToGaiRequest(t *testing.T) {
 			name: "with streaming",
 			request: CreateResponseRequest{
 				Model:  "gpt-4",
-				Input:  "Tell me a joke",
+				Input:  NewInputUnionFromString("Tell me a joke"),
 				Stream: toPtr(true),
 			},
 			expected: gai.GenerateRequest{
@@ -236,12 +236,12 @@ func TestConvertCreateResponseToGaiRequest(t *testing.T) {
 			name: "with input items - user message",
 			request: CreateResponseRequest{
 				Model: "gpt-4",
-				InputItems: []InputItem{
+				Input: NewInputUnionFromArray([]InputItem{
 					{
 						Type:    InputItemTypeMessage,
 						Content: mustMarshal(map[string]string{"role": "user", "content": "What's the capital of France?"}),
 					},
-				},
+				}),
 			},
 			expected: gai.GenerateRequest{
 				ModelID: "gpt-4",
@@ -260,7 +260,7 @@ func TestConvertCreateResponseToGaiRequest(t *testing.T) {
 			name: "with system message in input items",
 			request: CreateResponseRequest{
 				Model: "gpt-4",
-				InputItems: []InputItem{
+				Input: NewInputUnionFromArray([]InputItem{
 					{
 						Type:    InputItemTypeMessage,
 						Content: mustMarshal(map[string]string{"role": "system", "content": "You are a helpful assistant"}),
@@ -269,7 +269,7 @@ func TestConvertCreateResponseToGaiRequest(t *testing.T) {
 						Type:    InputItemTypeMessage,
 						Content: mustMarshal(map[string]string{"role": "user", "content": "Hello"}),
 					},
-				},
+				}),
 			},
 			expected: gai.GenerateRequest{
 				ModelID:      "gpt-4",
@@ -467,6 +467,93 @@ func TestConvertChunkToResponseStreamEvent(t *testing.T) {
 // Helper function to create pointer to value
 func toPtr[T any](v T) *T {
 	return &v
+}
+
+func TestCreateResponseRequest_InputUnionTypes(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       any
+		expectError bool
+	}{
+		{
+			name:        "string input",
+			input:       "Who won the world series in 2020?",
+			expectError: false,
+		},
+		{
+			name: "array input with single message",
+			input: []map[string]any{
+				{
+					"type": "message",
+					"message": map[string]string{
+						"role":    "user",
+						"content": "Who won the world series in 2020?",
+					},
+				},
+			},
+			expectError: false,
+		},
+		{
+			name: "array input with multiple messages",
+			input: []map[string]any{
+				{
+					"type": "message",
+					"message": map[string]string{
+						"role":    "system",
+						"content": "You are a helpful assistant.",
+					},
+				},
+				{
+					"type": "message",
+					"message": map[string]string{
+						"role":    "user",
+						"content": "What's the weather like?",
+					},
+				},
+			},
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create request payload
+			requestPayload := struct {
+				Model string `json:"model"`
+				Input any    `json:"input"`
+			}{
+				Model: "gemini-2.5-flash-lite",
+				Input: tt.input,
+			}
+
+			// Marshal to JSON
+			jsonPayload, err := json.Marshal(requestPayload)
+			require.NoError(t, err)
+
+			// Try to unmarshal into our CreateResponseRequest struct
+			var req CreateResponseRequest
+			err = json.Unmarshal(jsonPayload, &req)
+
+			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				// For string inputs, verify the value was set correctly
+				if strInput, ok := tt.input.(string); ok {
+					assert.True(t, req.Input.IsString())
+					actualStr, err := req.Input.String()
+					require.NoError(t, err)
+					assert.Equal(t, strInput, actualStr)
+				} else {
+					// For array inputs, verify it's not a string
+					assert.False(t, req.Input.IsString())
+					actualArr, err := req.Input.Array()
+					require.NoError(t, err)
+					assert.NotEmpty(t, actualArr)
+				}
+			}
+		})
+	}
 }
 
 // Helper function to marshal JSON that panics on error (for tests only)
