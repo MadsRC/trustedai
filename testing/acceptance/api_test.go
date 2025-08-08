@@ -19,6 +19,7 @@ import (
 	"connectrpc.com/connect"
 	trustedaiv1 "github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1"
 	"github.com/MadsRC/trustedai/gen/proto/madsrc/trustedai/v1/trustedaiv1connect"
+	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
 	"github.com/openai/openai-go/responses"
@@ -528,7 +529,75 @@ func testAnthropicCompatibility(t *testing.T, config *TestConfig) {
 	if config.CreatedToken == "" {
 		t.Skip("Skipping Anthropic compatibility tests - no created token available")
 	}
-	t.Skip("Not yet implemented")
+
+	t.Run("Messages", func(t *testing.T) {
+		testAnthropicMessages(t, config)
+	})
+}
+
+// testAnthropicMessages tests the Anthropic Messages API endpoint using the official Anthropic SDK
+func testAnthropicMessages(t *testing.T, config *TestConfig) {
+	// We need to set environment variables since the Anthropic SDK reads from them
+	originalAPIKey := os.Getenv("ANTHROPIC_API_KEY")
+	originalBaseURL := os.Getenv("ANTHROPIC_BASE_URL")
+
+	os.Setenv("ANTHROPIC_API_KEY", config.CreatedToken)
+	os.Setenv("ANTHROPIC_BASE_URL", config.DataPlaneURL+"/anthropic")
+
+	// Restore original values after test
+	defer func() {
+		if originalAPIKey != "" {
+			os.Setenv("ANTHROPIC_API_KEY", originalAPIKey)
+		} else {
+			os.Unsetenv("ANTHROPIC_API_KEY")
+		}
+		if originalBaseURL != "" {
+			os.Setenv("ANTHROPIC_BASE_URL", originalBaseURL)
+		} else {
+			os.Unsetenv("ANTHROPIC_BASE_URL")
+		}
+	}()
+
+	// Create Anthropic client - it will read from environment
+	client := anthropic.NewClient()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create messages request
+	message, err := client.Messages.New(ctx, anthropic.MessageNewParams{
+		Model: anthropic.Model("gemini-2.5-flash-lite"),
+		Messages: []anthropic.MessageParam{
+			anthropic.NewUserMessage(anthropic.NewTextBlock("Who won the world series in 2020?")),
+		},
+		MaxTokens: 1024,
+	})
+	require.NoError(t, err, "Failed to create Anthropic message")
+
+	// Verify response structure
+	assert.NotEmpty(t, message.ID, "Response should have an ID")
+	assert.Equal(t, "message", string(message.Type), "Type should be 'message'")
+	assert.Equal(t, "assistant", string(message.Role), "Role should be 'assistant'")
+	assert.Equal(t, anthropic.Model("gemini-2.5-flash-lite"), message.Model, "Model should match the requested model")
+	assert.Greater(t, len(message.Content), 0, "Should have at least one content block")
+
+	// Verify first content block
+	if len(message.Content) > 0 {
+		contentBlock := message.Content[0]
+		if textBlock := contentBlock.AsText(); textBlock.Text != "" {
+			assert.NotEmpty(t, textBlock.Text, "Text content should not be empty")
+			assert.Equal(t, "text", string(textBlock.Type), "Content type should be 'text'")
+		}
+	}
+
+	// Verify usage information if present
+	if message.Usage.InputTokens > 0 {
+		assert.GreaterOrEqual(t, message.Usage.InputTokens, int64(0), "Input tokens should be non-negative")
+		assert.GreaterOrEqual(t, message.Usage.OutputTokens, int64(0), "Output tokens should be non-negative")
+	}
+
+	// Verify stop reason
+	assert.NotEmpty(t, message.StopReason, "Should have a stop reason")
 }
 
 // testCreateOpenRouterCredential tests creating an OpenRouter credential

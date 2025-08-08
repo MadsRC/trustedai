@@ -12,6 +12,7 @@ require (
 	connectrpc.com/connect v1.18.1
 	connectrpc.com/cors v0.1.0
 	connectrpc.com/grpcreflect v1.3.0
+	github.com/anthropics/anthropic-sdk-go v1.7.0
 	github.com/coreos/go-oidc/v3 v3.14.1
 	github.com/golang-migrate/migrate/v4 v4.18.3
 	github.com/google/uuid v1.6.0
