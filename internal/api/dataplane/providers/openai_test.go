@@ -15,6 +15,7 @@ import (
 
 	"codeberg.org/gai-org/gai"
 	"github.com/MadsRC/trustedai/internal/api/dataplane"
+	"github.com/openai/openai-go/responses"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -139,6 +140,209 @@ func TestOpenAIProvider_WithLogger(t *testing.T) {
 
 	if provider.options.Logger != nil {
 		t.Errorf("Expected logger to be nil, got %v", provider.options.Logger)
+	}
+}
+
+func TestOpenAIProvider_ConvertResponseToGaiRequest(t *testing.T) {
+	provider := NewOpenAIProvider()
+
+	testCases := []struct {
+		name             string
+		inputJSON        string
+		isStream         bool
+		expectedGaiReq   gai.GenerateRequest
+		expectError      bool
+		errorDescription string
+	}{
+		{
+			name:      "simple string input",
+			inputJSON: `{"model": "gpt-4o", "input": "Hello world"}`,
+			isStream:  false,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID: "gpt-4o",
+				Input:   gai.TextInput{Text: "Hello world"},
+				Stream:  false,
+			},
+			expectError: false,
+		},
+		{
+			name: "message array input with string",
+			inputJSON: `{
+				"model": "gpt-4o",
+				"input": [
+					{
+						"type": "message",
+						"role": "user",
+						"content": "Hello"
+					}
+				]
+			}`,
+			isStream: false,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID: "gpt-4o",
+				Input: gai.Conversation{
+					Messages: []gai.Message{
+						{
+							Role:    gai.RoleUser,
+							Content: gai.TextInput{Text: "Hello"},
+						},
+					},
+				},
+				Stream: false,
+			},
+			expectError: false,
+		},
+		{
+			name: "message array input",
+			inputJSON: `{
+				"model": "gpt-4o",
+				"input": [
+					{
+						"type": "message",
+						"role": "user",
+						"content": [{"type": "input_text", "text": "Hello"}]
+					}
+				]
+			}`,
+			isStream: false,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID: "gpt-4o",
+				Input: gai.Conversation{
+					Messages: []gai.Message{
+						{
+							Role:    gai.RoleUser,
+							Content: gai.TextInput{Text: "Hello"},
+						},
+					},
+				},
+				Stream: false,
+			},
+			expectError: false,
+		},
+		{
+			name: "with instructions and parameters",
+			inputJSON: `{
+				"model": "gpt-4o",
+				"input": "Test",
+				"instructions": "You are a helpful assistant",
+				"temperature": 0.7,
+				"max_output_tokens": 100
+			}`,
+			isStream: true,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID:         "gpt-4o",
+				Input:           gai.TextInput{Text: "Test"},
+				Instructions:    "You are a helpful assistant",
+				Temperature:     0.7,
+				MaxOutputTokens: 100,
+				Stream:          true,
+			},
+			expectError: false,
+		},
+		{
+			name: "image input",
+			inputJSON: `{
+				"model": "gpt-4o",
+				"input": [
+					{
+						"type": "message",
+						"role": "user", 
+						"content": [
+							{"type": "input_text", "text": "What's in this image?"},
+							{"type": "input_image", "image_url": "https://example.com/image.jpg", "detail": "auto"}
+						]
+					}
+				]
+			}`,
+			isStream: false,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID: "gpt-4o",
+				Input: gai.Conversation{
+					Messages: []gai.Message{
+						{
+							Role:    gai.RoleUser,
+							Content: gai.TextInput{Text: "What's in this image?"},
+						},
+						{
+							Role:    gai.RoleUser,
+							Content: gai.ImageInput{URL: "https://example.com/image.jpg", Detail: "auto"},
+						},
+					},
+				},
+				Stream: false,
+			},
+			expectError: false,
+		},
+		{
+			name:      "text_input_no_message_type",
+			inputJSON: `{"input":[{"content":"Who won the world series in 2020?","role":"user"}],"model":"gpt-4o"}`,
+			isStream:  false,
+			expectedGaiReq: gai.GenerateRequest{
+				ModelID: "gpt-4o",
+				Input: gai.Conversation{
+					Messages: []gai.Message{
+						{
+							Role:    gai.RoleUser,
+							Content: gai.TextInput{Text: "Who won the world series in 2020?"},
+						},
+					},
+				},
+				Stream: false,
+			},
+			expectError: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Preprocess JSON to handle shorthand message format (like the real handler does)
+			var rawReq map[string]any
+			err := json.Unmarshal([]byte(tc.inputJSON), &rawReq)
+			require.NoError(t, err, "Failed to unmarshal raw JSON")
+
+			provider.preprocessResponseInput(rawReq)
+
+			processedJSON, err := json.Marshal(rawReq)
+			require.NoError(t, err, "Failed to marshal preprocessed JSON")
+
+			// Parse JSON into ResponseNewParams
+			var req responses.ResponseNewParams
+			err = json.Unmarshal(processedJSON, &req)
+			if tc.expectError {
+				require.Error(t, err, tc.errorDescription)
+				return
+			}
+			require.NoError(t, err, "Failed to unmarshal test JSON")
+
+			// Make sure data isn't lost during round-trip (using processed JSON)
+			d, err := json.Marshal(req)
+			require.NoError(t, err)
+			require.JSONEq(t, string(processedJSON), string(d))
+
+			// Convert to GAI request
+			gaiReq := provider.convertResponseToGaiRequest(req, tc.isStream)
+
+			// Compare with expected result
+			assert.Equal(t, tc.expectedGaiReq.ModelID, gaiReq.ModelID, "ModelID mismatch")
+			assert.Equal(t, tc.expectedGaiReq.Instructions, gaiReq.Instructions, "Instructions mismatch")
+			assert.Equal(t, tc.expectedGaiReq.Stream, gaiReq.Stream, "Stream mismatch")
+			assert.Equal(t, tc.expectedGaiReq.Temperature, gaiReq.Temperature, "Temperature mismatch")
+			assert.Equal(t, tc.expectedGaiReq.TopP, gaiReq.TopP, "TopP mismatch")
+			assert.Equal(t, tc.expectedGaiReq.MaxOutputTokens, gaiReq.MaxOutputTokens, "MaxOutputTokens mismatch")
+
+			// Compare Input (needs special handling for different types)
+			assert.Equal(t, tc.expectedGaiReq.Input, gaiReq.Input, "Input mismatch")
+
+			// Compare Tools if present
+			if len(tc.expectedGaiReq.Tools) > 0 || len(gaiReq.Tools) > 0 {
+				assert.Equal(t, tc.expectedGaiReq.Tools, gaiReq.Tools, "Tools mismatch")
+			}
+
+			// Compare ToolChoice if present
+			if tc.expectedGaiReq.ToolChoice != nil || gaiReq.ToolChoice != nil {
+				assert.Equal(t, tc.expectedGaiReq.ToolChoice, gaiReq.ToolChoice, "ToolChoice mismatch")
+			}
+		})
 	}
 }
 

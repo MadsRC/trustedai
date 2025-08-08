@@ -499,7 +499,7 @@ func testOpenAIResponses(t *testing.T, config *TestConfig) {
 
 	// Verify response structure
 	assert.NotEmpty(t, response.ID, "Response should have an ID")
-	assert.Equal(t, "response", response.Object, "Object should be 'response'")
+	assert.Equal(t, "response", string(response.Object), "Object should be 'response'")
 	assert.NotZero(t, response.CreatedAt, "Response should have a created timestamp")
 	assert.Equal(t, "gemini-2.5-flash-lite", response.Model, "Model should match the requested model")
 	assert.Greater(t, len(response.Output), 0, "Should have at least one output item")
